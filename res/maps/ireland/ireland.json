@@ -1,0 +1,10 @@
+{
+  "name": "ireland",
+  "displayName": "Ireland",
+  "author": "Butterlands",
+  "alignment": {
+    "horizontal": "LEFT",
+    "vertical": "BOTTOM"
+  },
+  "status": "AVAILABLE"
+}

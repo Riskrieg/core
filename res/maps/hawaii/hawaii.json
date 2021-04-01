@@ -1,0 +1,10 @@
+{
+  "name": "hawaii",
+  "displayName": "Hawai\u0027i",
+  "author": "Vidcom \u0026 Svetroid",
+  "alignment": {
+    "horizontal": "LEFT",
+    "vertical": "BOTTOM"
+  },
+  "status": "AVAILABLE"
+}

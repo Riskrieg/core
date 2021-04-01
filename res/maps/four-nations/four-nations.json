@@ -1,0 +1,10 @@
+{
+  "name": "four-nations",
+  "displayName": "Four Nations",
+  "author": "Vidcom",
+  "alignment": {
+    "horizontal": "LEFT",
+    "vertical": "BOTTOM"
+  },
+  "status": "AVAILABLE"
+}

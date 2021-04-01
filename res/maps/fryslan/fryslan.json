@@ -1,0 +1,10 @@
+{
+  "name": "fryslan",
+  "displayName": "Fryslân",
+  "author": "Sylviagony",
+  "alignment": {
+    "horizontal": "LEFT",
+    "vertical": "BOTTOM"
+  },
+  "status": "AVAILABLE"
+}

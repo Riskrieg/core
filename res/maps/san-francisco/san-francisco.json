@@ -1,0 +1,10 @@
+{
+  "name": "san-francisco",
+  "displayName": "San Francisco",
+  "author": "Vidcom",
+  "alignment": {
+    "horizontal": "LEFT",
+    "vertical": "BOTTOM"
+  },
+  "status": "AVAILABLE"
+}

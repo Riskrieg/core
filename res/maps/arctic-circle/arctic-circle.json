@@ -1,0 +1,10 @@
+{
+  "name": "arctic-circle",
+  "displayName": "Arctic Circle",
+  "author": "Svetroid \u0026 Vidcom",
+  "alignment": {
+    "horizontal": "LEFT",
+    "vertical": "BOTTOM"
+  },
+  "status": "AVAILABLE"
+}

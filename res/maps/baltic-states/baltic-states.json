@@ -1,0 +1,10 @@
+{
+  "name": "baltic-states",
+  "displayName": "Baltic States",
+  "author": "Sula Feet Studios",
+  "alignment": {
+    "horizontal": "LEFT",
+    "vertical": "BOTTOM"
+  },
+  "status": "AVAILABLE"
+}

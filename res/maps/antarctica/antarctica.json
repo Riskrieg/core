@@ -1,0 +1,10 @@
+{
+  "name": "antarctica",
+  "displayName": "Antarctica",
+  "author": "Svetroid & Vidcom",
+  "alignment": {
+    "horizontal": "LEFT",
+    "vertical": "BOTTOM"
+  },
+  "status": "AVAILABLE"
+}

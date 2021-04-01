@@ -1,0 +1,10 @@
+{
+  "name": "north-america",
+  "displayName": "North America",
+  "author": "Lyyti",
+  "alignment": {
+    "horizontal": "LEFT",
+    "vertical": "BOTTOM"
+  },
+  "status": "AVAILABLE"
+}

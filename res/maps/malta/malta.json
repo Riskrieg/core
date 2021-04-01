@@ -1,0 +1,10 @@
+{
+  "name": "malta",
+  "displayName": "Malta",
+  "author": "Sula Feet Studios",
+  "alignment": {
+    "horizontal": "LEFT",
+    "vertical": "BOTTOM"
+  },
+  "status": "AVAILABLE"
+}

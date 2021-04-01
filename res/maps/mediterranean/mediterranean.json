@@ -1,0 +1,10 @@
+{
+  "name": "mediterranean",
+  "displayName": "Mediterranean",
+  "author": "Lyyti",
+  "alignment": {
+    "horizontal": "LEFT",
+    "vertical": "BOTTOM"
+  },
+  "status": "AVAILABLE"
+}

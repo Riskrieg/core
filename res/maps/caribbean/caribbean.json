@@ -1,0 +1,10 @@
+{
+  "name": "caribbean",
+  "displayName": "Caribbean",
+  "author": "Samigot",
+  "alignment": {
+    "horizontal": "LEFT",
+    "vertical": "BOTTOM"
+  },
+  "status": "AVAILABLE"
+}
