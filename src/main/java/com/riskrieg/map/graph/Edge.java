@@ -2,24 +2,11 @@ package com.riskrieg.map.graph;
 
 import java.util.Objects;
 
-public class Edge { // TODO: Turn into Record in Java 16
+public record Edge(Territory source, Territory target) {
 
-  private final Territory source;
-  private final Territory target;
-
-  public Edge(Territory source, Territory target) {
+  public Edge {
     Objects.requireNonNull(source);
     Objects.requireNonNull(target);
-    this.source = source;
-    this.target = target;
-  }
-
-  public Territory target() {
-    return target;
-  }
-
-  public Territory source() {
-    return source;
   }
 
 }

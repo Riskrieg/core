@@ -2,7 +2,7 @@ package com.riskrieg.map;
 
 import com.riskrieg.map.alignment.InterfaceAlignment;
 
-public class MapInfo { // TODO: Convert to Record with Java 16 (?)
+public class MapInfo { // TODO: Convert to Record (?) -- Need to move MapStatus first
 
   private final String name;
   private final String displayName;

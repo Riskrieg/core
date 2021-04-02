@@ -80,7 +80,7 @@ public class ConquestNation implements AllianceNation {
     return Math.min(getClaimableTerritories(game).size(), claims);
   }
 
-  private Set<Territory> getClaimableTerritories(Game game) { // TODO: SPEED THIS UP
+  private Set<Territory> getClaimableTerritories(Game game) {
     Set<Territory> neighbors = new HashSet<>();
     Optional<GameMap> map = game.getMap();
     if (map.isPresent()) {

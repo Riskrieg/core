@@ -16,11 +16,9 @@ import org.jgrapht.graph.builder.GraphTypeBuilder;
 import org.jgrapht.traverse.BreadthFirstIterator;
 
 @SuppressWarnings("unused")
-public class GameMap implements Comparable<GameMap> {
+public record GameMap(String name) implements Comparable<GameMap> {
 
-  private final String name;
-
-  public GameMap(String name) {
+  public GameMap {
     Objects.requireNonNull(name);
     if (name.isBlank()) {
       throw new IllegalArgumentException("name cannot be blank");
@@ -28,7 +26,6 @@ public class GameMap implements Comparable<GameMap> {
     if (!isValid(name)) {
       throw new IllegalArgumentException(name + ": invalid map or correct map files do not exist");
     }
-    this.name = name;
   }
 
   public String getBaseLayerPath() {
@@ -39,6 +36,7 @@ public class GameMap implements Comparable<GameMap> {
     return Constants.MAP_PATH + name + "/" + name + "-text.png";
   }
 
+  @Override
   public String name() {
     return getInfo().name();
   }
