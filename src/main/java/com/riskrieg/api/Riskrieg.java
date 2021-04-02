@@ -1,6 +1,6 @@
 package com.riskrieg.api;
 
-import com.aaronjyoder.util.json.gson.GsonRuntimeTypeAdapterFactory;
+import com.aaronjyoder.util.json.adapters.RuntimeTypeAdapterFactory;
 import com.aaronjyoder.util.json.gson.GsonUtil;
 import com.riskrieg.constant.Constants;
 import com.riskrieg.gamemode.Game;
@@ -26,9 +26,9 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 public class Riskrieg {
 
   public Riskrieg() {
-    GsonUtil.register(GsonRuntimeTypeAdapterFactory.of(Game.class).with(Conquest.class).with(Creative.class));
-    GsonUtil.register(GsonRuntimeTypeAdapterFactory.of(Player.class).with(HumanPlayer.class).with(ComputerPlayer.class));
-    GsonUtil.register(GsonRuntimeTypeAdapterFactory.of(GameRule.class).with(Alliances.class).with(RandomTurnOrder.class).with(JoinAnyTime.class));
+    GsonUtil.register(RuntimeTypeAdapterFactory.of(Game.class).with(Conquest.class).with(Creative.class));
+    GsonUtil.register(RuntimeTypeAdapterFactory.of(Player.class).with(HumanPlayer.class).with(ComputerPlayer.class));
+    GsonUtil.register(RuntimeTypeAdapterFactory.of(GameRule.class).with(Alliances.class).with(RandomTurnOrder.class).with(JoinAnyTime.class));
   }
 
   public Response create(GameMode gameMode, String folderName, String fileName) {
