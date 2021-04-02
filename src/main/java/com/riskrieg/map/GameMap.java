@@ -1,6 +1,6 @@
 package com.riskrieg.map;
 
-import com.aaronjyoder.util.json.gson.GsonUtil;
+import com.aaronjyoder.util.json.moshi.MoshiUtil;
 import com.riskrieg.constant.Constants;
 import com.riskrieg.map.alignment.InterfaceAlignment;
 import com.riskrieg.map.graph.Edge;
@@ -85,12 +85,12 @@ public record GameMap(String name) implements Comparable<GameMap> {
   // Private methods
 
   private boolean isValid(String name) {
-    return GsonUtil.read(Constants.MAP_PATH + name + "/" + name + ".json", MapInfo.class) != null
-        && GsonUtil.read(Constants.MAP_PATH + name + "/graph/" + name + ".json", MapData.class) != null;
+    return MoshiUtil.read(Constants.MAP_PATH + name + "/" + name + ".json", MapInfo.class) != null
+        && MoshiUtil.read(Constants.MAP_PATH + name + "/graph/" + name + ".json", MapData.class) != null;
   }
 
   private MapInfo getInfo() {
-    return GsonUtil.read(Constants.MAP_PATH + name + "/" + name + ".json", MapInfo.class);
+    return MoshiUtil.read(Constants.MAP_PATH + name + "/" + name + ".json", MapInfo.class);
   }
 
   private Graph<Territory, Edge> getGraph() {
@@ -108,7 +108,7 @@ public record GameMap(String name) implements Comparable<GameMap> {
   }
 
   private MapData getData() {
-    return GsonUtil.read(Constants.MAP_PATH + name + "/graph/" + name + ".json", MapData.class);
+    return MoshiUtil.read(Constants.MAP_PATH + name + "/graph/" + name + ".json", MapData.class);
   }
 
   @Override

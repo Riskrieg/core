@@ -1,7 +1,7 @@
 package com.riskrieg.api;
 
 import com.aaronjyoder.util.json.adapters.RuntimeTypeAdapterFactory;
-import com.aaronjyoder.util.json.gson.GsonUtil;
+import com.aaronjyoder.util.json.moshi.MoshiUtil;
 import com.riskrieg.constant.Constants;
 import com.riskrieg.gamemode.Game;
 import com.riskrieg.gamemode.GameMode;
@@ -26,9 +26,9 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 public class Riskrieg {
 
   public Riskrieg() {
-    GsonUtil.register(RuntimeTypeAdapterFactory.of(Game.class).with(Conquest.class).with(Creative.class));
-    GsonUtil.register(RuntimeTypeAdapterFactory.of(Player.class).with(HumanPlayer.class).with(ComputerPlayer.class));
-    GsonUtil.register(RuntimeTypeAdapterFactory.of(GameRule.class).with(Alliances.class).with(RandomTurnOrder.class).with(JoinAnyTime.class));
+    MoshiUtil.register(RuntimeTypeAdapterFactory.of(Game.class).with(Conquest.class).with(Creative.class));
+    MoshiUtil.register(RuntimeTypeAdapterFactory.of(Player.class).with(HumanPlayer.class).with(ComputerPlayer.class));
+    MoshiUtil.register(RuntimeTypeAdapterFactory.of(GameRule.class).with(Alliances.class).with(RandomTurnOrder.class).with(JoinAnyTime.class));
   }
 
   public Response create(GameMode gameMode, String folderName, String fileName) {
@@ -52,7 +52,7 @@ public class Riskrieg {
       return new Response(false, "No game to save.");
     }
     try {
-      GsonUtil.write(Constants.SAVE_PATH + folderName + "/", fileName + ".json", Save.class, new Save(game));
+      MoshiUtil.write(Constants.SAVE_PATH + folderName + "/", fileName + ".json", Save.class, new Save(game));
       return new Response(true);
     } catch (Exception e) {
 //      e.printStackTrace();
@@ -88,7 +88,7 @@ public class Riskrieg {
       return Optional.empty();
     }
     try {
-      Save save = GsonUtil.read(Constants.SAVE_PATH + folderName + "/" + fileName + ".json", Save.class);
+      Save save = MoshiUtil.read(Constants.SAVE_PATH + folderName + "/" + fileName + ".json", Save.class);
       return save == null ? Optional.empty() : Optional.of(save.game());
     } catch (Exception e) {
       return Optional.empty();
