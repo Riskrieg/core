@@ -31,6 +31,15 @@ public class Riskrieg {
     GsonUtil.register(RuntimeTypeAdapterFactory.of(GameRule.class).with(Alliances.class).with(RandomTurnOrder.class).with(JoinAnyTime.class));
   }
 
+  /**
+   * Attempts to create a {@code game} given the specified {@link com.riskrieg.gamemode.GameMode}. It then saves the game in {@value com.riskrieg.constant.Constants#MAP_PATH}{@code
+   * folderName}/{@code fileName}.json and returns a response based on whether it was successful or not.
+   *
+   * @param gameMode   The game mode that the created game should be.
+   * @param folderName The folder name for the save file.
+   * @param fileName   The file name for the save file.
+   * @return A new {@link com.riskrieg.response.Response} object indicating the success of game creation. Fails if a game already exists or if there is a file I/O issue.
+   */
   public Response create(GameMode gameMode, String folderName, String fileName) {
     if (folderName == null || fileName == null || folderName.isBlank() || fileName.isBlank()) {
       return new Response(false, "Invalid filepath.");
@@ -44,6 +53,15 @@ public class Riskrieg {
     };
   }
 
+  /**
+   * Attempts to save an existing {@code game} in {@value com.riskrieg.constant.Constants#MAP_PATH}{@code folderName}/{@code fileName}.json, and then returns a response based on
+   * whether it was successful or not.
+   *
+   * @param game       The game to be saved.
+   * @param folderName The folder name for the save file.
+   * @param fileName   The file name for the save file.
+   * @return A new {@link com.riskrieg.response.Response} object indicating the success of game saving. Fails if there is a file I/O issue.
+   */
   public Response save(Game game, String folderName, String fileName) {
     if (folderName == null || fileName == null || folderName.isBlank() || fileName.isBlank()) {
       return new Response(false, "Invalid filepath.");
@@ -60,6 +78,14 @@ public class Riskrieg {
     }
   }
 
+  /**
+   * Attempts to match a save file to a {@code game} given the {@code folderName}, then saves the game if a match is found, the returns a response based on the success of the
+   * operation.
+   *
+   * @param game       The game to save.
+   * @param folderName The relative directory to look for a matching save game in.
+   * @return A new {@link com.riskrieg.response.Response} object indicating the success of game saving. Fails if a matching game could not be found or if there is a file I/O issue.
+   */
   public Response save(Game game, String folderName) {
     if (folderName == null || folderName.isBlank()) {
       return new Response(false, "Invalid filepath.");
@@ -83,6 +109,15 @@ public class Riskrieg {
     return new Response(false, "Unable to save game.");
   }
 
+  /**
+   * Attempts to load an existing {@code game} from {@value com.riskrieg.constant.Constants#MAP_PATH}{@code folderName}/{@code fileName}.json, and then returns a response based on
+   * whether it was successful or not.
+   *
+   * @param folderName The folder name for the save file.
+   * @param fileName   The file name for the save file.
+   * @return A {@link Game} object wrapped in {@link java.util.Optional} that either contains the game object if loaded successfully, or is empty if no game exists or there was a
+   * file I/O issue.
+   */
   public Optional<Game> load(String folderName, String fileName) {
     if (folderName == null || fileName == null || folderName.isBlank() || fileName.isBlank()) {
       return Optional.empty();
@@ -95,6 +130,12 @@ public class Riskrieg {
     }
   }
 
+  /**
+   * Attempts to load all saves found in the relative {@value com.riskrieg.constant.Constants#MAP_PATH}{@code folderName}/ directory.
+   *
+   * @param folderName The relative directory to look for save files in.
+   * @return The set containing all {@link Game} objects loaded from the given folder. Returns an empty set if there are no saves or a file I/O issue occurs.
+   */
   public Set<Game> loadSaves(String folderName) {
     if (folderName == null || folderName.isBlank()) {
       return new HashSet<>();
@@ -117,6 +158,12 @@ public class Riskrieg {
     return new HashSet<>();
   }
 
+  /**
+   * Attempts to load all saves in the {@value com.riskrieg.constant.Constants#MAP_PATH} relative directory.
+   *
+   * @return The set containing all {@link Game} objects loaded from the {@value com.riskrieg.constant.Constants#MAP_PATH} relative directory. Returns an empty set if there are no
+   * saves or a file I/O issue occurs.
+   */
   public Set<Game> loadAllSaves() {
     File[] saveFolders = new File(Constants.SAVE_PATH).listFiles(File::isDirectory);
     Set<Game> result = new HashSet<>();
@@ -131,6 +178,14 @@ public class Riskrieg {
     return result;
   }
 
+  /**
+   * Attempts to delete an existing {@code game} in {@value com.riskrieg.constant.Constants#MAP_PATH}{@code folderName}/{@code fileName}.json, and then returns a response based on
+   * whether it was successful or not.
+   *
+   * @param folderName The folder name for the save file.
+   * @param fileName   The file name for the save file.
+   * @return A new {@link com.riskrieg.response.Response} object indicating the success of deletion. Fails if there is no game to delete or if there is a file I/O issue.
+   */
   public Response delete(String folderName, String fileName) {
     if (folderName == null || fileName == null || folderName.isBlank() || fileName.isBlank()) {
       return new Response(false, "Invalid filepath.");
@@ -152,6 +207,12 @@ public class Riskrieg {
     }
   }
 
+  /**
+   * Attempts to delete all games in {@value com.riskrieg.constant.Constants#MAP_PATH} with the matching {@code uuid} supplied.
+   *
+   * @param uuid The ID of the game, given by a {@link java.util.UUID} object.
+   * @return A new {@link com.riskrieg.response.Response} object indicating the success of deletion. Fails if there is no game to delete or if there is a file I/O issue.
+   */
   public Response delete(UUID uuid) {
     File[] saveFolders = new File(Constants.SAVE_PATH).listFiles(File::isDirectory);
     if (saveFolders != null) {

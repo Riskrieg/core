@@ -1,7 +1,5 @@
 package com.riskrieg.map.alignment;
 
-//public record InterfaceAlignment(VerticalAlignment vertical, HorizontalAlignment horizontal) { }
-
 public class InterfaceAlignment { // TODO: Convert to record after Gson/Moshi add record support
 
   private final VerticalAlignment vertical;
