@@ -92,8 +92,7 @@ public class ConquestTest {
     assertTrue(api.loadSaves(null).isEmpty());
     assertTrue(api.loadSaves("").isEmpty());
     assertTrue(api.loadSaves("invalid").isEmpty());
-    assertTrue(api.loadSaves("test").isPresent());
-    assertEquals(api.loadSaves("test").get().size(), 2);
+    assertEquals(api.loadSaves("test").size(), 2);
 
     /*
      * Riskrieg#delete cases

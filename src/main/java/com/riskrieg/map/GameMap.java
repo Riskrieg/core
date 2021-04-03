@@ -1,6 +1,6 @@
 package com.riskrieg.map;
 
-import com.aaronjyoder.util.json.moshi.MoshiUtil;
+import com.aaronjyoder.util.json.gson.GsonUtil;
 import com.riskrieg.constant.Constants;
 import com.riskrieg.map.alignment.InterfaceAlignment;
 import com.riskrieg.map.graph.Edge;
@@ -16,9 +16,11 @@ import org.jgrapht.graph.builder.GraphTypeBuilder;
 import org.jgrapht.traverse.BreadthFirstIterator;
 
 @SuppressWarnings("unused")
-public record GameMap(String name) implements Comparable<GameMap> {
+public class GameMap implements Comparable<GameMap> { // TODO: Convert to record after Gson/Moshi add record support
 
-  public GameMap {
+  private final String name;
+
+  public GameMap(String name) {
     Objects.requireNonNull(name);
     if (name.isBlank()) {
       throw new IllegalArgumentException("name cannot be blank");
@@ -26,6 +28,7 @@ public record GameMap(String name) implements Comparable<GameMap> {
     if (!isValid(name)) {
       throw new IllegalArgumentException(name + ": invalid map or correct map files do not exist");
     }
+    this.name = name;
   }
 
   public String getBaseLayerPath() {
@@ -36,7 +39,6 @@ public record GameMap(String name) implements Comparable<GameMap> {
     return Constants.MAP_PATH + name + "/" + name + "-text.png";
   }
 
-  @Override
   public String name() {
     return getInfo().name();
   }
@@ -85,12 +87,12 @@ public record GameMap(String name) implements Comparable<GameMap> {
   // Private methods
 
   private boolean isValid(String name) {
-    return MoshiUtil.read(Constants.MAP_PATH + name + "/" + name + ".json", MapInfo.class) != null
-        && MoshiUtil.read(Constants.MAP_PATH + name + "/graph/" + name + ".json", MapData.class) != null;
+    return GsonUtil.read(Constants.MAP_PATH + name + "/" + name + ".json", MapInfo.class) != null
+        && GsonUtil.read(Constants.MAP_PATH + name + "/graph/" + name + ".json", MapData.class) != null;
   }
 
   private MapInfo getInfo() {
-    return MoshiUtil.read(Constants.MAP_PATH + name + "/" + name + ".json", MapInfo.class);
+    return GsonUtil.read(Constants.MAP_PATH + name + "/" + name + ".json", MapInfo.class);
   }
 
   private Graph<Territory, Edge> getGraph() {
@@ -108,7 +110,7 @@ public record GameMap(String name) implements Comparable<GameMap> {
   }
 
   private MapData getData() {
-    return MoshiUtil.read(Constants.MAP_PATH + name + "/graph/" + name + ".json", MapData.class);
+    return GsonUtil.read(Constants.MAP_PATH + name + "/graph/" + name + ".json", MapData.class);
   }
 
   @Override

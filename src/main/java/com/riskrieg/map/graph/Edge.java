@@ -2,11 +2,24 @@ package com.riskrieg.map.graph;
 
 import java.util.Objects;
 
-public record Edge(Territory source, Territory target) {
+public class Edge { // TODO: Convert to record after Gson/Moshi add record support
 
-  public Edge {
+  private final Territory source;
+  private final Territory target;
+
+  public Edge(Territory source, Territory target) {
     Objects.requireNonNull(source);
     Objects.requireNonNull(target);
+    this.source = source;
+    this.target = target;
+  }
+
+  public Territory source() {
+    return source;
+  }
+
+  public Territory target() {
+    return target;
   }
 
 }

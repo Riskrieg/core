@@ -5,18 +5,31 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 
-public record Territory(String name, Set<Point> seedPoints) implements Comparable<Territory> {
+public class Territory implements Comparable<Territory> { // TODO: Convert to record after Gson/Moshi add record support
 
-  public Territory {
+  private final String name;
+  private final Set<Point> seedPoints;
+
+  public Territory(String name, Set<Point> seedPoints) {
     Objects.requireNonNull(name);
     Objects.requireNonNull(seedPoints);
     if (seedPoints.isEmpty()) {
       throw new IllegalStateException("seedPoints must not be empty");
     }
+    this.name = name;
+    this.seedPoints = seedPoints;
   }
 
   public Territory(String name, Point seedPoint) {
     this(name, Collections.singleton(seedPoint));
+  }
+
+  public String name() {
+    return name;
+  }
+
+  public Set<Point> seedPoints() {
+    return seedPoints;
   }
 
   @Override
