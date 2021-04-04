@@ -1,7 +1,6 @@
 package com.riskrieg.player;
 
 import java.awt.Color;
-import org.apache.commons.lang3.StringUtils;
 
 public enum PlayerColor {
 
@@ -26,7 +25,7 @@ public enum PlayerColor {
   private final Color color;
 
   PlayerColor(int r, int g, int b) {
-    this.name = StringUtils.capitalize(toString().toLowerCase());
+    this.name = toString().substring(0, 1).toUpperCase() + toString().substring(1).toLowerCase();
     this.color = new Color(r, g, b);
   }
 

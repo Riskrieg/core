@@ -8,7 +8,7 @@ version '3.0'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(16)
+        languageVersion = JavaLanguageVersion.of(15)
     }
 }
 
@@ -25,7 +25,6 @@ repositories {
 
 dependencies {
     implementation fileTree(include: ["*.jar"], dir: "lib")
-    implementation 'org.apache.commons:commons-lang3:3.0'
     implementation("com.google.guava:guava:30.1-jre")
     implementation 'org.jgrapht:jgrapht-core:1.5.0'
 

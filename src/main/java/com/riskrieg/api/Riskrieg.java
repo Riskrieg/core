@@ -16,11 +16,12 @@ import com.riskrieg.player.HumanPlayer;
 import com.riskrieg.player.Player;
 import com.riskrieg.response.Response;
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 @SuppressWarnings("unused")
 public class Riskrieg {
@@ -73,8 +74,10 @@ public class Riskrieg {
       GsonUtil.write(Constants.SAVE_PATH + folderName + "/", fileName + ".json", Save.class, new Save(game));
       return new Response(true);
     } catch (Exception e) {
-//      e.printStackTrace();
-      return new Response(false, ExceptionUtils.getStackTrace(e));
+      StringWriter sw = new StringWriter();
+      PrintWriter pw = new PrintWriter(sw);
+      e.printStackTrace(pw);
+      return new Response(false, sw.toString());
     }
   }
 
@@ -103,7 +106,10 @@ public class Riskrieg {
         }
         return new Response(false, "Could not find matching save.");
       } catch (NullPointerException e) {
-        return new Response(false, ExceptionUtils.getStackTrace(e));
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        return new Response(false, sw.toString());
       }
     }
     return new Response(false, "Unable to save game.");
