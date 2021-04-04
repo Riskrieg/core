@@ -32,4 +32,21 @@ public class PlayerIdentifier { // TODO: Convert to record after Gson/Moshi add 
     return color;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    PlayerIdentifier that = (PlayerIdentifier) o;
+    return id.equals(that.id) && color == that.color;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, color);
+  }
+
 }

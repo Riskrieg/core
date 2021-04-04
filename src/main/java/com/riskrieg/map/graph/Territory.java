@@ -37,4 +37,22 @@ public class Territory implements Comparable<Territory> { // TODO: Convert to re
     return this.name().compareTo(o.name());
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Territory territory = (Territory) o;
+    return Objects.equals(name, territory.name) &&
+        Objects.equals(seedPoints, territory.seedPoints);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, seedPoints);
+  }
+
 }
