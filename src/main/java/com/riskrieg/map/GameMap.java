@@ -59,10 +59,24 @@ public class GameMap implements Comparable<GameMap> { // TODO: Convert to record
     return getInfo().status();
   }
 
+  public Graph<Territory, Edge> graph() {
+    MapData mapData = getData();
+
+    Graph<Territory, Edge> graph = GraphTypeBuilder.<Territory, Edge>undirected()
+        .allowingMultipleEdges(false).allowingSelfLoops(false).edgeClass(Edge.class).weighted(false).buildGraphBuilder()
+        .addVertices(mapData.vertices().toArray(new Territory[0])).build();
+
+    for (Edge edge : mapData.edges()) {
+      Edge e = new Edge(edge.source(), edge.target());
+      graph.addEdge(edge.source(), edge.target(), e);
+    }
+    return graph;
+  }
+
   // Public methods
 
   public Optional<Territory> getTerritory(String name) {
-    Iterator<Territory> iterator = new BreadthFirstIterator<>(getGraph());
+    Iterator<Territory> iterator = new BreadthFirstIterator<>(graph());
     while (iterator.hasNext()) {
       Territory territory = iterator.next();
       if (territory.name().equalsIgnoreCase(name)) {
@@ -77,7 +91,7 @@ public class GameMap implements Comparable<GameMap> { // TODO: Convert to record
   }
 
   public Set<Territory> getNeighbors(Territory territory) {
-    return Graphs.neighborSetOf(getGraph(), territory);
+    return Graphs.neighborSetOf(graph(), territory);
   }
 
   public boolean neighbors(Territory source, Territory target) {
@@ -93,20 +107,6 @@ public class GameMap implements Comparable<GameMap> { // TODO: Convert to record
 
   private MapInfo getInfo() {
     return GsonUtil.read(Constants.MAP_PATH + name + "/" + name + ".json", MapInfo.class);
-  }
-
-  private Graph<Territory, Edge> getGraph() {
-    MapData mapData = getData();
-
-    Graph<Territory, Edge> graph = GraphTypeBuilder.<Territory, Edge>undirected()
-        .allowingMultipleEdges(false).allowingSelfLoops(false).edgeClass(Edge.class).weighted(false).buildGraphBuilder()
-        .addVertices(mapData.vertices().toArray(new Territory[0])).build();
-
-    for (Edge edge : mapData.edges()) {
-      Edge e = new Edge(edge.source(), edge.target());
-      graph.addEdge(edge.source(), edge.target(), e);
-    }
-    return graph;
   }
 
   private MapData getData() {
