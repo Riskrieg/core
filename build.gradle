@@ -4,7 +4,7 @@ plugins {
     id 'maven'
 }
 
-group 'com.riskrieg'
+group 'com.github.Riskrieg'
 version '1.0.0'
 
 java {
