@@ -21,7 +21,7 @@ Make sure you replace **VERSION** with one of the versions from the releases.
 ```xml
 <dependency>
     <groupId>com.riskrieg</groupId>
-    <artifactId>riskrieg-core</artifactId>
+    <artifactId>core</artifactId>
     <version>VERSION</version>
 </dependency>
 ```
@@ -36,7 +36,7 @@ Make sure you replace **VERSION** with one of the versions from the releases.
 **Gradle**
 ```gradle
 dependencies {
-    implementation('com.riskrieg:riskrieg-core:VERSION')
+    implementation('com.riskrieg:core:VERSION')
 }
 
 repositories {
