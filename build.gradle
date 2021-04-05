@@ -1,13 +1,15 @@
 plugins {
     id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'java-library'
-    id 'maven-publish'
+    id 'maven'
 }
 
 group 'com.riskrieg'
 version '1.0.0'
 
 java {
+    withJavadocJar()
+    withSourcesJar()
     toolchain {
         languageVersion = JavaLanguageVersion.of(15)
     }
