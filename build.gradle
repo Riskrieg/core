@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'com.riskrieg'
-version '3.0'
+version '1.0.0'
 
 java {
     toolchain {
@@ -21,10 +21,11 @@ jar {
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    implementation fileTree(include: ["*.jar"], dir: "lib")
+    implementation 'com.github.aaronjyoder:Json-Utilities:1.0.0a15'
     implementation("com.google.guava:guava:30.1-jre")
     implementation 'org.jgrapht:jgrapht-core:1.5.1'
 

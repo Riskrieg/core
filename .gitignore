@@ -153,7 +153,6 @@ gradle-app.setting
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle,intellij
 
 # Riskrieg
-!lib/Json-Utilities-1.0.jar
 res/font/
 res/saves/
 res/maps/_UNFINISHED
