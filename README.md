@@ -6,7 +6,11 @@ Riskrieg is a world-domination/simulation game that lets you play out scenarios 
 
 This is the core Riskrieg game that can be used as a library API in other programs. Game maps are also submitted to this repository.
 
-## Code Style
+## Contributing
+
+Please [join us on Discord](https://discord.gg/weU8jYDbW4) if you'd like to be more involved in contributing to Riskrieg.
+
+### Code Style
 
 Please use the Google Java code style when contributing to this repository. You can find the proper file for your IDE [here](https://github.com/google/styleguide).
 
