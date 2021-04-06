@@ -1,11 +1,11 @@
 plugins {
     id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'java-library'
-    id 'maven'
+    id 'maven-publish'
 }
 
 group 'com.riskrieg'
-version '1.0.0'
+version '2.0.0-alpha-1'
 
 java {
     withJavadocJar()
@@ -30,8 +30,8 @@ repositories {
 
 dependencies {
     implementation('com.github.aaronjyoder:Json-Utilities:1.0.0a15')
-    implementation("com.google.guava:guava:30.1-jre")
     implementation('org.jgrapht:jgrapht-core:1.5.1')
+//    implementation("com.google.guava:guava:30.1-jre")
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
