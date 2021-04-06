@@ -1,6 +1,7 @@
 package com.riskrieg.api.gamemode;
 
 import com.riskrieg.api.gamemap.GameMap;
+import com.riskrieg.api.gamemode.order.TurnOrder;
 import com.riskrieg.api.player.Player;
 import com.riskrieg.api.gamemap.territory.Territory;
 import java.time.Instant;
@@ -24,5 +25,7 @@ public interface Gamemode {
   void grant(Player player, Territory territory);
 
   void revoke(Player player, Territory territory);
+
+  void start(TurnOrder order);
 
 }
