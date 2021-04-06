@@ -2,7 +2,6 @@ package com.riskrieg.api.gamemode;
 
 import com.riskrieg.api.gamemap.GameMap;
 import com.riskrieg.api.gamemap.territory.Territory;
-import com.riskrieg.api.gamemode.Gamemode;
 import com.riskrieg.api.gamemode.order.TurnOrder;
 import com.riskrieg.api.player.Player;
 import java.time.Instant;
@@ -71,7 +70,7 @@ public final class Conquest implements Gamemode {
 
   @Override
   public void start(TurnOrder order) {
-    
+
   }
 
 }

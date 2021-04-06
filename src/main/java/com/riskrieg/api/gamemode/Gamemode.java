@@ -1,9 +1,9 @@
 package com.riskrieg.api.gamemode;
 
 import com.riskrieg.api.gamemap.GameMap;
+import com.riskrieg.api.gamemap.territory.Territory;
 import com.riskrieg.api.gamemode.order.TurnOrder;
 import com.riskrieg.api.player.Player;
-import com.riskrieg.api.gamemap.territory.Territory;
 import java.time.Instant;
 import java.util.UUID;
 
