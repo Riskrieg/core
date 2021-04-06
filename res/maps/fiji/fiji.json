@@ -1,0 +1,10 @@
+{
+  "name": "fiji",
+  "displayName": "Fiji",
+  "author": "TheOWOTriangle",
+  "alignment": {
+    "horizontal": "LEFT",
+    "vertical": "BOTTOM"
+  },
+  "status": "COMING_SOON"
+}
