@@ -7,6 +7,6 @@ import javax.annotation.Nonnull;
 
 public interface TurnOrder {
 
-  @Nonnull Deque<Player> order(@Nonnull Collection<Player> players);
+  @Nonnull Deque<Player> order(@Nonnull final Collection<Player> players);
 
 }

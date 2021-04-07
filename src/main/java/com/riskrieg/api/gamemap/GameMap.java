@@ -7,6 +7,11 @@ import java.util.Objects;
 // TODO: Implement Riskrieg Map (.rkm) file format for maps so that they can be easily loaded, saved, and shared as a single file.
 public final class GameMap {
 
+//  private final MapName mapName;
+//  private final String author;
+//  private final InterfaceAlignment alignment;
+//  private final MapGraph mapGraph;
+
   public static GameMap load(URI uri) {
     Objects.requireNonNull(uri);
     File file = new File(uri);

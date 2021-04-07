@@ -6,8 +6,9 @@ import java.util.UUID;
 
 public final class Player {
 
-  private final String id;
   private final Color color;
+  private final String id;
+  private String name;
 
   public Player(String id, Color color) {
     Objects.requireNonNull(id);
@@ -29,6 +30,27 @@ public final class Player {
 
   public Color color() {
     return color;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Player player = (Player) o;
+    return color.equals(player.color);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(color);
   }
 
 }

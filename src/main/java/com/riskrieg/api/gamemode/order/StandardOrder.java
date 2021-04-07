@@ -9,7 +9,7 @@ public class StandardOrder implements TurnOrder {
 
   @Nonnull
   @Override
-  public Deque<Player> order(@Nonnull Collection<Player> players) {
+  public Deque<Player> order(@Nonnull final Collection<Player> players) {
     return null;
   }
 
