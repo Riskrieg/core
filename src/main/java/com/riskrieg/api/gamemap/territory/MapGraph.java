@@ -13,10 +13,10 @@ public final class MapGraph {
     Objects.requireNonNull(vertices);
     Objects.requireNonNull(edges);
     if (vertices.isEmpty()) {
-      throw new IllegalStateException("Set<Territory> 'vertices' must not be empty");
+      throw new IllegalStateException("Field 'vertices' of type Set<Territory> must not be empty");
     }
     if (edges.isEmpty()) {
-      throw new IllegalStateException("Set<Border> 'edges' must not be empty");
+      throw new IllegalStateException("Field 'edges' of type Set<Border> must not be empty");
     }
     this.vertices = vertices;
     this.edges = edges;

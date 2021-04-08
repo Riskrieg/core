@@ -14,7 +14,7 @@ public final class Player {
     Objects.requireNonNull(id);
     Objects.requireNonNull(color);
     if (id.isBlank()) {
-      throw new IllegalArgumentException("String 'id' cannot be blank");
+      throw new IllegalArgumentException("Field 'id' of type String cannot be blank");
     }
     this.id = id;
     this.color = color;
