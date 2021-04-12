@@ -474,6 +474,8 @@ public class Conquest implements Game, IAlliances {
   private boolean rollAttack(Nation attacker, Nation defender, Territory territory) {
     int attackRolls = 0;
     int defenseRolls = 0;
+    int attackSides = 7;
+    int defenseSides = 6;
     if (getMap().isPresent()) {
       Set<Territory> neighbors = getMap().get().getNeighbors(territory);
       for (Territory neighbor : neighbors) {
@@ -488,9 +490,10 @@ public class Conquest implements Game, IAlliances {
       }
       if (territory.equals(defender.getCapital())) {
         defenseRolls += Constants.CAPITAL_DEFENSE_ROLL_BOOST;
+        defenseSides = 8;
       }
-      Dice attackDice = new Dice(6, Math.max(1, attackRolls)); // just in case, I think the rolls should always be at least 1 though.
-      Dice defenseDice = new Dice(6, Math.max(1, defenseRolls));
+      Dice attackDice = new Dice(attackSides, Math.max(1, attackRolls)); // just in case, I think the rolls should always be at least 1 though.
+      Dice defenseDice = new Dice(defenseSides, Math.max(1, defenseRolls));
       int attackerMax = Arrays.stream(attackDice.roll()).summaryStatistics().getMax();
       int defenderMax = Arrays.stream(defenseDice.roll()).summaryStatistics().getMax();
       return attackerMax > defenderMax;
