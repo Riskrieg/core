@@ -1,6 +1,8 @@
 package com.riskrieg.map;
 
-
+import com.aaronjyoder.util.json.gson.GsonUtil;
+import com.riskrieg.constant.Constants;
+import com.riskrieg.map.data.MapName;
 import com.riskrieg.map.options.Availability;
 import com.riskrieg.map.options.InterfaceAlignment;
 import com.riskrieg.map.options.alignment.HorizontalAlignment;
@@ -19,6 +21,10 @@ public class MapOptions {
   public MapOptions(Availability availability, InterfaceAlignment alignment) {
     this.availability = availability;
     this.alignment = alignment;
+  }
+
+  public static MapOptions load(MapName mapName) {
+    return GsonUtil.read(Constants.MAP_OPTIONS_PATH + mapName.name() + ".json", MapOptions.class);
   }
 
   public InterfaceAlignment alignment() {
