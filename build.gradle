@@ -30,7 +30,7 @@ repositories {
 
 dependencies {
     implementation('com.github.aaronjyoder:Json-Utilities:1.0.0a15')
-    implementation 'com.riskrieg:map-format:1.0.0'
+    implementation('com.riskrieg:rkm:1.0.0')
 //    implementation("com.google.guava:guava:30.1-jre")
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
