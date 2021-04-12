@@ -8,7 +8,6 @@ public final class Player {
 
   private final Color color;
   private final String id;
-  private String name;
 
   public Player(String id, Color color) {
     Objects.requireNonNull(id);
@@ -30,10 +29,6 @@ public final class Player {
 
   public Color color() {
     return color;
-  }
-
-  public String getName() {
-    return name;
   }
 
   @Override
