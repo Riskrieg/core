@@ -15,6 +15,7 @@ public class Constants {
 
   public static final String SAVE_PATH = "res/saves/";
   public static final String MAP_PATH = "res/maps/";
+  public static final String MAP_OPTIONS_PATH = MAP_PATH + "options/";
 
   public static final double CLAIM_INCREASE_THRESHOLD = 5.0; // Threshold to gain another claim each turn
   public static final int MINIMUM_CLAIM_AMOUNT = 1;
