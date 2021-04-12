@@ -13,6 +13,10 @@ public class MapOptions {
   private Availability availability;
   private InterfaceAlignment alignment;
 
+  public static MapOptions load(MapName mapName) {
+    return GsonUtil.read(Constants.MAP_OPTIONS_PATH + mapName.name() + ".json", MapOptions.class);
+  }
+
   public MapOptions() {
     this.availability = Availability.AVAILABLE;
     this.alignment = new InterfaceAlignment(VerticalAlignment.BOTTOM, HorizontalAlignment.LEFT);
@@ -21,10 +25,6 @@ public class MapOptions {
   public MapOptions(Availability availability, InterfaceAlignment alignment) {
     this.availability = availability;
     this.alignment = alignment;
-  }
-
-  public static MapOptions load(MapName mapName) {
-    return GsonUtil.read(Constants.MAP_OPTIONS_PATH + mapName.name() + ".json", MapOptions.class);
   }
 
   public InterfaceAlignment alignment() {
