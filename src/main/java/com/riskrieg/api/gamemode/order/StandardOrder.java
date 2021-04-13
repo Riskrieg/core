@@ -10,7 +10,7 @@ import java.util.Deque;
 import java.util.List;
 import javax.annotation.Nonnull;
 
-public class StandardOrder implements TurnOrder {
+public final class StandardOrder implements TurnOrder {
 
   @Nonnull
   @Override

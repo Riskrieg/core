@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 
-public class RandomOrder implements TurnOrder {
+public final class RandomOrder implements TurnOrder {
 
   @Nonnull
   @Override
