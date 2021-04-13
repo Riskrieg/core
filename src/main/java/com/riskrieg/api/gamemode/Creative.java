@@ -1,5 +1,5 @@
 package com.riskrieg.api.gamemode;
 
-public class Creative {
+public final class Creative {
 
 }
