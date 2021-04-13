@@ -5,6 +5,8 @@ import com.riskrieg.api.player.Player;
 import com.riskrieg.map.GameMap;
 import com.riskrieg.map.territory.Territory;
 import java.time.Instant;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -15,10 +17,14 @@ public final class Conquest implements Gamemode {
   private Instant lastUpdated;
   private GameMap map;
 
+  private Deque<Player> players;
+
   public Conquest() {
     this.id = UUID.randomUUID();
     this.creationTime = Instant.now();
     this.lastUpdated = Instant.now();
+
+    this.players = new ArrayDeque<>();
   }
 
   @Override
@@ -70,7 +76,7 @@ public final class Conquest implements Gamemode {
 
   @Override
   public void start(TurnOrder order) {
-
+    players = order.order(players);
   }
 
 }
