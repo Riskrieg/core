@@ -7,15 +7,17 @@ public final class Player {
 
   private final Color color;
   private final Identity identity;
+  private String name;
 
-  public Player(Identity identity, Color color) {
+  public Player(Identity identity, Color color, String name) {
     Objects.requireNonNull(color);
     this.identity = identity;
     this.color = color;
+    this.name = name;
   }
 
-  public Player(Color color) {
-    this(new Identity(), color);
+  public Player(Color color, String name) {
+    this(new Identity(), color, name);
   }
 
   public Identity identity() {
@@ -24,6 +26,14 @@ public final class Player {
 
   public Color color() {
     return color;
+  }
+
+  public String name() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   @Override
