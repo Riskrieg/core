@@ -13,12 +13,17 @@ public class MapOptions {
   private Availability availability;
   private InterfaceAlignment alignment;
 
-  public static MapOptions load(MapName mapName) {
-    return GsonUtil.read(Constants.MAP_OPTIONS_PATH + mapName.name() + ".json", MapOptions.class);
+  public static MapOptions load(MapName mapName, boolean createIfUnavailable) {
+    MapOptions result = GsonUtil.read(Constants.MAP_OPTIONS_PATH + mapName.name() + ".json", MapOptions.class);
+    if (result == null && createIfUnavailable) {
+      result = new MapOptions();
+      GsonUtil.write(Constants.MAP_OPTIONS_PATH, mapName.name() + ".json", MapOptions.class, result);
+    }
+    return result;
   }
 
   public MapOptions() {
-    this.availability = Availability.AVAILABLE;
+    this.availability = Availability.UNAVAILABLE;
     this.alignment = new InterfaceAlignment(VerticalAlignment.BOTTOM, HorizontalAlignment.LEFT);
   }
 

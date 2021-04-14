@@ -14,7 +14,7 @@ public final class StandardOrder implements TurnOrder {
 
   @Nonnull
   @Override
-  public Deque<Player> order(@Nonnull final Collection<Player> players) {
+  public Deque<Player> sort(@Nonnull final Collection<Player> players) {
     List<Player> playerList = new ArrayList<>(players);
     playerList.sort(new StandardComparator());
     return new ArrayDeque<>(playerList);

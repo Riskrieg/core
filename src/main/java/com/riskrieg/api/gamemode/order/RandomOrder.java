@@ -14,7 +14,7 @@ public final class RandomOrder implements TurnOrder {
 
   @Nonnull
   @Override
-  public Deque<Player> order(@Nonnull final Collection<Player> players) {
+  public Deque<Player> sort(@Nonnull final Collection<Player> players) {
     Objects.requireNonNull(players);
     List<Player> playerList = new ArrayList<>(players);
     Collections.shuffle(playerList);

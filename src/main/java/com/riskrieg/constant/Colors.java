@@ -3,7 +3,7 @@ package com.riskrieg.constant;
 import java.awt.Color;
 
 @SuppressWarnings("unused")
-public class Colors {
+public final class Colors {
 
   public static final Color TEXT_COLOR = new Color(116, 88, 60);
   

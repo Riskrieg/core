@@ -22,6 +22,8 @@ public interface Gamemode {
 
   void selectMap(GameMap map);
 
+  void setCapital(Player player, Territory territory);
+
   void grant(Player player, Territory territory);
 
   void revoke(Player player, Territory territory);
