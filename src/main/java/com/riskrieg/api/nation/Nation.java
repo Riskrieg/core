@@ -1,14 +1,39 @@
 package com.riskrieg.api.nation;
 
+import com.riskrieg.api.player.Identity;
 import com.riskrieg.map.territory.Territory;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-public interface Nation {
+public final class Nation {
 
-  Set<Territory> territories();
+  private Identity leaderIdentity;
+  private final Set<Territory> territories;
 
-  boolean add(Territory territory);
+  public Nation(Identity identity, Territory capital) {
+    Objects.requireNonNull(identity);
+    Objects.requireNonNull(capital);
+    this.leaderIdentity = identity;
+    this.territories = new HashSet<>();
+    this.territories.add(capital);
+  }
 
-  boolean remove(Territory territory);
+  public Identity getLeaderIdentity() {
+    return leaderIdentity;
+  }
+
+  public Set<Territory> territories() {
+    return Collections.unmodifiableSet(territories);
+  }
+
+  public boolean add(Territory territory) {
+    return territories.add(territory);
+  }
+
+  public boolean remove(Territory territory) {
+    return territories.remove(territory);
+  }
 
 }
