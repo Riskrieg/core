@@ -4,7 +4,7 @@ import com.riskrieg.api.gamemode.order.TurnOrder;
 import com.riskrieg.api.nation.Nation;
 import com.riskrieg.api.player.Player;
 import com.riskrieg.map.GameMap;
-import com.riskrieg.map.territory.Territory;
+import com.riskrieg.map.territory.TerritoryId;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.UUID;
@@ -22,8 +22,6 @@ public interface Gamemode {
 
   Collection<Nation> nations();
 
-  Collection<Territory> capitals();
-
   GameMap map();
 
   void join(Player player);
@@ -32,11 +30,11 @@ public interface Gamemode {
 
   void selectMap(GameMap map);
 
-  void setCapital(Player player, Territory territory);
+  void setCapital(Player player, TerritoryId id);
 
-  void grant(Player player, Territory territory);
+  void grant(Player player, TerritoryId id);
 
-  void revoke(Player player, Territory territory);
+  void revoke(Player player, TerritoryId id);
 
   void start(TurnOrder order);
 

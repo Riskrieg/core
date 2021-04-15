@@ -3,7 +3,6 @@ package com.riskrieg.save;
 import com.riskrieg.api.gamemode.Conquest;
 import com.riskrieg.api.nation.Nation;
 import com.riskrieg.api.player.Player;
-import com.riskrieg.map.territory.Territory;
 import java.time.Instant;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -19,7 +18,6 @@ public class ConquestSave {
   private final String mapCodeName;
   private final Deque<Player> players;
   private final Set<Nation> nations;
-  private final Set<Territory> capitals;
 
   public ConquestSave(Conquest conquest) {
     this.id = conquest.id();
@@ -28,7 +26,6 @@ public class ConquestSave {
     this.mapCodeName = conquest.map().mapName().name();
     this.players = new ArrayDeque<>(conquest.players());
     this.nations = new HashSet<>(conquest.nations());
-    this.capitals = new HashSet<>(conquest.capitals());
   }
 
 }

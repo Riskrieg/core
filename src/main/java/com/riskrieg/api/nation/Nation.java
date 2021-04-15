@@ -1,7 +1,7 @@
 package com.riskrieg.api.nation;
 
 import com.riskrieg.api.player.Identity;
-import com.riskrieg.map.territory.Territory;
+import com.riskrieg.map.GameTerritory;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
@@ -10,9 +10,9 @@ import java.util.Set;
 public final class Nation {
 
   private Identity leaderIdentity;
-  private final Set<Territory> territories;
+  private final Set<GameTerritory> territories;
 
-  public Nation(Identity identity, Territory capital) {
+  public Nation(Identity identity, GameTerritory capital) {
     Objects.requireNonNull(identity);
     Objects.requireNonNull(capital);
     this.leaderIdentity = identity;
@@ -24,15 +24,15 @@ public final class Nation {
     return leaderIdentity;
   }
 
-  public Set<Territory> territories() {
+  public Set<GameTerritory> territories() {
     return Collections.unmodifiableSet(territories);
   }
 
-  public boolean add(Territory territory) {
+  public boolean add(GameTerritory territory) {
     return territories.add(territory);
   }
 
-  public boolean remove(Territory territory) {
+  public boolean remove(GameTerritory territory) {
     return territories.remove(territory);
   }
 

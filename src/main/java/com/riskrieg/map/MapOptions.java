@@ -8,7 +8,7 @@ import com.riskrieg.map.options.InterfaceAlignment;
 import com.riskrieg.map.options.alignment.HorizontalAlignment;
 import com.riskrieg.map.options.alignment.VerticalAlignment;
 
-public class MapOptions {
+public final class MapOptions {
 
   private Availability availability;
   private InterfaceAlignment alignment;
