@@ -1,15 +1,16 @@
-package com.riskrieg.api.gamemode;
+package com.riskrieg.gamemode;
 
-import com.riskrieg.api.gamemode.order.TurnOrder;
-import com.riskrieg.api.nation.Nation;
-import com.riskrieg.api.player.Identity;
-import com.riskrieg.api.player.Player;
+import com.riskrieg.gamemode.order.TurnOrder;
+import com.riskrieg.gamemode.util.GameID;
+import com.riskrieg.gamemode.util.Moment;
+import com.riskrieg.nation.Nation;
+import com.riskrieg.player.Identity;
+import com.riskrieg.player.Player;
 import com.riskrieg.map.GameMap;
 import com.riskrieg.map.GameTerritory;
 import com.riskrieg.map.TerritoryType;
 import com.riskrieg.map.territory.TerritoryId;
 import com.riskrieg.map.vertex.Territory;
-import java.time.Instant;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
@@ -18,40 +19,39 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public final class Conquest implements Gamemode {
 
-  private final UUID id;
-  private final Instant creationTime;
-  private Instant lastUpdated;
+  private final GameID id;
+  private final Moment creationTime;
+  private Moment lastUpdated;
   private GameMap map;
 
   private Deque<Player> players;
   private Set<Nation> nations;
 
   public Conquest() {
-    this.id = UUID.randomUUID();
-    this.creationTime = Instant.now();
-    this.lastUpdated = Instant.now();
+    this.id = new GameID();
+    this.creationTime = Moment.now();
+    this.lastUpdated = Moment.now();
 
     this.players = new ArrayDeque<>();
     this.nations = new HashSet<>();
   }
 
   @Override
-  public UUID id() {
+  public GameID id() {
     return id;
   }
 
   @Override
-  public Instant creationTime() {
+  public Moment creationTime() {
     return creationTime;
   }
 
   @Override
-  public Instant lastUpdated() {
+  public Moment lastUpdated() {
     return lastUpdated;
   }
 
@@ -120,7 +120,7 @@ public final class Conquest implements Gamemode {
   /* Private Methods */
 
   private void setLastUpdated() {
-    this.lastUpdated = Instant.now();
+    this.lastUpdated = Moment.now();
   }
 
   private Optional<Nation> getNation(Identity identity) {

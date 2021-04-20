@@ -1,6 +1,6 @@
-package com.riskrieg.api.gamemode.order;
+package com.riskrieg.gamemode.order;
 
-import com.riskrieg.api.player.Player;
+import com.riskrieg.player.Player;
 import java.awt.Color;
 import java.util.ArrayDeque;
 import java.util.ArrayList;

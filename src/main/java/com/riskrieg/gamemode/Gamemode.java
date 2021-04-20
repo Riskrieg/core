@@ -1,22 +1,22 @@
-package com.riskrieg.api.gamemode;
+package com.riskrieg.gamemode;
 
-import com.riskrieg.api.gamemode.order.TurnOrder;
-import com.riskrieg.api.nation.Nation;
-import com.riskrieg.api.player.Player;
+import com.riskrieg.gamemode.order.TurnOrder;
+import com.riskrieg.gamemode.util.GameID;
+import com.riskrieg.gamemode.util.Moment;
+import com.riskrieg.nation.Nation;
+import com.riskrieg.player.Player;
 import com.riskrieg.map.GameMap;
 import com.riskrieg.map.territory.TerritoryId;
-import java.time.Instant;
 import java.util.Collection;
-import java.util.UUID;
 
 // TODO: Add Javadoc
 public interface Gamemode {
 
-  UUID id();
+  GameID id();
 
-  Instant creationTime();
+  Moment creationTime();
 
-  Instant lastUpdated();
+  Moment lastUpdated();
 
   Collection<Player> players();
 

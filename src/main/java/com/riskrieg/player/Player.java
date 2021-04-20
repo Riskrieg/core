@@ -1,4 +1,4 @@
-package com.riskrieg.api.player;
+package com.riskrieg.player;
 
 import java.awt.Color;
 import java.util.Objects;

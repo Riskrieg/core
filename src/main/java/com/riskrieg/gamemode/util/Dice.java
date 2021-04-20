@@ -1,4 +1,4 @@
-package com.riskrieg.api.gamemode.util;
+package com.riskrieg.gamemode.util;
 
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;

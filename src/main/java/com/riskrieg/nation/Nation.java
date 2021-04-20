@@ -1,6 +1,6 @@
-package com.riskrieg.api.nation;
+package com.riskrieg.nation;
 
-import com.riskrieg.api.player.Identity;
+import com.riskrieg.player.Identity;
 import com.riskrieg.map.GameTerritory;
 import java.util.Collections;
 import java.util.HashSet;

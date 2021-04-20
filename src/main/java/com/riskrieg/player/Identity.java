@@ -1,4 +1,4 @@
-package com.riskrieg.api.player;
+package com.riskrieg.player;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -17,6 +17,11 @@ public final class Identity {
 
   public Identity() {
     this(UUID.randomUUID().toString());
+  }
+
+  @Override
+  public String toString() {
+    return id;
   }
 
   @Override
