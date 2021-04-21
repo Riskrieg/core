@@ -1,8 +1,9 @@
-package com.riskrieg.gamemode;
+package com.riskrieg.api;
 
+import com.riskrieg.gamemode.GameMode;
 import com.riskrieg.gamemode.order.TurnOrder;
-import com.riskrieg.gamemode.util.GameID;
-import com.riskrieg.gamemode.util.Moment;
+import com.riskrieg.gamemode.GameID;
+import com.riskrieg.gamemode.Moment;
 import com.riskrieg.map.GameMap;
 import com.riskrieg.map.GameTerritory;
 import com.riskrieg.map.TerritoryType;

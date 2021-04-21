@@ -1,4 +1,4 @@
-package com.riskrieg.gamemode.util;
+package com.riskrieg.gamemode;
 
 import java.time.Instant;
 import java.util.Objects;

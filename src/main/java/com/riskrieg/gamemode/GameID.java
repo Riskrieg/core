@@ -1,4 +1,4 @@
-package com.riskrieg.gamemode.util;
+package com.riskrieg.gamemode;
 
 import java.util.Objects;
 import java.util.UUID;
