@@ -1,9 +1,10 @@
 package com.riskrieg.api;
 
-import com.riskrieg.gamemode.GameMode;
-import com.riskrieg.gamemode.order.TurnOrder;
 import com.riskrieg.gamemode.GameID;
+import com.riskrieg.gamemode.GameMode;
 import com.riskrieg.gamemode.Moment;
+import com.riskrieg.gamemode.order.TurnOrder;
+import com.riskrieg.gamerule.GameRule;
 import com.riskrieg.map.GameMap;
 import com.riskrieg.map.GameTerritory;
 import com.riskrieg.map.TerritoryType;
@@ -16,7 +17,9 @@ import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.EnumMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -32,6 +35,8 @@ public final class Conquest implements GameMode {
   private Deque<Player> players;
   private Set<Nation> nations;
 
+  private final Map<GameRule, Boolean> gameRules;
+
   public Conquest() {
     this.id = new GameID();
     this.creationTime = Moment.now();
@@ -39,6 +44,8 @@ public final class Conquest implements GameMode {
 
     this.players = new ArrayDeque<>();
     this.nations = new HashSet<>();
+    gameRules = new EnumMap<>(GameRule.class);
+    gameRules.put(GameRule.ALLIANCES, true);
   }
 
   @Override

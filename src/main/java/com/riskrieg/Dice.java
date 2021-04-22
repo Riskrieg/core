@@ -39,8 +39,7 @@ public final class Dice {
       return false;
     }
     var that = (Dice) obj;
-    return this.sides == that.sides &&
-        this.amount == that.amount;
+    return this.sides == that.sides && this.amount == that.amount;
   }
 
   @Override
@@ -50,9 +49,7 @@ public final class Dice {
 
   @Override
   public String toString() {
-    return "Dice[" +
-        "sides=" + sides + ", " +
-        "amount=" + amount + ']';
+    return "Dice[" + "sides=" + sides + ", " + "amount=" + amount + ']';
   }
 
 
