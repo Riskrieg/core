@@ -1,7 +1,9 @@
 package com.riskrieg.api;
 
+import com.riskrieg.api.action.FormNationAction;
 import com.riskrieg.api.action.JoinAction;
 import com.riskrieg.api.action.LeaveAction;
+import com.riskrieg.api.action.SelectMapAction;
 import com.riskrieg.gamemode.GameID;
 import com.riskrieg.gamemode.GameMode;
 import com.riskrieg.gamemode.GameState;
@@ -10,7 +12,6 @@ import com.riskrieg.gamemode.order.TurnOrder;
 import com.riskrieg.gamerule.GameRule;
 import com.riskrieg.map.GameMap;
 import com.riskrieg.map.GameTerritory;
-import com.riskrieg.map.TerritoryType;
 import com.riskrieg.map.territory.TerritoryId;
 import com.riskrieg.map.vertex.Territory;
 import com.riskrieg.nation.Nation;
@@ -25,7 +26,6 @@ import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.CheckReturnValue;
@@ -49,6 +49,7 @@ public final class Conquest implements GameMode {
     this.creationTime = Moment.now();
     this.lastUpdated = Moment.now();
     this.gameState = GameState.SETUP;
+    this.map = new GameMap();
 
     this.players = new ArrayDeque<>();
     this.nations = new HashSet<>();
@@ -105,20 +106,25 @@ public final class Conquest implements GameMode {
     return this.join(Identity.random(), name, color);
   }
 
+  @Nonnull
+  @CheckReturnValue
   public LeaveAction leave(Player player) {
     setLastUpdated();
     return new LeaveAction(player, players, nations);
   }
 
-  public void selectMap(GameMap map) {
-    this.map = Objects.requireNonNull(map);
-    this.nations = new HashSet<>();
+  @Nonnull
+  @CheckReturnValue
+  public SelectMapAction selectMap(String name) {
     setLastUpdated();
+    return new SelectMapAction(name, map, nations, gameState);
   }
 
-  public void setCapital(Player player, TerritoryId id) {
-    Nation nation = new Nation(player.identity(), new GameTerritory(id, TerritoryType.CAPITAL));
-    nations.add(nation);
+  @Nonnull
+  @CheckReturnValue
+  public FormNationAction formNation(Player player, TerritoryId id) {
+    setLastUpdated();
+    return new FormNationAction(player, id, nations);
   }
 
   public void grant(Player player, TerritoryId id) {
@@ -141,21 +147,12 @@ public final class Conquest implements GameMode {
     this.lastUpdated = Moment.now();
   }
 
-  private Optional<Nation> getNation(Identity identity) {
-    for (Nation n : nations) {
-      if (n.getLeaderIdentity().equals(identity)) {
-        return Optional.of(n);
-      }
-    }
-    return Optional.empty();
-  }
-
   private Set<GameTerritory> territories() {
     return nations.stream().map(Nation::territories).flatMap(Set::stream).collect(Collectors.toSet());
   }
 
   private Territory getTerritory(TerritoryId id) {
-    for (Territory t : map.getGraph().vertices()) {
+    for (Territory t : map.getMap().getGraph().vertices()) {
       if (t.id().equals(id)) {
         return t;
       }
