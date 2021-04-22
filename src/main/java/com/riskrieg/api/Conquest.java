@@ -1,8 +1,10 @@
 package com.riskrieg.api;
 
 import com.riskrieg.api.action.JoinAction;
+import com.riskrieg.api.action.LeaveAction;
 import com.riskrieg.gamemode.GameID;
 import com.riskrieg.gamemode.GameMode;
+import com.riskrieg.gamemode.GameState;
 import com.riskrieg.gamemode.Moment;
 import com.riskrieg.gamemode.order.TurnOrder;
 import com.riskrieg.gamerule.GameRule;
@@ -34,17 +36,19 @@ public final class Conquest implements GameMode {
   private final GameID id;
   private final Moment creationTime;
   private Moment lastUpdated;
+
+  private GameState gameState;
   private GameMap map;
 
+  private final Map<GameRule, Boolean> gameRules;
   private Deque<Player> players;
   private Set<Nation> nations;
-
-  private final Map<GameRule, Boolean> gameRules;
 
   public Conquest() {
     this.id = new GameID();
     this.creationTime = Moment.now();
     this.lastUpdated = Moment.now();
+    this.gameState = GameState.SETUP;
 
     this.players = new ArrayDeque<>();
     this.nations = new HashSet<>();
@@ -67,16 +71,21 @@ public final class Conquest implements GameMode {
     return lastUpdated;
   }
 
+  @Override
+  public GameState gameState() {
+    return gameState;
+  }
+
+  public Map<GameRule, Boolean> gameRules() {
+    return Collections.unmodifiableMap(gameRules);
+  }
+
   public Collection<Player> players() {
     return Collections.unmodifiableCollection(players);
   }
 
   public Collection<Nation> nations() {
     return Collections.unmodifiableCollection(nations);
-  }
-
-  public Map<GameRule, Boolean> gameRules() {
-    return Collections.unmodifiableMap(gameRules);
   }
 
   public GameMap map() {
@@ -87,7 +96,7 @@ public final class Conquest implements GameMode {
   @CheckReturnValue
   public JoinAction join(@Nonnull Identity id, @Nonnull String name, @Nonnull Color color) {
     setLastUpdated();
-    return new JoinAction(id, name, color, players);
+    return new JoinAction(id, name, color, players, gameState);
   }
 
   @Nonnull
@@ -96,11 +105,9 @@ public final class Conquest implements GameMode {
     return this.join(Identity.random(), name, color);
   }
 
-  public void leave(Player player) {
-    Objects.requireNonNull(player);
-    getNation(player.identity()).ifPresent(nation -> nations.remove(nation));
-    players.remove(player);
+  public LeaveAction leave(Player player) {
     setLastUpdated();
+    return new LeaveAction(player, players, nations);
   }
 
   public void selectMap(GameMap map) {

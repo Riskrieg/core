@@ -8,4 +8,6 @@ public interface GameMode {
 
   Moment lastUpdated();
 
+  GameState gameState();
+
 }
