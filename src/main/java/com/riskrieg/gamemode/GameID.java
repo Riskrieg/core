@@ -7,8 +7,16 @@ public class GameID {
 
   private final String id;
 
+  public GameID(String id) {
+    Objects.requireNonNull(id);
+    if (id.isBlank()) {
+      throw new IllegalArgumentException("id cannot be blank");
+    }
+    this.id = id;
+  }
+
   public GameID() {
-    this.id = UUID.randomUUID().toString();
+    this(UUID.randomUUID().toString());
   }
 
   @Override

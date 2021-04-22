@@ -10,14 +10,19 @@ public final class Player {
   private String name;
 
   public Player(Identity identity, Color color, String name) {
+    Objects.requireNonNull(identity);
     Objects.requireNonNull(color);
+    Objects.requireNonNull(name);
+    if (name.isBlank()) {
+      throw new IllegalArgumentException("name cannot be blank");
+    }
     this.identity = identity;
     this.color = color;
     this.name = name;
   }
 
   public Player(Color color, String name) {
-    this(new Identity(), color, name);
+    this(Identity.random(), color, name);
   }
 
   public Identity identity() {

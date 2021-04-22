@@ -1,5 +1,6 @@
 package com.riskrieg.api;
 
+import com.riskrieg.api.action.JoinAction;
 import com.riskrieg.gamemode.GameID;
 import com.riskrieg.gamemode.GameMode;
 import com.riskrieg.gamemode.Moment;
@@ -13,6 +14,7 @@ import com.riskrieg.map.vertex.Territory;
 import com.riskrieg.nation.Nation;
 import com.riskrieg.player.Identity;
 import com.riskrieg.player.Player;
+import java.awt.Color;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
@@ -24,6 +26,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
 
 public final class Conquest implements GameMode {
 
@@ -71,16 +75,25 @@ public final class Conquest implements GameMode {
     return Collections.unmodifiableCollection(nations);
   }
 
+  public Map<GameRule, Boolean> gameRules() {
+    return Collections.unmodifiableMap(gameRules);
+  }
+
   public GameMap map() {
     return map;
   }
 
-  public void join(Player player) {
-    Objects.requireNonNull(player);
-    if (!players.contains(player)) {
-      players.add(player);
-      setLastUpdated();
-    }
+  @Nonnull
+  @CheckReturnValue
+  public JoinAction join(@Nonnull Identity id, @Nonnull String name, @Nonnull Color color) {
+    setLastUpdated();
+    return new JoinAction(id, name, color, players);
+  }
+
+  @Nonnull
+  @CheckReturnValue
+  public JoinAction join(@Nonnull String name, @Nonnull Color color) {
+    return this.join(Identity.random(), name, color);
   }
 
   public void leave(Player player) {

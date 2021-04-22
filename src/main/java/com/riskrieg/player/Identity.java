@@ -7,7 +7,7 @@ public final class Identity {
 
   private final String id;
 
-  public Identity(String id) {
+  private Identity(String id) {
     Objects.requireNonNull(id);
     if (id.isBlank()) {
       throw new IllegalArgumentException("Field 'id' of type String cannot be blank");
@@ -15,8 +15,16 @@ public final class Identity {
     this.id = id;
   }
 
-  public Identity() {
+  private Identity() {
     this(UUID.randomUUID().toString());
+  }
+
+  public static Identity of(String id) {
+    return new Identity(id);
+  }
+
+  public static Identity random() {
+    return new Identity();
   }
 
   @Override
