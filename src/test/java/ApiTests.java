@@ -1,7 +1,7 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.riskrieg.api.Conquest;
-import com.riskrieg.player.Identity;
+import com.riskrieg.core.api.Conquest;
+import com.riskrieg.core.player.Identity;
 import java.awt.Color;
 import org.junit.jupiter.api.Test;
 
