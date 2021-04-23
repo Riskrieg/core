@@ -46,7 +46,7 @@ public final class Conquest implements GameMode {
   private Set<Nation> nations;
 
   public Conquest() {
-    this.id = new GameID();
+    this.id = GameID.random();
     this.creationTime = Moment.now();
     this.lastUpdated = Moment.now();
     this.gameState = GameState.SETUP;

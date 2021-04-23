@@ -1,5 +1,6 @@
 package com.riskrieg.core.gamemode;
 
+import com.riskrieg.core.player.Identity;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -7,7 +8,7 @@ public class GameID {
 
   private final String id;
 
-  public GameID(String id) {
+  private GameID(String id) {
     Objects.requireNonNull(id);
     if (id.isBlank()) {
       throw new IllegalArgumentException("id cannot be blank");
@@ -15,8 +16,16 @@ public class GameID {
     this.id = id;
   }
 
-  public GameID() {
+  private GameID() {
     this(UUID.randomUUID().toString());
+  }
+
+  public static GameID of(String id) {
+    return new GameID(id);
+  }
+
+  public static GameID random() {
+    return new GameID();
   }
 
   @Override

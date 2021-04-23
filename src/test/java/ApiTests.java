@@ -1,19 +1,53 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.riskrieg.core.api.Conquest;
+import com.riskrieg.core.api.Riskrieg;
 import com.riskrieg.core.gamemode.GameState;
 import com.riskrieg.core.order.RandomOrder;
 import com.riskrieg.core.player.Identity;
 import com.riskrieg.map.RkmMap;
 import com.riskrieg.map.vertex.Territory;
 import java.awt.Color;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import org.junit.jupiter.api.Test;
 
 public class ApiTests {
+
+  @Test
+  public void testRiskrieg() {
+    Riskrieg api = new Riskrieg();
+    Conquest game = null;
+    try {
+      game = api.create("test", "test", Conquest.class);
+    } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+      e.printStackTrace();
+    }
+    assertNotNull(game);
+  }
+
+  @Test
+  public void testJoin() {
+    Conquest game = new Conquest();
+    game.join("Name", new Color(1, 1, 1));
+    assertEquals(0, game.players().size());
+    game.join("Name", new Color(1, 1, 1)).submit();
+    assertEquals(1, game.players().size());
+    game.join("Name2", new Color(1, 1, 1)).submit();
+    assertEquals(1, game.players().size());
+    game.join(Identity.of("identity2"), "Name", new Color(1, 1, 1)).submit();
+    assertEquals(1, game.players().size());
+    game.join(Identity.of("identity2"), "Name", new Color(2, 2, 2)).submit();
+    assertEquals(2, game.players().size());
+    game.join(Identity.of("identity2"), "Name", new Color(3, 3, 3)).submit();
+    assertEquals(2, game.players().size());
+    game.join(Identity.of("identity3"), "Name", new Color(3, 3, 3)).submit();
+    assertEquals(3, game.players().size());
+  }
 
   @Test
   public void testConquest() {
