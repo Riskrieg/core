@@ -1,6 +1,7 @@
 package com.riskrieg.core.internal.action;
 
 import com.riskrieg.core.api.Riskrieg;
+import com.riskrieg.core.gamemode.GameMode;
 import com.riskrieg.core.gamemode.GameState;
 import com.riskrieg.core.map.GameMap;
 import com.riskrieg.core.nation.Nation;
@@ -9,24 +10,24 @@ import java.util.Collection;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
-public final class StartAction implements GameAction<Void> {
+public final class StartAction implements GameAction<GameState> {
 
+  private final GameMode gameMode;
+  private final GameMap gameMap;
   private final Collection<Player> players;
   private final Collection<Nation> nations;
-  private final GameMap gameMap;
-  private final GameState gameState;
 
-  public StartAction(Collection<Player> players, Collection<Nation> nations, GameMap gameMap, GameState gameState) {
+  public StartAction(GameMode gameMode, GameMap gameMap, Collection<Player> players, Collection<Nation> nations) {
+    this.gameMode = gameMode;
+    this.gameMap = gameMap;
     this.players = players;
     this.nations = nations;
-    this.gameMap = gameMap;
-    this.gameState = gameState;
   }
 
   @Override
-  public void submit(@Nullable Consumer<? super Void> success, @Nullable Consumer<? super Throwable> failure) {
+  public void submit(@Nullable Consumer<? super GameState> success, @Nullable Consumer<? super Throwable> failure) {
     try {
-      switch (gameState) {
+      switch (gameMode.gameState()) {
         case ENDED, RUNNING -> throw new IllegalStateException("The map can only be set during the setup phase");
         case SETUP -> {
           if (players.size() < Riskrieg.MIN_PLAYERS) {
@@ -41,10 +42,9 @@ public final class StartAction implements GameAction<Void> {
           if (nations.size() > players.size()) {
             throw new IllegalStateException("Critical error: game cannot be started and must be reset");
           }
-          // TODO: Change gameState
-
+          gameMode.setGameState(GameState.RUNNING);
           if (success != null) {
-            success.accept(null);
+            success.accept(gameMode.gameState());
           }
         }
       }

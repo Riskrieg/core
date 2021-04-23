@@ -10,4 +10,6 @@ public interface GameMode {
 
   GameState gameState();
 
+  void setGameState(GameState gameState);
+
 }

@@ -3,9 +3,9 @@ package com.riskrieg.core.internal.action;
 import com.riskrieg.core.gamemode.GameState;
 import com.riskrieg.core.map.GameMap;
 import com.riskrieg.core.map.MapOptions;
-import com.riskrieg.map.RkmMap;
 import com.riskrieg.core.map.options.Availability;
 import com.riskrieg.core.nation.Nation;
+import com.riskrieg.map.RkmMap;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -14,15 +14,15 @@ import javax.annotation.Nullable;
 public final class SelectMapAction implements GameAction<GameMap> {
 
   private final RkmMap rkmMap;
+  private final GameState gameState;
   private final GameMap gameMap;
   private final Collection<Nation> nations;
-  private final GameState gameState;
 
-  public SelectMapAction(RkmMap rkmMap, GameMap gameMap, Collection<Nation> nations, GameState gameState) {
+  public SelectMapAction(RkmMap rkmMap, GameState gameState, GameMap gameMap, Collection<Nation> nations) {
     this.rkmMap = rkmMap;
+    this.gameState = gameState;
     this.gameMap = gameMap;
     this.nations = nations;
-    this.gameState = gameState;
   }
 
   @Override

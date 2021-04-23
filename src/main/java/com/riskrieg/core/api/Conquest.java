@@ -4,7 +4,6 @@ import com.riskrieg.core.gamemode.GameID;
 import com.riskrieg.core.gamemode.GameMode;
 import com.riskrieg.core.gamemode.GameState;
 import com.riskrieg.core.gamemode.Moment;
-import com.riskrieg.core.order.TurnOrder;
 import com.riskrieg.core.gamerule.GameRule;
 import com.riskrieg.core.internal.action.FormNationAction;
 import com.riskrieg.core.internal.action.JoinAction;
@@ -14,6 +13,7 @@ import com.riskrieg.core.internal.action.StartAction;
 import com.riskrieg.core.map.GameMap;
 import com.riskrieg.core.map.GameTerritory;
 import com.riskrieg.core.nation.Nation;
+import com.riskrieg.core.order.TurnOrder;
 import com.riskrieg.core.player.Identity;
 import com.riskrieg.core.player.Player;
 import com.riskrieg.map.RkmMap;
@@ -78,6 +78,11 @@ public final class Conquest implements GameMode {
     return gameState;
   }
 
+  @Override
+  public void setGameState(GameState gameState) {
+    this.gameState = gameState;
+  }
+
   public Map<GameRule, Boolean> gameRules() {
     return Collections.unmodifiableMap(gameRules);
   }
@@ -98,7 +103,7 @@ public final class Conquest implements GameMode {
   @CheckReturnValue
   public JoinAction join(@Nonnull Identity id, @Nonnull String name, @Nonnull Color color) {
     setLastUpdated();
-    return new JoinAction(id, name, color, players, gameState);
+    return new JoinAction(id, name, color, gameState, players);
   }
 
   @Nonnull
@@ -118,19 +123,28 @@ public final class Conquest implements GameMode {
   @CheckReturnValue
   public SelectMapAction selectMap(RkmMap rkmMap) {
     setLastUpdated();
-    return new SelectMapAction(rkmMap, gameMap, nations, gameState);
+    return new SelectMapAction(rkmMap, gameState, gameMap, nations);
   }
 
   @Nonnull
   @CheckReturnValue
   public FormNationAction formNation(Player player, TerritoryId id) {
     setLastUpdated();
-    return new FormNationAction(player, id, nations);
+    return new FormNationAction(player.identity(), id, gameState, gameMap, players, nations);
   }
 
-  public StartAction start(TurnOrder order) {
+  @Nonnull
+  @CheckReturnValue
+  public FormNationAction formNation(Identity identity, TerritoryId id) {
+    setLastUpdated();
+    return new FormNationAction(identity, id, gameState, gameMap, players, nations);
+  }
+
+  @Nonnull
+  @CheckReturnValue
+  public StartAction start(@Nonnull TurnOrder order) {
     players = order.sort(players);
-    return new StartAction(players, nations, gameMap, gameState);
+    return new StartAction(this, gameMap, players, nations);
   }
 
   /* Private Methods */
@@ -144,7 +158,7 @@ public final class Conquest implements GameMode {
   }
 
   private Territory getTerritory(TerritoryId id) {
-    for (Territory t : gameMap.getMap().getGraph().vertices()) {
+    for (Territory t : gameMap.getGraph().vertices()) {
       if (t.id().equals(id)) {
         return t;
       }

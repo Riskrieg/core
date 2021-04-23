@@ -12,18 +12,18 @@ import javax.annotation.Nullable;
 
 public final class JoinAction implements GameAction<Player> {
 
-  private final Collection<Player> players;
-  private final GameState gameState;
   private final Identity id;
   private final String name;
   private final Color color;
+  private final GameState gameState;
+  private final Collection<Player> players;
 
-  public JoinAction(Identity id, String name, Color color, Collection<Player> players, GameState gameState) {
+  public JoinAction(Identity id, String name, Color color,GameState gameState, Collection<Player> players) {
     this.id = id;
     this.name = name;
     this.color = color;
-    this.players = players;
     this.gameState = gameState;
+    this.players = players;
   }
 
   @Override
