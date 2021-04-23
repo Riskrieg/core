@@ -1,6 +1,5 @@
 package com.riskrieg.core.gamemode;
 
-import com.riskrieg.core.player.Identity;
 import java.util.Objects;
 import java.util.UUID;
 
