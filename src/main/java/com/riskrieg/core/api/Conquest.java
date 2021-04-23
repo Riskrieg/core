@@ -1,23 +1,24 @@
 package com.riskrieg.core.api;
 
-import com.riskrieg.core.internal.action.FormNationAction;
-import com.riskrieg.core.internal.action.JoinAction;
-import com.riskrieg.core.internal.action.LeaveAction;
-import com.riskrieg.core.internal.action.SelectMapAction;
 import com.riskrieg.core.gamemode.GameID;
 import com.riskrieg.core.gamemode.GameMode;
 import com.riskrieg.core.gamemode.GameState;
 import com.riskrieg.core.gamemode.Moment;
-import com.riskrieg.core.gamemode.order.TurnOrder;
+import com.riskrieg.core.order.TurnOrder;
 import com.riskrieg.core.gamerule.GameRule;
+import com.riskrieg.core.internal.action.FormNationAction;
+import com.riskrieg.core.internal.action.JoinAction;
+import com.riskrieg.core.internal.action.LeaveAction;
+import com.riskrieg.core.internal.action.SelectMapAction;
+import com.riskrieg.core.internal.action.StartAction;
 import com.riskrieg.core.map.GameMap;
 import com.riskrieg.core.map.GameTerritory;
-import com.riskrieg.map.RkmMap;
-import com.riskrieg.map.territory.TerritoryId;
-import com.riskrieg.map.vertex.Territory;
 import com.riskrieg.core.nation.Nation;
 import com.riskrieg.core.player.Identity;
 import com.riskrieg.core.player.Player;
+import com.riskrieg.map.RkmMap;
+import com.riskrieg.map.territory.TerritoryId;
+import com.riskrieg.map.vertex.Territory;
 import java.awt.Color;
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -26,7 +27,6 @@ import java.util.Deque;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.CheckReturnValue;
@@ -128,18 +128,9 @@ public final class Conquest implements GameMode {
     return new FormNationAction(player, id, nations);
   }
 
-  public void grant(Player player, TerritoryId id) {
-    Objects.requireNonNull(player);
-    Objects.requireNonNull(id);
-  }
-
-  public void revoke(Player player, TerritoryId id) {
-    Objects.requireNonNull(player);
-    Objects.requireNonNull(id);
-  }
-
-  public void start(TurnOrder order) {
+  public StartAction start(TurnOrder order) {
     players = order.sort(players);
+    return new StartAction(players, nations, gameMap, gameState);
   }
 
   /* Private Methods */

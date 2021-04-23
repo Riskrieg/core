@@ -1,4 +1,4 @@
-package com.riskrieg.core.gamemode.order;
+package com.riskrieg.core.order;
 
 import com.riskrieg.core.player.Player;
 import java.awt.Color;

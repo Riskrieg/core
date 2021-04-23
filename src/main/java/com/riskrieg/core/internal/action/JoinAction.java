@@ -1,5 +1,6 @@
 package com.riskrieg.core.internal.action;
 
+import com.riskrieg.core.api.Riskrieg;
 import com.riskrieg.core.constant.Constants;
 import com.riskrieg.core.gamemode.GameState;
 import com.riskrieg.core.player.Identity;
@@ -35,7 +36,7 @@ public final class JoinAction implements GameAction<Player> {
           if (players.contains(player) || players.stream().anyMatch(p -> p.identity().equals(player.identity()))) {
             throw new IllegalArgumentException("Player is already present or color already taken");
           }
-          if (players.size() >= Constants.MAX_PLAYERS) {
+          if (players.size() >= Riskrieg.MAX_PLAYERS) {
             throw new IllegalStateException("The game is too full to join");
           }
           players.add(player);
