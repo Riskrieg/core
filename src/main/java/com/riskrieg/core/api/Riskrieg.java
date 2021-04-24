@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import javax.annotation.Nonnull;
 
 // TODO: (?: Unsure) Implement Riskrieg Save (.rks) file format for saves.
 public final class Riskrieg {
@@ -29,8 +30,8 @@ public final class Riskrieg {
     GsonUtil.register(RuntimeTypeAdapterFactory.of(GameMode.class).with(Conquest.class));
   }
 
-  public <T extends GameMode> Optional<T> create(Path filePath, Class<T> type) {
-    if (filePath == null || !Files.isRegularFile(filePath) || type == null) {
+  public <T extends GameMode> Optional<T> create(@Nonnull Path filePath, @Nonnull Class<T> type) {
+    if (!Files.isRegularFile(filePath)) {
       return Optional.empty();
     }
     try {
@@ -51,26 +52,26 @@ public final class Riskrieg {
     return Optional.empty();
   }
 
-  public boolean delete(Path filePath) {
-    if (filePath == null || !Files.isRegularFile(filePath)) {
+  public boolean delete(@Nonnull Path filePath) {
+    if (!Files.isRegularFile(filePath)) {
       return false;
     }
     try {
-      // TODO: Delete directory if it is empty
-      return Files.deleteIfExists(filePath);
+      if (Files.deleteIfExists(filePath) && Files.isDirectory(filePath.getParent()) && Files.list(filePath.getParent()).findAny().isEmpty()) {
+        return Files.deleteIfExists(filePath.getParent());
+      }
+      return false;
     } catch (Exception e) {
       return false;
     }
   }
 
-  public boolean delete(GameID id) {
+  public boolean delete(@Nonnull GameID id) {
+    // TODO: Implement
     return false;
   }
 
-  public boolean save(Path path, GameMode gameMode) {
-    if (path == null || gameMode == null) {
-      return false;
-    }
+  public boolean save(@Nonnull Path path, @Nonnull GameMode gameMode) {
     // TODO: Handle both cases of whether it's a folder or a file
     try {
       return true;
@@ -79,36 +80,41 @@ public final class Riskrieg {
     }
   }
 
-  public Optional<GameMode> load(Path filePath) {
-    if (filePath == null || !Files.isRegularFile(filePath)) {
+  public Optional<GameMode> load(@Nonnull Path filePath) {
+    if (!Files.isRegularFile(filePath)) {
+      return Optional.empty();
+    }
+    // TODO: Implement
+    return Optional.empty();
+  }
+
+  public <T extends GameMode> Optional<T> load(@Nonnull Path filePath, @Nonnull Class<T> type) {
+    if (!Files.isRegularFile(filePath)) {
       return Optional.empty();
     }
     return Optional.empty();
   }
 
-  public <T extends GameMode> Optional<T> load(Path filePath, Class<T> type) {
-    if (filePath == null || !Files.isRegularFile(filePath)) {
-      return Optional.empty();
-    }
+  public Optional<GameMode> loadById(@Nonnull GameID gameID) {
+    // TODO: Implement
     return Optional.empty();
   }
 
-  public Optional<GameMode> loadById(GameID gameID) {
+  public <T extends GameMode> Optional<T> loadById(@Nonnull GameID gameID, @Nonnull Class<T> type) {
+    // TODO: Implement
     return Optional.empty();
   }
 
-  public <T extends GameMode> Optional<T> loadById(GameID gameID, Class<T> type) {
-    return Optional.empty();
-  }
-
-  public Set<GameMode> loadAll(Path folderPath) {
-    if (folderPath == null || !Files.isDirectory(folderPath)) {
+  public Set<GameMode> loadAll(@Nonnull Path folderPath) {
+    if (!Files.isDirectory(folderPath)) {
       return new HashSet<>();
     }
+    // TODO: Implement
     return new HashSet<>();
   }
 
   public Set<GameMode> loadAll() {
+    // TODO: Implement
     return new HashSet<>();
   }
 
