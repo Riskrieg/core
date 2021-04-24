@@ -2,7 +2,6 @@ package com.riskrieg.core.api;
 
 import com.aaronjyoder.util.json.adapters.RuntimeTypeAdapterFactory;
 import com.aaronjyoder.util.json.gson.GsonUtil;
-import com.riskrieg.core.gamemode.GameID;
 import com.riskrieg.core.gamemode.GameMode;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -67,11 +66,6 @@ public final class Riskrieg {
     }
   }
 
-  public boolean delete(@Nonnull GameID id) {
-    // TODO: Implement
-    return false;
-  }
-
   public boolean save(@Nonnull Path path, @Nonnull GameMode gameMode) {
     // TODO: Handle both cases of whether it's a folder or a file
     try {
@@ -100,28 +94,10 @@ public final class Riskrieg {
   }
 
   @Nonnull
-  public Optional<GameMode> loadById(@Nonnull GameID gameID) {
-    // TODO: Implement
-    return Optional.empty();
-  }
-
-  @Nonnull
-  public <T extends GameMode> Optional<T> loadById(@Nonnull GameID gameID, @Nonnull Class<T> type) {
-    // TODO: Implement
-    return Optional.empty();
-  }
-
-  @Nonnull
-  public Set<GameMode> loadAll(@Nonnull Path folderPath) {
-    if (!Files.isDirectory(folderPath)) {
+  public Set<GameMode> loadAll(@Nonnull Path directory) {
+    if (!Files.isDirectory(directory)) {
       return new HashSet<>();
     }
-    // TODO: Implement
-    return new HashSet<>();
-  }
-
-  @Nonnull
-  public Set<GameMode> loadAll() {
     // TODO: Implement
     return new HashSet<>();
   }

@@ -11,7 +11,6 @@ import com.riskrieg.core.player.Identity;
 import com.riskrieg.map.RkmMap;
 import com.riskrieg.map.vertex.Territory;
 import java.awt.Color;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -23,11 +22,7 @@ public class ApiTests {
   public void testRiskrieg() {
     Riskrieg api = new Riskrieg();
     Conquest game = null;
-    try {
-      game = api.create(Path.of("res/saves/test/test.json"), Conquest.class).orElseThrow();
-    } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-      e.printStackTrace();
-    }
+    game = api.create(Path.of("res/saves/test/test.json"), Conquest.class).orElseThrow();
     assertNotNull(game);
   }
 
