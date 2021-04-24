@@ -21,7 +21,7 @@ public class ApiTests {
   @Test
   public void testRiskrieg() {
     Riskrieg api = new Riskrieg();
-    Conquest game = null;
+    Conquest game;
     game = api.create(Path.of("res/saves/test/test.json"), Conquest.class).orElseThrow();
     assertNotNull(game);
   }

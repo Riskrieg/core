@@ -5,6 +5,7 @@ import com.riskrieg.core.gamemode.GameMode;
 import com.riskrieg.core.gamemode.GameState;
 import com.riskrieg.core.gamemode.Moment;
 import com.riskrieg.core.gamerule.GameRule;
+import com.riskrieg.core.internal.action.ClaimAction;
 import com.riskrieg.core.internal.action.FormNationAction;
 import com.riskrieg.core.internal.action.JoinAction;
 import com.riskrieg.core.internal.action.LeaveAction;
@@ -104,6 +105,8 @@ public final class Conquest implements GameMode {
     return gameMap;
   }
 
+  /* Setup */
+
   @Nonnull
   @CheckReturnValue
   public JoinAction join(@Nonnull Identity id, @Nonnull String name, @Nonnull Color color) {
@@ -133,16 +136,15 @@ public final class Conquest implements GameMode {
 
   @Nonnull
   @CheckReturnValue
-  public FormNationAction formNation(Player player, TerritoryId id) {
+  public FormNationAction formNation(Identity identity, TerritoryId id) {
     setLastUpdated();
-    return new FormNationAction(player.identity(), id, gameState, gameMap, players, nations);
+    return new FormNationAction(identity, id, gameState, gameMap, players, nations);
   }
 
   @Nonnull
   @CheckReturnValue
-  public FormNationAction formNation(Identity identity, TerritoryId id) {
-    setLastUpdated();
-    return new FormNationAction(identity, id, gameState, gameMap, players, nations);
+  public FormNationAction formNation(Player player, TerritoryId id) {
+    return this.formNation(player.identity(), id);
   }
 
   @Nonnull
@@ -151,6 +153,23 @@ public final class Conquest implements GameMode {
     players = order.sort(players);
     return new StartAction(this, gameMap, players, nations);
   }
+
+  /* Running */
+
+  @Nonnull
+  @CheckReturnValue
+  public ClaimAction claim(Identity identity, TerritoryId... ids) {
+    setLastUpdated();
+    return new ClaimAction(identity, Set.of(ids), players.getFirst().identity(), gameState, gameMap, nations);
+  }
+
+  @Nonnull
+  @CheckReturnValue
+  public ClaimAction claim(Player player, TerritoryId... ids) {
+    return this.claim(player.identity(), ids);
+  }
+
+
 
   /* Private Methods */
 
