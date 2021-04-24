@@ -44,7 +44,7 @@ public final class FormNationAction implements GameAction<Nation> {
           if (!gameMap.isSet()) {
             throw new IllegalStateException("A valid map must be selected before selecting a capital");
           }
-          if (gameMap.getGraph().vertices().stream().noneMatch(t -> t.id().equals(id))) {
+          if (gameMap.getGraph().vertexSet().stream().noneMatch(t -> t.id().equals(id))) {
             throw new IllegalStateException("No such territory exists on the selected map");
           }
           var territoryIds = nations.stream().map(Nation::territories).flatMap(Set::stream).map(GameTerritory::id).collect(Collectors.toSet());

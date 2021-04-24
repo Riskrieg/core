@@ -182,7 +182,7 @@ public final class Conquest implements GameMode {
   }
 
   private Territory getTerritory(TerritoryId id) {
-    for (Territory t : gameMap.getGraph().vertices()) {
+    for (Territory t : gameMap.getGraph().vertexSet()) {
       if (t.id().equals(id)) {
         return t;
       }
