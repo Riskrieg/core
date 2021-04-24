@@ -30,6 +30,7 @@ public final class Riskrieg {
     GsonUtil.register(RuntimeTypeAdapterFactory.of(GameMode.class).with(Conquest.class));
   }
 
+  @Nonnull
   public <T extends GameMode> Optional<T> create(@Nonnull Path filePath, @Nonnull Class<T> type) {
     if (!Files.isRegularFile(filePath)) {
       return Optional.empty();
@@ -80,6 +81,7 @@ public final class Riskrieg {
     }
   }
 
+  @Nonnull
   public Optional<GameMode> load(@Nonnull Path filePath) {
     if (!Files.isRegularFile(filePath)) {
       return Optional.empty();
@@ -88,6 +90,7 @@ public final class Riskrieg {
     return Optional.empty();
   }
 
+  @Nonnull
   public <T extends GameMode> Optional<T> load(@Nonnull Path filePath, @Nonnull Class<T> type) {
     if (!Files.isRegularFile(filePath)) {
       return Optional.empty();
@@ -96,16 +99,19 @@ public final class Riskrieg {
     return Optional.empty();
   }
 
+  @Nonnull
   public Optional<GameMode> loadById(@Nonnull GameID gameID) {
     // TODO: Implement
     return Optional.empty();
   }
 
+  @Nonnull
   public <T extends GameMode> Optional<T> loadById(@Nonnull GameID gameID, @Nonnull Class<T> type) {
     // TODO: Implement
     return Optional.empty();
   }
 
+  @Nonnull
   public Set<GameMode> loadAll(@Nonnull Path folderPath) {
     if (!Files.isDirectory(folderPath)) {
       return new HashSet<>();
@@ -114,6 +120,7 @@ public final class Riskrieg {
     return new HashSet<>();
   }
 
+  @Nonnull
   public Set<GameMode> loadAll() {
     // TODO: Implement
     return new HashSet<>();
