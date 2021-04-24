@@ -1,7 +1,6 @@
 package com.riskrieg.core.internal.action;
 
 import com.riskrieg.core.api.Riskrieg;
-import com.riskrieg.core.constant.Constants;
 import com.riskrieg.core.gamemode.GameState;
 import com.riskrieg.core.player.Identity;
 import com.riskrieg.core.player.Player;

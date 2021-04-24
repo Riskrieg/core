@@ -2,11 +2,11 @@ package com.riskrieg.core.map;
 
 import com.aaronjyoder.util.json.gson.GsonUtil;
 import com.riskrieg.core.constant.Constants;
+import com.riskrieg.core.map.options.Availability;
 import com.riskrieg.core.map.options.InterfaceAlignment;
 import com.riskrieg.core.map.options.alignment.HorizontalAlignment;
 import com.riskrieg.core.map.options.alignment.VerticalAlignment;
 import com.riskrieg.map.data.MapName;
-import com.riskrieg.core.map.options.Availability;
 
 public final class MapOptions {
 

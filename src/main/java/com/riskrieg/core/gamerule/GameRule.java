@@ -2,7 +2,7 @@ package com.riskrieg.core.gamerule;
 
 public enum GameRule {
 
-  ALLIANCES("Alliances");
+  CAP_ALLIANCES("Cap Per-Player Alliances");
 
   private final String displayName;
 

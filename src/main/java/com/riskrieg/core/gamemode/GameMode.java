@@ -12,4 +12,6 @@ public interface GameMode {
 
   void setGameState(GameState gameState);
 
+  boolean isEnded();
+
 }

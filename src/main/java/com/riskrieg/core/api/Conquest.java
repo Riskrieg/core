@@ -55,7 +55,7 @@ public final class Conquest implements GameMode {
     this.players = new ArrayDeque<>();
     this.nations = new HashSet<>();
     gameRules = new EnumMap<>(GameRule.class);
-    gameRules.put(GameRule.ALLIANCES, true);
+    gameRules.put(GameRule.CAP_ALLIANCES, true);
   }
 
   @Override
@@ -81,6 +81,11 @@ public final class Conquest implements GameMode {
   @Override
   public void setGameState(GameState gameState) {
     this.gameState = gameState;
+  }
+
+  @Override
+  public boolean isEnded() {
+    return gameState.equals(GameState.ENDED);
   }
 
   public Map<GameRule, Boolean> gameRules() {

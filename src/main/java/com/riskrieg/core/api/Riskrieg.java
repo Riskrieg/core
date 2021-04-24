@@ -4,8 +4,10 @@ import com.aaronjyoder.util.json.adapters.RuntimeTypeAdapterFactory;
 import com.aaronjyoder.util.json.gson.GsonUtil;
 import com.riskrieg.core.gamemode.GameID;
 import com.riskrieg.core.gamemode.GameMode;
-import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 // TODO: (?: Unsure) Implement Riskrieg Save (.rks) file format for saves.
@@ -27,55 +29,87 @@ public final class Riskrieg {
     GsonUtil.register(RuntimeTypeAdapterFactory.of(GameMode.class).with(Conquest.class));
   }
 
-  public <T extends GameMode> T create(String folderName, String fileName, Class<T> type)
-      throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-    if (folderName != null && fileName != null && !folderName.isBlank() && !fileName.isBlank() && type != null) {
-      // TODO: Check if game already exists, if it does and is ended, delete and save new game, then return it. If it exists and is not ended, return null;
-      return type.getDeclaredConstructor().newInstance();
+  public <T extends GameMode> Optional<T> create(Path filePath, Class<T> type) {
+    if (filePath == null || !Files.isRegularFile(filePath) || type == null) {
+      return Optional.empty();
     }
-    return null;
+    try {
+      var optGame = load(filePath);
+      if (optGame.isEmpty()) {
+        return Optional.of(type.getDeclaredConstructor().newInstance());
+      }
+      if (!optGame.get().isEnded()) {
+        return Optional.empty();
+      }
+      var newGame = type.getDeclaredConstructor().newInstance();
+      if (delete(filePath) && save(filePath, newGame)) {
+        return Optional.of(newGame);
+      }
+    } catch (Exception e) {
+      return Optional.empty();
+    }
+    return Optional.empty();
   }
 
-  public void save(String folderName, String fileName, GameMode gameMode) {
-    if (folderName != null && fileName != null && !folderName.isBlank() && !fileName.isBlank() && gameMode != null) {
-//      GsonUtil.write(Constants.SAVE_PATH + folderName + "/", fileName + ".json", Save.class, new Save(game));
+  public boolean delete(Path filePath) {
+    if (filePath == null || !Files.isRegularFile(filePath)) {
+      return false;
+    }
+    try {
+      // TODO: Delete directory if it is empty
+      return Files.deleteIfExists(filePath);
+    } catch (Exception e) {
+      return false;
     }
   }
 
-  public void save(String folderName, GameMode gameMode) {
-    
+  public boolean delete(GameID id) {
+    return false;
   }
 
-  public GameMode load(String folderName, String fileName) {
-    return null;
+  public boolean save(Path path, GameMode gameMode) {
+    if (path == null || gameMode == null) {
+      return false;
+    }
+    // TODO: Handle both cases of whether it's a folder or a file
+    try {
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
   }
 
-  public <T extends GameMode> T load(String folderName, String fileName, Class<T> type) {
-    return null;
+  public Optional<GameMode> load(Path filePath) {
+    if (filePath == null || !Files.isRegularFile(filePath)) {
+      return Optional.empty();
+    }
+    return Optional.empty();
   }
 
-  public GameMode loadById(GameID gameID) {
-    return null;
+  public <T extends GameMode> Optional<T> load(Path filePath, Class<T> type) {
+    if (filePath == null || !Files.isRegularFile(filePath)) {
+      return Optional.empty();
+    }
+    return Optional.empty();
   }
 
-  public <T extends GameMode> T loadById(GameID gameID, Class<T> type) {
-    return null;
+  public Optional<GameMode> loadById(GameID gameID) {
+    return Optional.empty();
   }
 
-  public Set<GameMode> loadAll(String folderName) {
+  public <T extends GameMode> Optional<T> loadById(GameID gameID, Class<T> type) {
+    return Optional.empty();
+  }
+
+  public Set<GameMode> loadAll(Path folderPath) {
+    if (folderPath == null || !Files.isDirectory(folderPath)) {
+      return new HashSet<>();
+    }
     return new HashSet<>();
   }
 
   public Set<GameMode> loadAll() {
     return new HashSet<>();
-  }
-
-  public void delete(String folderName, String fileName) {
-
-  }
-
-  public void delete(GameID id) {
-
   }
 
   /* Private Methods */
