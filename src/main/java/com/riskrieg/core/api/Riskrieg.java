@@ -92,6 +92,7 @@ public final class Riskrieg {
     if (!Files.isRegularFile(filePath)) {
       return Optional.empty();
     }
+    // TODO: Implement
     return Optional.empty();
   }
 
