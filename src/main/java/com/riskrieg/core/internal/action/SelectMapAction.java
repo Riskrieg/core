@@ -32,7 +32,7 @@ public final class SelectMapAction implements GameAction<GameMap> {
         case ENDED, RUNNING -> throw new IllegalStateException("The map can only be set during the setup phase");
         case SETUP -> {
           Objects.requireNonNull(rkmMap);
-          var options = MapOptions.load(rkmMap.mapName(), false);
+          var options = MapOptions.load(rkmMap.mapName(), true);
           if (options == null) {
             throw new NullPointerException("Unable to load map options");
           }
