@@ -8,22 +8,22 @@ import com.riskrieg.core.map.options.alignment.VerticalAlignment;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.Optional;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public final class MapOptions {
 
   private Availability availability;
   private InterfaceAlignment alignment;
 
-  @Nullable
-  public static MapOptions load(@Nonnull Path optionsPath, boolean createIfUnavailable) throws IOException {
+  @Nonnull
+  public static Optional<MapOptions> load(@Nonnull Path optionsPath, boolean createIfUnavailable) throws IOException {
     MapOptions result = GsonUtil.read(optionsPath, MapOptions.class);
     if (result == null && createIfUnavailable) {
       result = new MapOptions();
       GsonUtil.write(optionsPath, MapOptions.class, result);
     }
-    return result;
+    return Optional.ofNullable(result);
   }
 
   public MapOptions() {
