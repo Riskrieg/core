@@ -2,11 +2,15 @@ package com.riskrieg.core.internal.action;
 
 import com.riskrieg.core.api.Riskrieg;
 import com.riskrieg.core.gamemode.GameState;
+import com.riskrieg.core.internal.Dice;
 import com.riskrieg.core.map.GameMap;
 import com.riskrieg.core.nation.Nation;
 import com.riskrieg.core.player.Identity;
 import com.riskrieg.map.territory.TerritoryId;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -69,10 +73,29 @@ public class ClaimAction implements GameAction<ClaimResult> {
             throw new IllegalStateException("Trying to claim " + ids.size() + (ids.size() == 1 ? " territory" : " territories")
                 + " but must claim " + claims + (claims == 1 ? " territory" : " territories"));
           }
-          // TODO: Process attack
+
+          Set<TerritoryId> claimed = new HashSet<>();
+          Set<TerritoryId> taken = new HashSet<>();
+          Set<TerritoryId> defended = new HashSet<>();
+          
+          for (TerritoryId id : ids) {
+            var defender = getNation(id);
+            if (defender != null) {
+              if (attack(nation, defender, id)) {
+                defender.remove(id);
+                nation.add(id);
+                taken.add(id);
+              } else {
+                defended.add(id);
+              }
+            } else {
+              nation.add(id);
+              claimed.add(id);
+            }
+          }
 
           if (success != null) {
-            success.accept(new ClaimResult());
+            success.accept(new ClaimResult(claimed, taken, defended));
           }
         }
       }
@@ -83,12 +106,40 @@ public class ClaimAction implements GameAction<ClaimResult> {
     }
   }
 
-  private int getClaimAmount(Nation nation) {
+  private boolean attack(Nation attacker, Nation defender, TerritoryId id) {
+    int attackRolls = 1;
+    int defenseRolls = 1;
+    int attackSides = 8;
+    int defenseSides = 6;
+    var neighbors = gameMap.getNeighbors(id);
+    for (TerritoryId neighbor : neighbors) {
+      if (attacker.territories().contains(neighbor)) {
+        attackRolls++;
+      } else if (defender.territories().contains(neighbor)) {
+        defenseRolls++;
+      }
+    }
+    // TODO: Configure capital boost
+    // TODO: Configure not connected to capital debuff
+    Dice attackDice = new Dice(attackSides, attackRolls);
+    Dice defenseDice = new Dice(defenseSides, defenseRolls);
+    int attackerMax = Arrays.stream(attackDice.roll()).summaryStatistics().getMax();
+    int defenderMax = Arrays.stream(defenseDice.roll()).summaryStatistics().getMax();
+    return attackerMax > defenderMax;
+  }
+
+  @Nullable
+  private Nation getNation(TerritoryId id) {
+    return nations.stream().filter(nation -> nation.territories().contains(id)).findAny().orElse(null);
+  }
+
+  private int getClaimAmount(@Nonnull Nation nation) {
     int claims = Riskrieg.MINIMUM_CLAIM_AMOUNT + (int) (Math.floor(nation.territories().size() / Riskrieg.CLAIM_INCREASE_THRESHOLD));
     return Math.min(getClaimableTerritories(nation).size(), claims);
   }
-  
-  private Set<TerritoryId> getClaimableTerritories(Nation nation) {
+
+  @Nonnull
+  private Set<TerritoryId> getClaimableTerritories(@Nonnull Nation nation) {
     Set<TerritoryId> neighbors = nation.neighbors(gameMap);
     // TODO: Remove allied territories
     return neighbors;
@@ -96,10 +147,28 @@ public class ClaimAction implements GameAction<ClaimResult> {
 
 }
 
-class ClaimResult { // TODO: Add data for claimed/defended/taken
+class ClaimResult {
 
-  public ClaimResult() {
+  private final Set<TerritoryId> claimed;
+  private final Set<TerritoryId> taken;
+  private final Set<TerritoryId> defended;
 
+  public ClaimResult(Set<TerritoryId> claimed, Set<TerritoryId> taken, Set<TerritoryId> defended) {
+    this.claimed = claimed;
+    this.taken = taken;
+    this.defended = defended;
+  }
+
+  public Set<TerritoryId> claimed() {
+    return Collections.unmodifiableSet(claimed);
+  }
+
+  public Set<TerritoryId> taken() {
+    return Collections.unmodifiableSet(taken);
+  }
+
+  public Set<TerritoryId> defended() {
+    return Collections.unmodifiableSet(defended);
   }
 
 }

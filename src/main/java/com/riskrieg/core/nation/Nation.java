@@ -58,6 +58,7 @@ public final class Nation {
     return territories.add(new GameTerritory(id, type));
   }
 
+  // TODO: If capital is removed, select a new capital
   public boolean remove(GameTerritory territory) {
     return territories.remove(territory);
   }

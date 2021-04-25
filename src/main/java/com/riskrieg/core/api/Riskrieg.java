@@ -10,11 +10,10 @@ import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nonnull;
 
-// TODO: (?: Unsure) Implement Riskrieg Save (.rks) file format for saves.
 public final class Riskrieg {
 
   public static final String NAME = "Riskrieg";
-  public static final String VERSION = "2104.23a";
+  public static final String VERSION = "2104.25a";
 
   public static final int MIN_PLAYERS = 2;
   public static final int MAX_PLAYERS = 16;

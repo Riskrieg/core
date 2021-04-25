@@ -174,17 +174,4 @@ public final class Conquest implements GameMode {
     this.lastUpdated = Moment.now();
   }
 
-//  private Set<GameTerritory> territories() {
-//    return nations.stream().map(Nation::territories).flatMap(Set::stream).collect(Collectors.toSet());
-//  }
-//
-//  private Territory getTerritory(TerritoryId id) {
-//    for (Territory t : gameMap.getGraph().vertexSet()) {
-//      if (t.id().equals(id)) {
-//        return t;
-//      }
-//    }
-//    return null;
-//  }
-
 }
