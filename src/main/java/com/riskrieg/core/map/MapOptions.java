@@ -5,7 +5,6 @@ import com.riskrieg.core.map.options.Availability;
 import com.riskrieg.core.map.options.InterfaceAlignment;
 import com.riskrieg.core.map.options.alignment.HorizontalAlignment;
 import com.riskrieg.core.map.options.alignment.VerticalAlignment;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
@@ -17,13 +16,17 @@ public final class MapOptions {
   private InterfaceAlignment alignment;
 
   @Nonnull
-  public static Optional<MapOptions> load(@Nonnull Path optionsPath, boolean createIfUnavailable) throws IOException {
-    MapOptions result = GsonUtil.read(optionsPath, MapOptions.class);
-    if (result == null && createIfUnavailable) {
-      result = new MapOptions();
-      GsonUtil.write(optionsPath, MapOptions.class, result);
+  public static Optional<MapOptions> load(@Nonnull Path optionsPath, boolean createIfUnavailable) {
+    try {
+      MapOptions result = GsonUtil.read(optionsPath, MapOptions.class);
+      if (result == null && createIfUnavailable) {
+        result = new MapOptions();
+        GsonUtil.write(optionsPath, MapOptions.class, result);
+      }
+      return Optional.ofNullable(result);
+    } catch (Exception e) {
+      return Optional.empty();
     }
-    return Optional.ofNullable(result);
   }
 
   public MapOptions() {
