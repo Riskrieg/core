@@ -27,7 +27,7 @@ public enum StandardPlayerColor {
     this.color = new Color(r, g, b);
   }
 
-  private Color value() {
+  public Color value() {
     return color;
   }
 
