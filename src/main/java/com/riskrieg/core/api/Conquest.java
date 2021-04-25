@@ -100,7 +100,7 @@ public final class Conquest implements GameMode {
 
   public GameMap map() {
     return gameMap;
-  }
+  } // TODO: Return unmodifiable version of GameMap
 
   /* Setup */
 
@@ -165,8 +165,6 @@ public final class Conquest implements GameMode {
   public ClaimAction claim(Player player, TerritoryId... ids) {
     return this.claim(player.identity(), ids);
   }
-
-
 
   /* Private Methods */
 

@@ -29,6 +29,13 @@ public class GameMap {
     return this.map != null && this.options != null;
   }
 
+  public void set(RkmMap map, MapOptions options) {
+    Objects.requireNonNull(map);
+    Objects.requireNonNull(options);
+    this.map = map;
+    this.options = options;
+  }
+
   public MapName mapName() {
     return map.mapName();
   }
@@ -78,13 +85,6 @@ public class GameMap {
       return false;
     }
     return getGraph().vertexSet().stream().anyMatch(territory -> territory.id().equals(id));
-  }
-
-  public void set(RkmMap map, MapOptions options) {
-    Objects.requireNonNull(map);
-    Objects.requireNonNull(options);
-    this.map = map;
-    this.options = options;
   }
 
 }
