@@ -30,9 +30,6 @@ public final class Riskrieg {
 
   @Nonnull
   public <T extends GameMode> Optional<T> create(@Nonnull Path filePath, @Nonnull Class<T> type) {
-    if (!Files.isRegularFile(filePath)) {
-      return Optional.empty();
-    }
     try {
       var optGame = load(filePath);
       if (optGame.isEmpty()) {
@@ -56,10 +53,11 @@ public final class Riskrieg {
       return false;
     }
     try {
-      if (Files.deleteIfExists(filePath) && Files.isDirectory(filePath.getParent()) && Files.list(filePath.getParent()).findAny().isEmpty()) {
+      boolean result = Files.deleteIfExists(filePath);
+      if (Files.isDirectory(filePath.getParent()) && Files.list(filePath.getParent()).findAny().isEmpty()) {
         return Files.deleteIfExists(filePath.getParent());
       }
-      return false;
+      return result;
     } catch (Exception e) {
       return false;
     }

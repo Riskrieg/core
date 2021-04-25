@@ -9,7 +9,7 @@ public class MapTests {
   @Test
   public void loadMapFromUrl() {
     try {
-      var optMap = RkmMap.load(new URL("https://github.com/Riskrieg/core/raw/v2/res/maps/antarctica.rkm"));
+      var optMap = RkmMap.load(new URL("https://github.com/Riskrieg/maps/raw/main/antarctica.rkm"));
       assertTrue(optMap.isPresent());
     } catch (Exception e) {
       e.printStackTrace();

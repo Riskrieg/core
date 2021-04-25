@@ -7,12 +7,16 @@ import com.riskrieg.core.api.Conquest;
 import com.riskrieg.core.api.Riskrieg;
 import com.riskrieg.core.gamemode.GameState;
 import com.riskrieg.core.map.MapOptions;
+import com.riskrieg.core.map.options.Availability;
+import com.riskrieg.core.map.options.InterfaceAlignment;
+import com.riskrieg.core.map.options.alignment.HorizontalAlignment;
+import com.riskrieg.core.map.options.alignment.VerticalAlignment;
 import com.riskrieg.core.order.RandomOrder;
 import com.riskrieg.core.player.Identity;
 import com.riskrieg.map.RkmMap;
 import com.riskrieg.map.vertex.Territory;
 import java.awt.Color;
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
@@ -65,9 +69,11 @@ public class ApiTests {
     assertFalse(game.map().isSet());
 
     try {
-      game.selectMap(RkmMap.load(new URL("https://github.com/Riskrieg/core/raw/v2/res/maps/antarctica.rkm")).orElseThrow(),
-          MapOptions.load("antarctica", true)).submit();
-    } catch (MalformedURLException e) {
+      game.selectMap(
+          RkmMap.load(new URL("https://github.com/Riskrieg/maps/raw/main/antarctica.rkm")).orElseThrow(),
+          new MapOptions(Availability.AVAILABLE, new InterfaceAlignment(VerticalAlignment.BOTTOM, HorizontalAlignment.LEFT)))
+          .submit();
+    } catch (IOException e) {
       e.printStackTrace();
     }
     assertTrue(game.map().isSet());

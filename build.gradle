@@ -44,7 +44,7 @@ repositories {
 }
 
 dependencies {
-    implementation('com.github.aaronjyoder:Json-Utilities:1.0.0a15')
+    implementation('com.github.aaronjyoder:json-utilities:1.1.1')
     implementation('com.riskrieg:rkm:1.0.5')
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'

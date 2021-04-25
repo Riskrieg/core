@@ -1,24 +1,27 @@
 package com.riskrieg.core.map;
 
 import com.aaronjyoder.util.json.gson.GsonUtil;
-import com.riskrieg.core.constant.Constants;
 import com.riskrieg.core.map.options.Availability;
 import com.riskrieg.core.map.options.InterfaceAlignment;
 import com.riskrieg.core.map.options.alignment.HorizontalAlignment;
 import com.riskrieg.core.map.options.alignment.VerticalAlignment;
-import com.riskrieg.map.data.MapName;
+import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Objects;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class MapOptions {
 
   private Availability availability;
   private InterfaceAlignment alignment;
 
-  public static MapOptions load(String mapCodeName, boolean createIfUnavailable) {
-    MapOptions result = GsonUtil.read(Constants.MAP_OPTIONS_PATH + mapCodeName + ".json", MapOptions.class);
+  @Nullable
+  public static MapOptions load(@Nonnull Path optionsPath, boolean createIfUnavailable) throws IOException {
+    MapOptions result = GsonUtil.read(optionsPath, MapOptions.class);
     if (result == null && createIfUnavailable) {
       result = new MapOptions();
-      GsonUtil.write(Constants.MAP_OPTIONS_PATH, mapCodeName + ".json", MapOptions.class, result);
+      GsonUtil.write(optionsPath, MapOptions.class, result);
     }
     return result;
   }
@@ -29,6 +32,8 @@ public final class MapOptions {
   }
 
   public MapOptions(Availability availability, InterfaceAlignment alignment) {
+    Objects.requireNonNull(availability);
+    Objects.requireNonNull(alignment);
     this.availability = availability;
     this.alignment = alignment;
   }
