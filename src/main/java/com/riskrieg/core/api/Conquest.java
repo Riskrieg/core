@@ -39,7 +39,7 @@ public final class Conquest implements GameMode {
   private GameState gameState;
   private GameMap gameMap;
 
-  private final Map<GameRule, Boolean> gameRules;
+//  private final Map<GameRule, Boolean> gameRules;
   private Deque<Player> players;
   private Set<Nation> nations;
 
@@ -52,8 +52,8 @@ public final class Conquest implements GameMode {
 
     this.players = new ArrayDeque<>();
     this.nations = new HashSet<>();
-    gameRules = new EnumMap<>(GameRule.class);
-    gameRules.put(GameRule.CAP_ALLIANCES, true);
+//    gameRules = new EnumMap<>(GameRule.class);
+//    gameRules.put(GameRule.CAP_ALLIANCES, true);
   }
 
   @Override
@@ -86,9 +86,9 @@ public final class Conquest implements GameMode {
     return gameState.equals(GameState.ENDED);
   }
 
-  public Map<GameRule, Boolean> gameRules() {
-    return Collections.unmodifiableMap(gameRules);
-  }
+//  public Map<GameRule, Boolean> gameRules() {
+//    return Collections.unmodifiableMap(gameRules);
+//  }
 
   public Collection<Player> players() {
     return Collections.unmodifiableCollection(players);
