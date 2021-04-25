@@ -12,6 +12,7 @@ import com.riskrieg.core.internal.action.LeaveAction;
 import com.riskrieg.core.internal.action.SelectMapAction;
 import com.riskrieg.core.internal.action.StartAction;
 import com.riskrieg.core.map.GameMap;
+import com.riskrieg.core.map.MapOptions;
 import com.riskrieg.core.nation.Nation;
 import com.riskrieg.core.order.TurnOrder;
 import com.riskrieg.core.player.Identity;
@@ -130,9 +131,9 @@ public final class Conquest implements GameMode {
 
   @Nonnull
   @CheckReturnValue
-  public SelectMapAction selectMap(RkmMap rkmMap) {
+  public SelectMapAction selectMap(RkmMap rkmMap, MapOptions options) {
     setLastUpdated();
-    return new SelectMapAction(rkmMap, gameState, gameMap, nations);
+    return new SelectMapAction(rkmMap, options, gameState, gameMap, nations);
   }
 
   @Nonnull

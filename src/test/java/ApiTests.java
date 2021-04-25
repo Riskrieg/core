@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.riskrieg.core.api.Conquest;
 import com.riskrieg.core.api.Riskrieg;
 import com.riskrieg.core.gamemode.GameState;
+import com.riskrieg.core.map.MapOptions;
 import com.riskrieg.core.order.RandomOrder;
 import com.riskrieg.core.player.Identity;
 import com.riskrieg.map.RkmMap;
@@ -64,7 +65,8 @@ public class ApiTests {
     assertFalse(game.map().isSet());
 
     try {
-      game.selectMap(RkmMap.load(new URL("https://github.com/Riskrieg/core/raw/v2/res/maps/antarctica.rkm")).orElseThrow()).submit();
+      game.selectMap(RkmMap.load(new URL("https://github.com/Riskrieg/core/raw/v2/res/maps/antarctica.rkm")).orElseThrow(),
+          MapOptions.load("antarctica", true)).submit();
     } catch (MalformedURLException e) {
       e.printStackTrace();
     }

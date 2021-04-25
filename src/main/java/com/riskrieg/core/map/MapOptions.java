@@ -7,17 +7,18 @@ import com.riskrieg.core.map.options.InterfaceAlignment;
 import com.riskrieg.core.map.options.alignment.HorizontalAlignment;
 import com.riskrieg.core.map.options.alignment.VerticalAlignment;
 import com.riskrieg.map.data.MapName;
+import java.nio.file.Path;
 
 public final class MapOptions {
 
   private Availability availability;
   private InterfaceAlignment alignment;
 
-  public static MapOptions load(MapName mapName, boolean createIfUnavailable) {
-    MapOptions result = GsonUtil.read(Constants.MAP_OPTIONS_PATH + mapName.name() + ".json", MapOptions.class);
+  public static MapOptions load(String mapCodeName, boolean createIfUnavailable) {
+    MapOptions result = GsonUtil.read(Constants.MAP_OPTIONS_PATH + mapCodeName + ".json", MapOptions.class);
     if (result == null && createIfUnavailable) {
       result = new MapOptions();
-      GsonUtil.write(Constants.MAP_OPTIONS_PATH, mapName.name() + ".json", MapOptions.class, result);
+      GsonUtil.write(Constants.MAP_OPTIONS_PATH, mapCodeName + ".json", MapOptions.class, result);
     }
     return result;
   }

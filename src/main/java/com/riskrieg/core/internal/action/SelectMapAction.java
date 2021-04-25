@@ -14,12 +14,14 @@ import javax.annotation.Nullable;
 public final class SelectMapAction implements GameAction<GameMap> {
 
   private final RkmMap rkmMap;
+  private final MapOptions options;
   private final GameState gameState;
   private final GameMap gameMap;
   private final Collection<Nation> nations;
 
-  public SelectMapAction(RkmMap rkmMap, GameState gameState, GameMap gameMap, Collection<Nation> nations) {
+  public SelectMapAction(RkmMap rkmMap, MapOptions options, GameState gameState, GameMap gameMap, Collection<Nation> nations) {
     this.rkmMap = rkmMap;
+    this.options = options;
     this.gameState = gameState;
     this.gameMap = gameMap;
     this.nations = nations;
@@ -32,10 +34,7 @@ public final class SelectMapAction implements GameAction<GameMap> {
         case ENDED, RUNNING -> throw new IllegalStateException("The map can only be set during the setup phase");
         case SETUP -> {
           Objects.requireNonNull(rkmMap);
-          var options = MapOptions.load(rkmMap.mapName(), true);
-          if (options == null) {
-            throw new NullPointerException("Unable to load map options");
-          }
+          Objects.requireNonNull(options);
           if (!options.availability().equals(Availability.AVAILABLE)) {
             throw new IllegalStateException("That map is not available");
           }
