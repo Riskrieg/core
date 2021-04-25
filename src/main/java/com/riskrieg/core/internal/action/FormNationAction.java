@@ -47,7 +47,7 @@ public final class FormNationAction implements GameAction<Nation> {
           if (gameMap.getGraph().vertexSet().stream().noneMatch(t -> t.id().equals(id))) {
             throw new IllegalStateException("No such territory exists on the selected map");
           }
-          var territoryIds = nations.stream().map(Nation::territories).flatMap(Set::stream).map(GameTerritory::id).collect(Collectors.toSet());
+          var territoryIds = nations.stream().map(Nation::territories).flatMap(Set::stream).collect(Collectors.toSet());
           if (territoryIds.contains(id)) {
             throw new IllegalStateException("That territory is already taken by someone else");
           }

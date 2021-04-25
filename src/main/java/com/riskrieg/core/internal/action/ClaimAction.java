@@ -1,5 +1,6 @@
 package com.riskrieg.core.internal.action;
 
+import com.riskrieg.core.api.Riskrieg;
 import com.riskrieg.core.gamemode.GameState;
 import com.riskrieg.core.map.GameMap;
 import com.riskrieg.core.nation.Nation;
@@ -9,6 +10,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ClaimAction implements GameAction<ClaimResult> {
@@ -50,8 +52,8 @@ public class ClaimAction implements GameAction<ClaimResult> {
           Nation nation = nations.stream().filter(n -> n.getLeaderIdentity().equals(identity)).findAny().orElseThrow();
 
           var invalidTerritories = ids.stream().filter(id -> !gameMap.contains(id)).collect(Collectors.toSet());
-          var ownedTerritories = ids.stream().filter(id -> nation.territories().stream().anyMatch(gt -> gt.id().equals(id))).collect(Collectors.toSet());
-          var notBorderingTerritories = ids.stream().filter(id -> nation.territories().stream().noneMatch(gt -> gameMap.neighbors(gt.id(), id))).collect(Collectors.toSet());
+          var ownedTerritories = ids.stream().filter(id -> nation.territories().stream().anyMatch(tid -> tid.equals(id))).collect(Collectors.toSet());
+          var notBorderingTerritories = ids.stream().filter(id -> nation.territories().stream().noneMatch(tid -> gameMap.areNeighbors(tid, id))).collect(Collectors.toSet());
 
           if (!invalidTerritories.isEmpty()) {
             throw new IllegalStateException("Invalid territories: " + invalidTerritories.stream().map(TerritoryId::value).collect(Collectors.joining(", ")).trim());
@@ -62,8 +64,12 @@ public class ClaimAction implements GameAction<ClaimResult> {
           if (!notBorderingTerritories.isEmpty()) {
             throw new IllegalStateException("Not bordering territories: " + notBorderingTerritories.stream().map(TerritoryId::value).collect(Collectors.joining(", ")).trim());
           }
-          // TODO: Make sure they're claiming as many territories as they can. AP system?
-          // TODO: Then process attack
+          int claims = getClaimAmount(nation);
+          if (claims != ids.size()) {
+            throw new IllegalStateException("Trying to claim " + ids.size() + (ids.size() == 1 ? " territory" : " territories")
+                + " but must claim " + claims + (claims == 1 ? " territory" : " territories"));
+          }
+          // TODO: Process attack
 
           if (success != null) {
             success.accept(new ClaimResult());
@@ -75,6 +81,17 @@ public class ClaimAction implements GameAction<ClaimResult> {
         failure.accept(e);
       }
     }
+  }
+
+  private int getClaimAmount(Nation nation) {
+    int claims = Riskrieg.MINIMUM_CLAIM_AMOUNT + (int) (Math.floor(nation.territories().size() / Riskrieg.CLAIM_INCREASE_THRESHOLD));
+    return Math.min(getClaimableTerritories(nation).size(), claims);
+  }
+  
+  private Set<TerritoryId> getClaimableTerritories(Nation nation) {
+    Set<TerritoryId> neighbors = nation.neighbors(gameMap);
+    // TODO: Remove allied territories
+    return neighbors;
   }
 
 }

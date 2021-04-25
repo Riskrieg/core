@@ -12,14 +12,12 @@ import com.riskrieg.core.internal.action.LeaveAction;
 import com.riskrieg.core.internal.action.SelectMapAction;
 import com.riskrieg.core.internal.action.StartAction;
 import com.riskrieg.core.map.GameMap;
-import com.riskrieg.core.map.GameTerritory;
 import com.riskrieg.core.nation.Nation;
 import com.riskrieg.core.order.TurnOrder;
 import com.riskrieg.core.player.Identity;
 import com.riskrieg.core.player.Player;
 import com.riskrieg.map.RkmMap;
 import com.riskrieg.map.territory.TerritoryId;
-import com.riskrieg.map.vertex.Territory;
 import java.awt.Color;
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -29,7 +27,6 @@ import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
@@ -177,17 +174,17 @@ public final class Conquest implements GameMode {
     this.lastUpdated = Moment.now();
   }
 
-  private Set<GameTerritory> territories() {
-    return nations.stream().map(Nation::territories).flatMap(Set::stream).collect(Collectors.toSet());
-  }
-
-  private Territory getTerritory(TerritoryId id) {
-    for (Territory t : gameMap.getGraph().vertexSet()) {
-      if (t.id().equals(id)) {
-        return t;
-      }
-    }
-    return null;
-  }
+//  private Set<GameTerritory> territories() {
+//    return nations.stream().map(Nation::territories).flatMap(Set::stream).collect(Collectors.toSet());
+//  }
+//
+//  private Territory getTerritory(TerritoryId id) {
+//    for (Territory t : gameMap.getGraph().vertexSet()) {
+//      if (t.id().equals(id)) {
+//        return t;
+//      }
+//    }
+//    return null;
+//  }
 
 }

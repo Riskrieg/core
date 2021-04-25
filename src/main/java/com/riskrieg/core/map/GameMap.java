@@ -7,8 +7,12 @@ import com.riskrieg.map.data.MapName;
 import com.riskrieg.map.edge.Border;
 import com.riskrieg.map.territory.TerritoryId;
 import com.riskrieg.map.vertex.Territory;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
 import org.jgrapht.graph.SimpleGraph;
 
 public class GameMap {
@@ -56,7 +60,16 @@ public class GameMap {
     return options;
   }
 
-  public boolean neighbors(TerritoryId source, TerritoryId target) {
+  public Set<TerritoryId> getNeighbors(TerritoryId id) {
+    var graph = getGraph();
+    Territory territory = graph.vertexSet().stream().filter(t -> t.id().equals(id)).findAny().orElse(null);
+    if (territory != null) {
+      return Graphs.neighborSetOf(graph, territory).stream().map(Territory::id).collect(Collectors.toSet());
+    }
+    return new HashSet<>();
+  }
+
+  public boolean areNeighbors(TerritoryId source, TerritoryId target) {
     return getGraph().edgeSet().contains(new Border(source, target));
   }
 
