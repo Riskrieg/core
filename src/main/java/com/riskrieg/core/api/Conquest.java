@@ -2,9 +2,9 @@ package com.riskrieg.core.api;
 
 import com.riskrieg.core.gamemode.GameID;
 import com.riskrieg.core.gamemode.GameMode;
+import com.riskrieg.core.gamemode.GameModeType;
 import com.riskrieg.core.gamemode.GameState;
 import com.riskrieg.core.gamemode.Moment;
-import com.riskrieg.core.gamerule.GameRule;
 import com.riskrieg.core.internal.action.ClaimAction;
 import com.riskrieg.core.internal.action.FormNationAction;
 import com.riskrieg.core.internal.action.JoinAction;
@@ -19,13 +19,12 @@ import com.riskrieg.core.player.Player;
 import com.riskrieg.map.RkmMap;
 import com.riskrieg.map.territory.TerritoryId;
 import java.awt.Color;
+import java.time.Instant;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
-import java.util.EnumMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
@@ -39,7 +38,7 @@ public final class Conquest implements GameMode {
   private GameState gameState;
   private GameMap gameMap;
 
-//  private final Map<GameRule, Boolean> gameRules;
+  //  private final Map<GameRule, Boolean> gameRules;
   private Deque<Player> players;
   private Set<Nation> nations;
 
@@ -62,13 +61,18 @@ public final class Conquest implements GameMode {
   }
 
   @Override
-  public Moment creationTime() {
-    return creationTime;
+  public GameModeType type() {
+    return GameModeType.CONQUEST;
   }
 
   @Override
-  public Moment lastUpdated() {
-    return lastUpdated;
+  public Instant creationTime() {
+    return creationTime.asInstant();
+  }
+
+  @Override
+  public Instant lastUpdated() {
+    return lastUpdated.asInstant();
   }
 
   @Override

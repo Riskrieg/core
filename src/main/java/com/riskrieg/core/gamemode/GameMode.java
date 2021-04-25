@@ -1,12 +1,18 @@
 package com.riskrieg.core.gamemode;
 
+import java.time.Instant;
+
 public interface GameMode {
 
   GameID id();
 
-  Moment creationTime();
+  default GameModeType type() {
+    return GameModeType.UNKNOWN;
+  }
 
-  Moment lastUpdated();
+  Instant creationTime();
+
+  Instant lastUpdated();
 
   GameState gameState();
 
