@@ -3,11 +3,13 @@ package com.riskrieg.core.api;
 import com.aaronjyoder.util.json.adapters.RuntimeTypeAdapterFactory;
 import com.aaronjyoder.util.json.gson.GsonUtil;
 import com.riskrieg.core.gamemode.GameMode;
+import com.riskrieg.core.internal.action.api.CreateAction;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
 public final class Riskrieg {
@@ -29,23 +31,24 @@ public final class Riskrieg {
   }
 
   @Nonnull
-  public <T extends GameMode> Optional<T> create(@Nonnull Path filePath, @Nonnull Class<T> type) {
+  @CheckReturnValue
+  public <T extends GameMode> CreateAction<T> create(@Nonnull Path filePath, @Nonnull Class<T> type) {
     try {
       var optGame = load(filePath);
       if (optGame.isEmpty()) {
-        return Optional.of(type.getDeclaredConstructor().newInstance());
+        return new CreateAction<>(type.getDeclaredConstructor().newInstance());
       }
       if (!optGame.get().isEnded()) {
-        return Optional.empty();
+        return new CreateAction<>(new IllegalStateException("An active game is currently in progress"));
       }
       var newGame = type.getDeclaredConstructor().newInstance();
       if (delete(filePath) && save(filePath, newGame)) {
-        return Optional.of(newGame);
+        return new CreateAction<>(newGame);
       }
     } catch (Exception e) {
-      return Optional.empty();
+      return new CreateAction<>(new IllegalStateException("Unable to load game"));
     }
-    return Optional.empty();
+    return new CreateAction<>(new IllegalStateException("Unknown error"));
   }
 
   public boolean delete(@Nonnull Path filePath) {
@@ -72,7 +75,6 @@ public final class Riskrieg {
     }
   }
 
-  @Nonnull
   public Optional<GameMode> load(@Nonnull Path filePath) {
     if (!Files.isRegularFile(filePath)) {
       return Optional.empty();
@@ -81,7 +83,6 @@ public final class Riskrieg {
     return Optional.empty();
   }
 
-  @Nonnull
   public <T extends GameMode> Optional<T> load(@Nonnull Path filePath, @Nonnull Class<T> type) {
     if (!Files.isRegularFile(filePath)) {
       return Optional.empty();
@@ -89,8 +90,7 @@ public final class Riskrieg {
     // TODO: Implement
     return Optional.empty();
   }
-
-  @Nonnull
+  
   public Set<GameMode> loadAll(@Nonnull Path directory) {
     if (!Files.isDirectory(directory)) {
       return new HashSet<>();

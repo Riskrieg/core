@@ -1,6 +1,5 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.riskrieg.core.api.Conquest;
@@ -19,6 +18,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class ApiTests {
@@ -26,9 +26,7 @@ public class ApiTests {
   @Test
   public void testRiskrieg() {
     Riskrieg api = new Riskrieg();
-    Conquest game;
-    game = api.create(Path.of("res/saves/test/test.json"), Conquest.class).orElseThrow();
-    assertNotNull(game);
+    api.create(Path.of("res/saves/test/test.json"), Conquest.class).complete(Assertions::assertNotNull);
   }
 
   @Test
