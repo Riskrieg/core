@@ -90,7 +90,7 @@ public final class Riskrieg {
     // TODO: Implement
     return Optional.empty();
   }
-  
+
   public Set<GameMode> loadAll(@Nonnull Path directory) {
     if (!Files.isDirectory(directory)) {
       return new HashSet<>();
