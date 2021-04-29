@@ -2,7 +2,9 @@
 [![Donate](https://img.shields.io/badge/donate-PayPal-brightgreen.svg)](https://paypal.me/aaronjyoder)
 
 # Riskrieg | Core
-Riskrieg is a world-domination/simulation game that lets you play out scenarios on one of a wide variety of game maps. The standard mode, Conquest, plays similarly to traditional world-domination games, while Creative mode allows more D&D-style play.
+
+Riskrieg is a world-domination/simulation game that lets you play out scenarios on one of a wide variety of game maps. The standard mode, Conquest, plays similarly to traditional
+world-domination games, while Creative mode allows more D&D-style play.
 
 This is the core Riskrieg game that can be used as a library API in other programs. Game maps are also submitted to this repository.
 
@@ -14,7 +16,6 @@ Please [join us on Discord](https://discord.gg/weU8jYDbW4) if you'd like to be m
 
 Please use the Google Java code style when contributing to this repository. You can find the proper file for your IDE [here](https://github.com/google/styleguide).
 
-
 ## Download
 
 Latest release: https://github.com/Riskrieg/riskrieg-core/releases/latest
@@ -22,6 +23,7 @@ Latest release: https://github.com/Riskrieg/riskrieg-core/releases/latest
 Make sure you replace **VERSION** with one of the versions from the releases.
 
 **Maven**
+
 ```xml
 <dependency>
     <groupId>com.riskrieg</groupId>
@@ -29,6 +31,7 @@ Make sure you replace **VERSION** with one of the versions from the releases.
     <version>VERSION</version>
 </dependency>
 ```
+
 ```xml
 <repository>
     <id>jitpack.io</id>
@@ -36,8 +39,8 @@ Make sure you replace **VERSION** with one of the versions from the releases.
 </repository>
 ```
 
-
 **Gradle**
+
 ```gradle
 dependencies {
     implementation('com.riskrieg:core:VERSION')
