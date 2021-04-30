@@ -28,4 +28,10 @@ public class GenericAction<T> implements Action<T> {
     }
   }
 
+  @Nullable
+  @Override
+  public T complete() {
+    return value;
+  }
+
 }
