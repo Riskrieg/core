@@ -3,7 +3,7 @@ package com.riskrieg.core.internal.action;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
-public class GenericAction<T> implements Action<T> {
+public class GenericAction<T> implements CompletableAction<T> {
 
   private final T value;
   private final Throwable throwable;

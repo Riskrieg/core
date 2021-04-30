@@ -2,7 +2,7 @@ package com.riskrieg.core.internal.impl;
 
 import com.riskrieg.core.api.Group;
 import com.riskrieg.core.api.Riskrieg;
-import com.riskrieg.core.internal.action.Action;
+import com.riskrieg.core.internal.action.CompletableAction;
 import com.riskrieg.core.internal.action.GenericAction;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
@@ -23,7 +23,7 @@ public final class RiskriegImpl implements Riskrieg {
 
   @Nonnull
   @Override
-  public Action<Group> createGroup(@Nonnull String id) {
+  public CompletableAction<Group> createGroup(@Nonnull String id) {
     try {
       Path groupPath = repository.resolve(id);
       Files.createDirectories(groupPath);
@@ -35,7 +35,7 @@ public final class RiskriegImpl implements Riskrieg {
 
   @Nonnull
   @Override
-  public Action<Group> retrieveGroupById(String id) {
+  public CompletableAction<Group> retrieveGroupById(String id) {
     try {
       Path groupPath = repository.resolve(id);
       if (!Files.exists(groupPath)) {

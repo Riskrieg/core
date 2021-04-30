@@ -44,4 +44,5 @@ public class LeaveAction implements Action<Player> {
       }
     }
   }
+
 }

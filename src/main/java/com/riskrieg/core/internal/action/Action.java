@@ -15,7 +15,4 @@ public interface Action<T> {
     this.submit(null);
   }
 
-  @Nullable
-  T complete();
-
 }

@@ -4,7 +4,7 @@ import com.aaronjyoder.util.json.gson.GsonUtil;
 import com.riskrieg.core.api.Group;
 import com.riskrieg.core.api.gamemode.Save;
 import com.riskrieg.core.api.gamemode.conquest.Conquest;
-import com.riskrieg.core.internal.action.Action;
+import com.riskrieg.core.internal.action.CompletableAction;
 import com.riskrieg.core.internal.action.GenericAction;
 import com.riskrieg.core.unsorted.constant.Constants;
 import com.riskrieg.core.unsorted.gamemode.GameMode;
@@ -55,7 +55,7 @@ public final class GroupImpl implements Group {
   @Nonnull
   @CheckReturnValue
   @Override
-  public <T extends GameMode> Action<T> createGame(@Nonnull String gameId, @Nonnull Class<T> type) {
+  public <T extends GameMode> CompletableAction<T> createGame(@Nonnull String gameId, @Nonnull Class<T> type) {
     try {
       Path savePath = path.resolve(gameId + Constants.SAVE_FILE_EXT);
       if (Files.exists(savePath)) {
@@ -76,7 +76,7 @@ public final class GroupImpl implements Group {
   @Nonnull
   @CheckReturnValue
   @Override
-  public <T extends GameMode> Action<T> retrieveGameById(@Nonnull String gameId, @Nonnull Class<T> type) {
+  public <T extends GameMode> CompletableAction<T> retrieveGameById(@Nonnull String gameId, @Nonnull Class<T> type) {
     try {
       Path savePath = path.resolve(gameId + Constants.SAVE_FILE_EXT);
       if (!Files.exists(savePath)) {
@@ -93,7 +93,7 @@ public final class GroupImpl implements Group {
   @Nonnull
   @CheckReturnValue
   @Override
-  public Action<GameMode> retrieveGameById(@Nonnull String gameId) {
+  public CompletableAction<GameMode> retrieveGameById(@Nonnull String gameId) {
     try {
       Path savePath = path.resolve(gameId + Constants.SAVE_FILE_EXT);
       if (!Files.exists(savePath)) {
