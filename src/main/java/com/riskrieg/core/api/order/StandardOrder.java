@@ -1,7 +1,7 @@
 package com.riskrieg.core.api.order;
 
-import com.riskrieg.core.constant.StandardPlayerColor;
 import com.riskrieg.core.api.player.Player;
+import com.riskrieg.core.constant.StandardPlayerColor;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;

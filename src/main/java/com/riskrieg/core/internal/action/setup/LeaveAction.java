@@ -1,8 +1,8 @@
 package com.riskrieg.core.internal.action.setup;
 
-import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.player.Player;
+import com.riskrieg.core.internal.action.Action;
 import java.util.Collection;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
