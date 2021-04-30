@@ -34,7 +34,7 @@ public class Save {
       this.creationTime = Moment.of(conquest.creationTime());
       this.lastUpdated = Moment.of(conquest.lastUpdated());
       this.gameState = conquest.gameState();
-      if (conquest.map() != null && conquest.map().isSet()) {
+      if (conquest.map().isSet()) {
         this.mapCodeName = conquest.map().mapName().name();
       } else {
         this.mapCodeName = null;
