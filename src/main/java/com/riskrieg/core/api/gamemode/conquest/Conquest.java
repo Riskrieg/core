@@ -11,7 +11,6 @@ import com.riskrieg.core.internal.action.setup.StartAction;
 import com.riskrieg.core.internal.impl.GroupImpl;
 import com.riskrieg.core.unsorted.gamemode.GameID;
 import com.riskrieg.core.unsorted.gamemode.GameMode;
-import com.riskrieg.core.unsorted.gamemode.GameModeType;
 import com.riskrieg.core.unsorted.gamemode.GameState;
 import com.riskrieg.core.unsorted.map.GameMap;
 import com.riskrieg.core.unsorted.map.MapOptions;
@@ -79,11 +78,6 @@ public final class Conquest implements GameMode {
   @Override
   public GameID getId() {
     return id;
-  }
-
-  @Override
-  public GameModeType type() {
-    return GameModeType.CONQUEST;
   }
 
   @Override

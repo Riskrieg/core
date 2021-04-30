@@ -20,10 +20,4 @@ public interface Group {
 
   // TODO: Add delete method
 
-//  @Nullable
-//  <T extends GameMode> T getGameById(@Nonnull String gameId, @Nonnull Class<T> type);
-
-//  @Nullable
-//  <T extends GameMode> T getGameById(@Nonnull String gameId);
-
 }

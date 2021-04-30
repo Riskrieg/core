@@ -9,10 +9,6 @@ public interface GameMode {
 
   GameID getId();
 
-  default GameModeType type() {
-    return GameModeType.UNKNOWN;
-  }
-
   Instant creationTime();
 
   Instant lastUpdated();

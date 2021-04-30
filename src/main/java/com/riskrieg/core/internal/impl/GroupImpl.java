@@ -3,6 +3,7 @@ package com.riskrieg.core.internal.impl;
 import com.aaronjyoder.util.json.gson.GsonUtil;
 import com.riskrieg.core.api.Group;
 import com.riskrieg.core.api.gamemode.Save;
+import com.riskrieg.core.api.gamemode.conquest.Conquest;
 import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.action.GenericAction;
 import com.riskrieg.core.unsorted.constant.Constants;
@@ -12,6 +13,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
 public final class GroupImpl implements Group {
@@ -81,6 +83,27 @@ public final class GroupImpl implements Group {
       var save = GsonUtil.read(savePath, Save.class);
       var game = type.getDeclaredConstructor(GroupImpl.class, Save.class).newInstance(this, save);
       return new GenericAction<>(game);
+    } catch (Exception e) {
+      return new GenericAction<>(e);
+    }
+  }
+
+  @Nonnull
+  @CheckReturnValue
+  public Action<GameMode> retrieveGameById(@Nonnull String gameId) {
+    try {
+      Path savePath = path.resolve(gameId + Constants.SAVE_FILE_EXT);
+      if (!Files.exists(savePath)) {
+        throw new FileNotFoundException("Save file does not exist");
+      }
+      var save = GsonUtil.read(savePath, Save.class);
+      if (save == null) {
+        throw new IllegalStateException("Unable to read save file");
+      }
+      return switch (save.getGameType()) {
+        case CONQUEST -> new GenericAction<>(new Conquest(this, save));
+        default -> throw new IllegalStateException("");
+      };
     } catch (Exception e) {
       return new GenericAction<>(e);
     }

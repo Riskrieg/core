@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class Save {
 
-  private final GameModeType type;
+  private final GameModeType gameType;
   private final GameID id;
   private final Moment creationTime;
   private final Moment lastUpdated;
@@ -29,7 +29,7 @@ public class Save {
   public <T extends GameMode> Save(T game) {
     if (game instanceof Conquest) {
       Conquest conquest = (Conquest) game;
-      this.type = conquest.type();
+      this.gameType = GameModeType.CONQUEST;
       this.id = conquest.getId();
       this.creationTime = Moment.of(conquest.creationTime());
       this.lastUpdated = Moment.of(conquest.lastUpdated());
@@ -46,8 +46,8 @@ public class Save {
     }
   }
 
-  public GameModeType type() {
-    return type;
+  public GameModeType getGameType() {
+    return gameType;
   }
 
   public GameID id() {

@@ -29,7 +29,7 @@ public class ApiTests {
             group -> {
               group.createGame("test", Conquest.class).submit();
             },
-            failure -> System.out.println(failure.getMessage())
+            failure -> System.out.println("failure: " + failure.getMessage())
         );
   }
 

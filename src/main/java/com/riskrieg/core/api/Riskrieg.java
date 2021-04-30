@@ -14,7 +14,4 @@ public interface Riskrieg {
   @CheckReturnValue
   Action<Group> retrieveGroupById(String id);
 
-//  @Nullable
-//  Group getGroupById(@Nonnull String id);
-
 }
