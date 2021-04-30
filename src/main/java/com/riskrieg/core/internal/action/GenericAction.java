@@ -30,6 +30,15 @@ public class GenericAction<T> implements CompletableAction<T> {
 
   @Nullable
   @Override
+  public T complete(@Nullable Consumer<? super Throwable> failure) {
+    if (failure != null && throwable != null) {
+      failure.accept(throwable);
+    }
+    return value;
+  }
+
+  @Nullable
+  @Override
   public T complete() {
     return value;
   }

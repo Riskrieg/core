@@ -1,5 +1,6 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.riskrieg.core.api.Group;
 import com.riskrieg.core.api.Riskrieg;
 import com.riskrieg.core.api.RiskriegBuilder;
 import com.riskrieg.core.api.gamemode.conquest.Conquest;
@@ -24,13 +25,10 @@ public class ApiTests {
   @Test
   public void testRiskrieg() {
     Riskrieg api = RiskriegBuilder.create(Path.of("res/saves/")).build();
-    api.createGroup("test")
-        .submit(
-            group -> {
-              group.createGame("test", Conquest.class).submit();
-            },
-            failure -> System.out.println("failure: " + failure.getMessage())
-        );
+    Group group = api.createGroup("test").complete(failure -> System.out.println("failure: " + failure.getMessage()));
+    if (group != null) {
+      group.createGame("test", Conquest.class).submit();
+    }
   }
 
   @Test
