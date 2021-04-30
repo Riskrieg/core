@@ -3,7 +3,7 @@ package com.riskrieg.core.api.gamemode;
 import java.util.Objects;
 import java.util.UUID;
 
-public class GameID {
+public final class GameID {
 
   private final String value;
 

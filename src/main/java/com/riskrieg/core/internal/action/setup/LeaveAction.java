@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
-public class LeaveAction implements Action<Player> {
+public final class LeaveAction implements Action<Player> {
 
   private final Player player;
   private final Collection<Player> players;

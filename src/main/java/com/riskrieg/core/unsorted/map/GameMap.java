@@ -15,7 +15,7 @@ import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.SimpleGraph;
 
-public class GameMap {
+public final class GameMap {
 
   private RkmMap map;
   private MapOptions options;

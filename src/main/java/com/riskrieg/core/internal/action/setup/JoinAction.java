@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
-public class JoinAction implements Action<Player> {
+public final class JoinAction implements Action<Player> {
 
   private final Identity id;
   private final String name;

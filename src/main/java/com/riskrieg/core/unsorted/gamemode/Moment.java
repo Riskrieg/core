@@ -3,7 +3,7 @@ package com.riskrieg.core.unsorted.gamemode;
 import java.time.Instant;
 import java.util.Objects;
 
-public class Moment {
+public final class Moment {
 
   private final long epochSecond;
   private final int nanos;

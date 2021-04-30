@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
-public class SelectMapAction implements Action<GameMap> {
+public final class SelectMapAction implements Action<GameMap> {
 
   private final RkmMap rkmMap;
   private final MapOptions options;

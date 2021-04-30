@@ -4,7 +4,7 @@ import com.riskrieg.map.territory.TerritoryId;
 import java.util.Collections;
 import java.util.Set;
 
-public class ClaimResult {
+public final class ClaimResult {
 
   private final Set<TerritoryId> claimed;
   private final Set<TerritoryId> taken;

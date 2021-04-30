@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
-public class FormNationAction implements Action<Nation> {
+public final class FormNationAction implements Action<Nation> {
 
   private final Identity identity;
   private final TerritoryId id;

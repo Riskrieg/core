@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
-public class StartAction implements Action<GameState> {
+public final class StartAction implements Action<GameState> {
 
   private final GameMode gameMode;
   private final GameMap gameMap;

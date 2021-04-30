@@ -13,7 +13,7 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Save {
+public final class Save {
 
   private final GameModeType gameType;
   private final GameID id;
