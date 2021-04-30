@@ -1,12 +1,12 @@
 package com.riskrieg.core.internal.action.setup;
 
 import com.riskrieg.core.internal.action.Action;
-import com.riskrieg.core.unsorted.constant.Constants;
-import com.riskrieg.core.unsorted.gamemode.GameMode;
+import com.riskrieg.core.constant.Constants;
+import com.riskrieg.core.api.gamemode.GameMode;
 import com.riskrieg.core.unsorted.gamemode.GameState;
 import com.riskrieg.core.unsorted.map.GameMap;
-import com.riskrieg.core.unsorted.nation.Nation;
-import com.riskrieg.core.unsorted.player.Player;
+import com.riskrieg.core.api.nation.Nation;
+import com.riskrieg.core.api.player.Player;
 import java.util.Collection;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;

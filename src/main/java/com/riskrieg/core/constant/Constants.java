@@ -1,4 +1,4 @@
-package com.riskrieg.core.unsorted.constant;
+package com.riskrieg.core.constant;
 
 public class Constants {
 

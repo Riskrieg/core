@@ -1,13 +1,13 @@
-package com.riskrieg.core.api.gamemode;
+package com.riskrieg.core.api;
 
+import com.riskrieg.core.api.gamemode.GameID;
+import com.riskrieg.core.api.gamemode.GameMode;
 import com.riskrieg.core.api.gamemode.conquest.Conquest;
-import com.riskrieg.core.unsorted.gamemode.GameID;
-import com.riskrieg.core.unsorted.gamemode.GameMode;
 import com.riskrieg.core.unsorted.gamemode.GameModeType;
 import com.riskrieg.core.unsorted.gamemode.GameState;
 import com.riskrieg.core.unsorted.gamemode.Moment;
-import com.riskrieg.core.unsorted.nation.Nation;
-import com.riskrieg.core.unsorted.player.Player;
+import com.riskrieg.core.api.nation.Nation;
+import com.riskrieg.core.api.player.Player;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashSet;

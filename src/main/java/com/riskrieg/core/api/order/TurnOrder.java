@@ -1,6 +1,6 @@
-package com.riskrieg.core.unsorted.order;
+package com.riskrieg.core.api.order;
 
-import com.riskrieg.core.unsorted.player.Player;
+import com.riskrieg.core.api.player.Player;
 import java.util.Collection;
 import java.util.Deque;
 import javax.annotation.Nonnull;

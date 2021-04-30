@@ -1,4 +1,4 @@
-package com.riskrieg.core.unsorted.gamemode;
+package com.riskrieg.core.api.gamemode;
 
 import java.util.Objects;
 import java.util.UUID;

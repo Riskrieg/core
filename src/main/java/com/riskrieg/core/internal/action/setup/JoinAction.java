@@ -1,10 +1,10 @@
 package com.riskrieg.core.internal.action.setup;
 
 import com.riskrieg.core.internal.action.Action;
-import com.riskrieg.core.unsorted.constant.Constants;
+import com.riskrieg.core.constant.Constants;
 import com.riskrieg.core.unsorted.gamemode.GameState;
-import com.riskrieg.core.unsorted.player.Identity;
-import com.riskrieg.core.unsorted.player.Player;
+import com.riskrieg.core.api.player.Identity;
+import com.riskrieg.core.api.player.Player;
 import java.awt.Color;
 import java.util.Collection;
 import java.util.function.Consumer;

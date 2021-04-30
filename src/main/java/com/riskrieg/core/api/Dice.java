@@ -1,4 +1,4 @@
-package com.riskrieg.core.unsorted;
+package com.riskrieg.core.api;
 
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;

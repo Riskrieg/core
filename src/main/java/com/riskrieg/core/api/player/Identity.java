@@ -1,4 +1,4 @@
-package com.riskrieg.core.unsorted.player;
+package com.riskrieg.core.api.player;
 
 import java.util.Objects;
 import java.util.UUID;

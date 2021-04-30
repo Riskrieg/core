@@ -1,7 +1,7 @@
 package com.riskrieg.core.api;
 
 import com.riskrieg.core.internal.action.CompletableAction;
-import com.riskrieg.core.unsorted.gamemode.GameMode;
+import com.riskrieg.core.api.gamemode.GameMode;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
