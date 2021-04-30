@@ -8,6 +8,7 @@ import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
+import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.action.running.ClaimAction;
 import com.riskrieg.core.internal.action.setup.FormNationAction;
 import com.riskrieg.core.internal.action.setup.JoinAction;
@@ -70,26 +71,31 @@ public final class Conquest implements GameMode {
     this.nations = new HashSet<>(save.nations());
   }
 
+  @Nonnull
   @Override
   public Group getGroup() {
     return group;
   }
 
+  @Nonnull
   @Override
   public GameID getId() {
     return id;
   }
 
+  @Nonnull
   @Override
   public Instant creationTime() {
     return creationTime;
   }
 
+  @Nonnull
   @Override
   public Instant lastUpdated() {
     return lastUpdated;
   }
 
+  @Nonnull
   @Override
   public GameState gameState() {
     return gameState;
@@ -109,14 +115,20 @@ public final class Conquest implements GameMode {
 //    return Collections.unmodifiableMap(gameRules);
 //  }
 
+  @Nonnull
+  @Override
   public Collection<Player> players() {
     return Collections.unmodifiableCollection(players);
   }
 
+  @Nonnull
+  @Override
   public Collection<Nation> nations() {
     return Collections.unmodifiableCollection(nations);
   }
 
+  @Nonnull
+  @Override
   public GameMap map() {
     return gameMap;
   } // TODO: Return unmodifiable version of GameMap
@@ -124,48 +136,36 @@ public final class Conquest implements GameMode {
   /* Setup */
 
   @Nonnull
-  @CheckReturnValue
-  public JoinAction join(@Nonnull Identity id, @Nonnull String name, @Nonnull Color color) {
+  @Override
+  public Action<Player> join(@Nonnull Identity id, @Nonnull String name, @Nonnull Color color) {
     setLastUpdated();
     return new JoinAction(id, name, color, gameState, players);
   }
 
   @Nonnull
-  @CheckReturnValue
-  public JoinAction join(@Nonnull String name, @Nonnull Color color) {
-    return this.join(Identity.random(), name, color);
-  }
-
-  @Nonnull
-  @CheckReturnValue
-  public LeaveAction leave(Player player) {
+  @Override
+  public Action<Player> leave(Player player) {
     setLastUpdated();
     return new LeaveAction(player, players, nations);
   }
 
   @Nonnull
-  @CheckReturnValue
-  public SelectMapAction selectMap(RkmMap rkmMap, MapOptions options) {
+  @Override
+  public Action<GameMap> selectMap(RkmMap rkmMap, MapOptions options) {
     setLastUpdated();
     return new SelectMapAction(rkmMap, options, gameState, gameMap, nations);
   }
 
   @Nonnull
-  @CheckReturnValue
-  public FormNationAction formNation(Identity identity, TerritoryId id) {
+  @Override
+  public Action<Nation> formNation(Identity identity, TerritoryId id) {
     setLastUpdated();
     return new FormNationAction(identity, id, gameState, gameMap, players, nations);
   }
 
   @Nonnull
-  @CheckReturnValue
-  public FormNationAction formNation(Player player, TerritoryId id) {
-    return this.formNation(player.identity(), id);
-  }
-
-  @Nonnull
-  @CheckReturnValue
-  public StartAction start(@Nonnull TurnOrder order) {
+  @Override
+  public Action<GameState> start(@Nonnull TurnOrder order) {
     players = order.sort(players);
     return new StartAction(this, gameMap, players, nations);
   }
