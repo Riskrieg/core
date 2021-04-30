@@ -111,7 +111,7 @@ public final class GroupImpl implements Group {
 
   @Nonnull
   @Override
-  public <T extends GameMode> Action<T> saveGame(@Nonnull String gameId, T game) {
+  public <T extends GameMode> CompletableAction<T> saveGame(@Nonnull String gameId, T game) {
     try {
       Path savePath = path.resolve(gameId + Constants.SAVE_FILE_EXT);
       GsonUtil.write(savePath, Save.class, new Save(game));
