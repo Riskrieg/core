@@ -36,11 +36,11 @@ public class GameMap {
     this.options = options;
   }
 
-  public MapName mapName() {
+  public MapName getMapName() {
     return map.mapName();
   }
 
-  public MapAuthor author() {
+  public MapAuthor getAuthor() {
     return map.author();
   }
 
@@ -85,6 +85,15 @@ public class GameMap {
       return false;
     }
     return getGraph().vertexSet().stream().anyMatch(territory -> territory.id().equals(id));
+  }
+
+  public Territory get(TerritoryId id) {
+    for (Territory t : map.getGraph().vertices()) {
+      if (t.id().equals(id)) {
+        return t;
+      }
+    }
+    return null;
   }
 
 }
