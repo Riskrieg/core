@@ -34,7 +34,7 @@ public interface GameMode {
   @Nonnull
   GameState gameState();
 
-  void setGameState(GameState gameState);
+  void setGameState(@Nonnull GameState gameState);
 
   boolean isEnded();
 
@@ -59,19 +59,19 @@ public interface GameMode {
 
   @Nonnull
   @CheckReturnValue
-  Action<Player> leave(Player player);
+  Action<Player> leave(@Nonnull Player player);
 
   @Nonnull
   @CheckReturnValue
-  Action<GameMap> selectMap(RkmMap rkmMap, MapOptions options);
+  Action<GameMap> selectMap(@Nonnull RkmMap rkmMap, @Nonnull MapOptions options);
 
   @Nonnull
   @CheckReturnValue
-  Action<Nation> formNation(Identity identity, TerritoryId id);
+  Action<Nation> formNation(@Nonnull Identity identity, @Nonnull TerritoryId id);
 
   @Nonnull
   @CheckReturnValue
-  default Action<Nation> formNation(Player player, TerritoryId id) {
+  default Action<Nation> formNation(@Nonnull Player player, @Nonnull TerritoryId id) {
     return this.formNation(player.identity(), id);
   }
 

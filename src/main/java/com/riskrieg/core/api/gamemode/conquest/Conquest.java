@@ -102,7 +102,7 @@ public final class Conquest implements GameMode {
   }
 
   @Override
-  public void setGameState(GameState gameState) {
+  public void setGameState(@Nonnull GameState gameState) {
     this.gameState = gameState;
   }
 
@@ -144,21 +144,21 @@ public final class Conquest implements GameMode {
 
   @Nonnull
   @Override
-  public Action<Player> leave(Player player) {
+  public Action<Player> leave(@Nonnull Player player) {
     setLastUpdated();
     return new LeaveAction(player, players, nations);
   }
 
   @Nonnull
   @Override
-  public Action<GameMap> selectMap(RkmMap rkmMap, MapOptions options) {
+  public Action<GameMap> selectMap(@Nonnull RkmMap rkmMap, @Nonnull MapOptions options) {
     setLastUpdated();
     return new SelectMapAction(rkmMap, options, gameState, gameMap, nations);
   }
 
   @Nonnull
   @Override
-  public Action<Nation> formNation(Identity identity, TerritoryId id) {
+  public Action<Nation> formNation(@Nonnull Identity identity, @Nonnull TerritoryId id) {
     setLastUpdated();
     return new FormNationAction(identity, id, gameState, gameMap, players, nations);
   }
