@@ -6,6 +6,7 @@ import com.riskrieg.core.api.Save;
 import com.riskrieg.core.api.gamemode.GameMode;
 import com.riskrieg.core.api.gamemode.conquest.Conquest;
 import com.riskrieg.core.constant.Constants;
+import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.action.CompletableAction;
 import com.riskrieg.core.internal.action.GenericAction;
 import java.io.FileNotFoundException;
@@ -13,7 +14,6 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
 public final class GroupImpl implements Group {
@@ -53,7 +53,6 @@ public final class GroupImpl implements Group {
   }
 
   @Nonnull
-  @CheckReturnValue
   @Override
   public <T extends GameMode> CompletableAction<T> createGame(@Nonnull String gameId, @Nonnull Class<T> type) {
     try {
@@ -74,7 +73,6 @@ public final class GroupImpl implements Group {
   }
 
   @Nonnull
-  @CheckReturnValue
   @Override
   public <T extends GameMode> CompletableAction<T> retrieveGameById(@Nonnull String gameId, @Nonnull Class<T> type) {
     try {
@@ -91,7 +89,6 @@ public final class GroupImpl implements Group {
   }
 
   @Nonnull
-  @CheckReturnValue
   @Override
   public CompletableAction<GameMode> retrieveGameById(@Nonnull String gameId) {
     try {
@@ -105,8 +102,20 @@ public final class GroupImpl implements Group {
       }
       return switch (save.getGameType()) {
         case CONQUEST -> new GenericAction<>(new Conquest(this, save));
-        default -> throw new IllegalStateException("");
+        default -> throw new IllegalStateException("Invalid game mode");
       };
+    } catch (Exception e) {
+      return new GenericAction<>(e);
+    }
+  }
+
+  @Nonnull
+  @Override
+  public <T extends GameMode> Action<T> saveGame(@Nonnull String gameId, T game) {
+    try {
+      Path savePath = path.resolve(gameId + Constants.SAVE_FILE_EXT);
+      GsonUtil.write(savePath, Save.class, new Save(game));
+      return new GenericAction<>(game);
     } catch (Exception e) {
       return new GenericAction<>(e);
     }

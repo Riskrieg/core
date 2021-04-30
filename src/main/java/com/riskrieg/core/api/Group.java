@@ -1,6 +1,7 @@
 package com.riskrieg.core.api;
 
 import com.riskrieg.core.api.gamemode.GameMode;
+import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.action.CompletableAction;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
@@ -21,6 +22,10 @@ public interface Group {
   @Nonnull
   @CheckReturnValue
   CompletableAction<GameMode> retrieveGameById(@Nonnull String gameId);
+
+  @Nonnull
+  @CheckReturnValue
+  <T extends GameMode> Action<T> saveGame(@Nonnull String gameId, T game);
 
   // TODO: Add delete method
 
