@@ -18,6 +18,10 @@ public interface Group {
   @CheckReturnValue
   <T extends GameMode> Action<T> retrieveGameById(@Nonnull String gameId, @Nonnull Class<T> type);
 
+  @Nonnull
+  @CheckReturnValue
+  Action<GameMode> retrieveGameById(@Nonnull String gameId);
+
   // TODO: Add delete method
 
 }

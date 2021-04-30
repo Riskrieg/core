@@ -53,6 +53,7 @@ public final class GroupImpl implements Group {
   }
 
   @Nonnull
+  @CheckReturnValue
   @Override
   public <T extends GameMode> Action<T> createGame(@Nonnull String gameId, @Nonnull Class<T> type) {
     try {
@@ -73,6 +74,7 @@ public final class GroupImpl implements Group {
   }
 
   @Nonnull
+  @CheckReturnValue
   @Override
   public <T extends GameMode> Action<T> retrieveGameById(@Nonnull String gameId, @Nonnull Class<T> type) {
     try {
@@ -90,6 +92,7 @@ public final class GroupImpl implements Group {
 
   @Nonnull
   @CheckReturnValue
+  @Override
   public Action<GameMode> retrieveGameById(@Nonnull String gameId) {
     try {
       Path savePath = path.resolve(gameId + Constants.SAVE_FILE_EXT);
