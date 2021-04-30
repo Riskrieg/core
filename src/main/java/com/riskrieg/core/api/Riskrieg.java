@@ -12,6 +12,6 @@ public interface Riskrieg {
 
   @Nonnull
   @CheckReturnValue
-  CompletableAction<Group> retrieveGroupById(String id);
+  CompletableAction<Group> retrieveGroupById(@Nonnull String id);
 
 }

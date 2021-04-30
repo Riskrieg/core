@@ -35,7 +35,7 @@ public final class RiskriegImpl implements Riskrieg {
 
   @Nonnull
   @Override
-  public CompletableAction<Group> retrieveGroupById(String id) {
+  public CompletableAction<Group> retrieveGroupById(@Nonnull String id) {
     try {
       Path groupPath = repository.resolve(id);
       if (!Files.exists(groupPath)) {

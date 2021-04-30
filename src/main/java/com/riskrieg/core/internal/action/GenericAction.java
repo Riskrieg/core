@@ -1,6 +1,8 @@
 package com.riskrieg.core.internal.action;
 
+import java.util.Optional;
 import java.util.function.Consumer;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class GenericAction<T> implements CompletableAction<T> {
@@ -28,19 +30,13 @@ public class GenericAction<T> implements CompletableAction<T> {
     }
   }
 
-  @Nullable
+  @Nonnull
   @Override
-  public T complete(@Nullable Consumer<? super Throwable> failure) {
+  public Optional<T> complete(@Nullable Consumer<? super Throwable> failure) {
     if (failure != null && throwable != null) {
       failure.accept(throwable);
     }
-    return value;
-  }
-
-  @Nullable
-  @Override
-  public T complete() {
-    return value;
+    return Optional.ofNullable(value);
   }
 
 }
