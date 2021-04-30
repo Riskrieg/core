@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ClaimAction implements Action<ClaimResult> {
+public final class ClaimAction implements Action<ClaimResult> {
 
   private final Identity identity;
   private final Set<TerritoryId> ids;
