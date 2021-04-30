@@ -1,6 +1,7 @@
 package com.riskrieg.core.internal.action.running;
 
 import com.riskrieg.core.api.Dice;
+import com.riskrieg.core.api.gamemode.conquest.ClaimResult;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.constant.Constants;
@@ -10,7 +11,6 @@ import com.riskrieg.core.unsorted.map.GameMap;
 import com.riskrieg.map.territory.TerritoryId;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -142,32 +142,6 @@ public class ClaimAction implements Action<ClaimResult> {
     Set<TerritoryId> neighbors = nation.neighbors(gameMap);
     // TODO: Remove allied territories
     return neighbors;
-  }
-
-}
-
-class ClaimResult {
-
-  private final Set<TerritoryId> claimed;
-  private final Set<TerritoryId> taken;
-  private final Set<TerritoryId> defended;
-
-  public ClaimResult(Set<TerritoryId> claimed, Set<TerritoryId> taken, Set<TerritoryId> defended) {
-    this.claimed = claimed;
-    this.taken = taken;
-    this.defended = defended;
-  }
-
-  public Set<TerritoryId> claimed() {
-    return Collections.unmodifiableSet(claimed);
-  }
-
-  public Set<TerritoryId> taken() {
-    return Collections.unmodifiableSet(taken);
-  }
-
-  public Set<TerritoryId> defended() {
-    return Collections.unmodifiableSet(defended);
   }
 
 }
