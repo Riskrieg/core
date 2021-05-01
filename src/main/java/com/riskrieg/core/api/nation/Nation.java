@@ -67,4 +67,21 @@ public final class Nation {
     return territories.removeIf(gt -> gt.id().equals(id));
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Nation nation = (Nation) o;
+    return identity.equals(nation.identity);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(identity);
+  }
+  
 }
