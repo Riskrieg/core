@@ -20,6 +20,7 @@ import com.riskrieg.core.unsorted.map.MapOptions;
 import com.riskrieg.map.RkmMap;
 import com.riskrieg.map.territory.TerritoryId;
 import java.awt.Color;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -61,7 +62,14 @@ public final class ConquestMode implements GameMode {
     if (save.mapCodeName() == null) {
       this.gameMap = new GameMap();
     } else {
-      this.gameMap = new GameMap(); // TODO: Load map
+      // TODO: Temporary
+      var optMap = RkmMap.load(Path.of("res/maps/" + save.mapCodeName() + ".rkm"));
+      var optOptions = MapOptions.load(Path.of("res/maps/options/" + save.mapCodeName() + ".json"), false);
+      if (optMap.isPresent() && optOptions.isPresent()) {
+        this.gameMap = new GameMap(optMap.get(), optOptions.get());
+      } else {
+        this.gameMap = new GameMap();
+      }
     }
     this.players = new ArrayDeque<>(save.players());
     this.nations = new HashSet<>(save.nations());

@@ -25,6 +25,13 @@ public final class GameMap {
     this.options = null;
   }
 
+  public GameMap(RkmMap map, MapOptions options) {
+    Objects.requireNonNull(map);
+    Objects.requireNonNull(options);
+    this.map = map;
+    this.options = options;
+  }
+
   public boolean isSet() {
     return this.map != null && this.options != null;
   }
