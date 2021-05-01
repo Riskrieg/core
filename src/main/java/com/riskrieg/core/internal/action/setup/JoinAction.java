@@ -33,8 +33,11 @@ public final class JoinAction implements Action<Player> {
       switch (gameState) {
         case ENDED, RUNNING -> throw new IllegalStateException("Players can only join the game during the setup phase");
         case SETUP -> {
-          if (players.contains(player) || players.stream().anyMatch(p -> p.identity().equals(player.identity()))) {
-            throw new IllegalArgumentException("Player is already present or color already taken");
+          if (players.contains(player)) {
+            throw new IllegalArgumentException("That color is already taken");
+          }
+          if (players.stream().anyMatch(p -> p.identity().equals(player.identity()))) {
+            throw new IllegalArgumentException("That player is already in the game");
           }
           if (players.size() >= Constants.MAX_PLAYERS) {
             throw new IllegalStateException("The game is too full to join");
