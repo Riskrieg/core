@@ -61,7 +61,7 @@ public final class ConquestMode implements GameMode {
     if (save.mapCodeName() == null) {
       this.gameMap = new GameMap();
     } else {
-      // TODO: Load map
+      this.gameMap = new GameMap(); // TODO: Load map
     }
     this.players = new ArrayDeque<>(save.players());
     this.nations = new HashSet<>(save.nations());
