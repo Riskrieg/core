@@ -58,6 +58,7 @@ public final class ConquestMode implements GameMode {
     this.creationTime = save.creationTime().asInstant();
     this.lastUpdated = save.lastUpdated().asInstant();
     this.gameState = save.gameState();
+    this.gameMap = new GameMap();
     // TODO: Load map
     this.players = new ArrayDeque<>(save.players());
     this.nations = new HashSet<>(save.nations());
