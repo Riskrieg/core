@@ -1,6 +1,5 @@
 package com.riskrieg.core.api.gamemode;
 
-import com.riskrieg.core.api.Group;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
@@ -18,9 +17,6 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
 public interface GameMode {
-
-  @Nonnull
-  Group getGroup();
 
   @Nonnull
   GameID getId();

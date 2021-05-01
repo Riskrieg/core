@@ -1,6 +1,5 @@
 package com.riskrieg.core.api.gamemode.conquest;
 
-import com.riskrieg.core.api.Group;
 import com.riskrieg.core.api.Save;
 import com.riskrieg.core.api.gamemode.GameID;
 import com.riskrieg.core.api.gamemode.GameMode;
@@ -15,7 +14,6 @@ import com.riskrieg.core.internal.action.setup.JoinAction;
 import com.riskrieg.core.internal.action.setup.LeaveAction;
 import com.riskrieg.core.internal.action.setup.SelectMapAction;
 import com.riskrieg.core.internal.action.setup.StartAction;
-import com.riskrieg.core.internal.impl.GroupImpl;
 import com.riskrieg.core.unsorted.gamemode.GameState;
 import com.riskrieg.core.unsorted.map.GameMap;
 import com.riskrieg.core.unsorted.map.MapOptions;
@@ -32,9 +30,8 @@ import java.util.Set;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
-public final class Conquest implements GameMode {
+public final class ConquestMode implements GameMode {
 
-  private final GroupImpl group;
   private final GameID id;
   private final Instant creationTime;
   private Instant lastUpdated;
@@ -42,12 +39,10 @@ public final class Conquest implements GameMode {
   private GameState gameState;
   private GameMap gameMap;
 
-  //  private final Map<GameRule, Boolean> gameRules;
   private Deque<Player> players;
   private Set<Nation> nations;
 
-  public Conquest(GroupImpl group) {
-    this.group = group;
+  public ConquestMode() {
     this.id = GameID.random();
     this.creationTime = Instant.now();
     this.lastUpdated = Instant.now();
@@ -56,12 +51,9 @@ public final class Conquest implements GameMode {
 
     this.players = new ArrayDeque<>();
     this.nations = new HashSet<>();
-//    gameRules = new EnumMap<>(GameRule.class);
-//    gameRules.put(GameRule.CAP_ALLIANCES, true);
   }
 
-  public Conquest(GroupImpl group, Save save) {
-    this.group = group;
+  public ConquestMode(Save save) {
     this.id = save.id();
     this.creationTime = save.creationTime().asInstant();
     this.lastUpdated = save.lastUpdated().asInstant();
@@ -69,12 +61,6 @@ public final class Conquest implements GameMode {
     // TODO: Load map
     this.players = new ArrayDeque<>(save.players());
     this.nations = new HashSet<>(save.nations());
-  }
-
-  @Nonnull
-  @Override
-  public Group getGroup() {
-    return group;
   }
 
   @Nonnull
@@ -110,10 +96,6 @@ public final class Conquest implements GameMode {
   public boolean isEnded() {
     return gameState.equals(GameState.ENDED);
   }
-
-//  public Map<GameRule, Boolean> gameRules() {
-//    return Collections.unmodifiableMap(gameRules);
-//  }
 
   @Nonnull
   @Override

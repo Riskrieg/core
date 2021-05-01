@@ -2,7 +2,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.riskrieg.core.api.Riskrieg;
 import com.riskrieg.core.api.RiskriegBuilder;
-import com.riskrieg.core.api.gamemode.conquest.Conquest;
+import com.riskrieg.core.api.gamemode.conquest.ConquestMode;
 import com.riskrieg.core.api.order.RandomOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.unsorted.gamemode.GameState;
@@ -25,12 +25,12 @@ public class ApiTests {
   public void testRiskrieg() {
     Riskrieg api = RiskriegBuilder.create(Path.of("res/saves/")).build();
     var optGroup = api.createGroup("test").complete(failure -> System.out.println("failure: " + failure.getMessage()));
-    optGroup.ifPresent(group -> group.createGame("test", Conquest.class).submit());
+    optGroup.ifPresent(group -> group.createGame("test", ConquestMode.class).submit());
   }
 
   @Test
   public void testJoin() {
-    Conquest game = new Conquest(null);
+    ConquestMode game = new ConquestMode();
     game.join("Name", new Color(1, 1, 1));
     assertEquals(0, game.players().size());
     game.join("Name", new Color(1, 1, 1)).submit();
@@ -49,7 +49,7 @@ public class ApiTests {
 
   @Test
   public void testConquest() {
-    Conquest game = new Conquest(null);
+    ConquestMode game = new ConquestMode();
 
     game.join(Identity.of("1234"), "Test", new Color(0, 0, 0));
     assertEquals(0, game.players().size());

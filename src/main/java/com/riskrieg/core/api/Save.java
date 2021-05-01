@@ -2,7 +2,10 @@ package com.riskrieg.core.api;
 
 import com.riskrieg.core.api.gamemode.GameID;
 import com.riskrieg.core.api.gamemode.GameMode;
-import com.riskrieg.core.api.gamemode.conquest.Conquest;
+import com.riskrieg.core.api.gamemode.classic.ClassicMode;
+import com.riskrieg.core.api.gamemode.conquer.ConquerMode;
+import com.riskrieg.core.api.gamemode.conquest.ConquestMode;
+import com.riskrieg.core.api.gamemode.creative.CreativeMode;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.unsorted.gamemode.GameModeType;
@@ -27,20 +30,25 @@ public final class Save {
   private final Set<Nation> nations;
 
   public <T extends GameMode> Save(T game) {
-    if (game instanceof Conquest) {
-      Conquest conquest = (Conquest) game;
+    this.id = game.getId();
+    this.creationTime = Moment.of(game.creationTime());
+    this.lastUpdated = Moment.of(game.lastUpdated());
+    this.gameState = game.gameState();
+    if (game.map().isSet()) {
+      this.mapCodeName = game.map().getMapName().name();
+    } else {
+      this.mapCodeName = null;
+    }
+    this.players = new ArrayDeque<>(game.players());
+    this.nations = new HashSet<>(game.nations());
+    if (game instanceof ClassicMode) {
+      this.gameType = GameModeType.CLASSIC;
+    } else if (game instanceof ConquestMode) {
       this.gameType = GameModeType.CONQUEST;
-      this.id = conquest.getId();
-      this.creationTime = Moment.of(conquest.creationTime());
-      this.lastUpdated = Moment.of(conquest.lastUpdated());
-      this.gameState = conquest.gameState();
-      if (conquest.map().isSet()) {
-        this.mapCodeName = conquest.map().getMapName().name();
-      } else {
-        this.mapCodeName = null;
-      }
-      this.players = new ArrayDeque<>(conquest.players());
-      this.nations = new HashSet<>(conquest.nations());
+    } else if (game instanceof ConquerMode) {
+      this.gameType = GameModeType.CONQUER;
+    } else if (game instanceof CreativeMode) {
+      this.gameType = GameModeType.CREATIVE;
     } else {
       throw new IllegalArgumentException("provided game mode is not supported");
     }

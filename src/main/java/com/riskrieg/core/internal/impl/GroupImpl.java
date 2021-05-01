@@ -4,7 +4,10 @@ import com.aaronjyoder.util.json.gson.GsonUtil;
 import com.riskrieg.core.api.Group;
 import com.riskrieg.core.api.Save;
 import com.riskrieg.core.api.gamemode.GameMode;
-import com.riskrieg.core.api.gamemode.conquest.Conquest;
+import com.riskrieg.core.api.gamemode.classic.ClassicMode;
+import com.riskrieg.core.api.gamemode.conquer.ConquerMode;
+import com.riskrieg.core.api.gamemode.conquest.ConquestMode;
+import com.riskrieg.core.api.gamemode.creative.CreativeMode;
 import com.riskrieg.core.constant.Constants;
 import com.riskrieg.core.internal.action.CompletableAction;
 import com.riskrieg.core.internal.action.GenericAction;
@@ -58,12 +61,12 @@ public final class GroupImpl implements Group {
       Path savePath = path.resolve(gameId + Constants.SAVE_FILE_EXT);
       if (Files.exists(savePath)) {
         var save = GsonUtil.read(savePath, Save.class);
-        var existingGame = type.getDeclaredConstructor(GroupImpl.class, Save.class).newInstance(this, save);
+        var existingGame = type.getDeclaredConstructor(Save.class).newInstance(save);
         if (!existingGame.isEnded()) {
           throw new FileAlreadyExistsException("An active game already exists");
         }
       }
-      var newGame = type.getDeclaredConstructor(GroupImpl.class).newInstance(this);
+      var newGame = type.getDeclaredConstructor().newInstance();
       GsonUtil.write(savePath, Save.class, new Save(newGame));
       return new GenericAction<>(newGame);
     } catch (Exception e) {
@@ -80,7 +83,7 @@ public final class GroupImpl implements Group {
         throw new FileNotFoundException("Save file does not exist");
       }
       var save = GsonUtil.read(savePath, Save.class);
-      var game = type.getDeclaredConstructor(GroupImpl.class, Save.class).newInstance(this, save);
+      var game = type.getDeclaredConstructor(Save.class).newInstance(save);
       return new GenericAction<>(game);
     } catch (Exception e) {
       return new GenericAction<>(e);
@@ -100,7 +103,10 @@ public final class GroupImpl implements Group {
         throw new IllegalStateException("Unable to read save file");
       }
       return switch (save.getGameType()) {
-        case CONQUEST -> new GenericAction<>(new Conquest(this, save));
+        case CLASSIC -> new GenericAction<>(new ClassicMode(save));
+        case CONQUEST -> new GenericAction<>(new ConquestMode(save));
+        case CONQUER -> new GenericAction<>(new ConquerMode(save));
+        case CREATIVE -> new GenericAction<>(new CreativeMode(save));
         default -> throw new IllegalStateException("Invalid game mode");
       };
     } catch (Exception e) {
