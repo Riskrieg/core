@@ -88,7 +88,7 @@ public final class BrawlMode implements GameMode { // TODO: Capturing a capital 
 
   @Nonnull
   @Override
-  public Action<Player> leave(@Nonnull Player player) {
+  public Action<Player> leave(@Nonnull Identity id) {
     return null;
   }
 
@@ -109,4 +109,5 @@ public final class BrawlMode implements GameMode { // TODO: Capturing a capital 
   public Action<GameState> start(@Nonnull TurnOrder order) {
     return null;
   }
+
 }

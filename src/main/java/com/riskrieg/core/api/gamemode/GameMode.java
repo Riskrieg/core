@@ -55,7 +55,7 @@ public interface GameMode {
 
   @Nonnull
   @CheckReturnValue
-  Action<Player> leave(@Nonnull Player player);
+  Action<Player> leave(@Nonnull Identity id);
 
   @Nonnull
   @CheckReturnValue
@@ -64,12 +64,6 @@ public interface GameMode {
   @Nonnull
   @CheckReturnValue
   Action<Nation> formNation(@Nonnull Identity identity, @Nonnull TerritoryId id);
-
-  @Nonnull
-  @CheckReturnValue
-  default Action<Nation> formNation(@Nonnull Player player, @Nonnull TerritoryId id) {
-    return this.formNation(player.identity(), id);
-  }
 
   @Nonnull
   @CheckReturnValue

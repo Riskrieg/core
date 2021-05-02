@@ -76,7 +76,7 @@ public class ApiTests {
 //    assertTrue(game.map().isSet());
 
     game.join("Janice", new Color(1, 1, 1)).submit(player -> {
-      game.formNation(player, game.map().getGraph().vertexSet().toArray(new Territory[0])[0].id()).submit();
+      game.formNation(player.identity(), game.map().getGraph().vertexSet().toArray(new Territory[0])[0].id()).submit();
     });
     assertEquals(2, game.players().size());
     assertEquals(1, game.nations().size());

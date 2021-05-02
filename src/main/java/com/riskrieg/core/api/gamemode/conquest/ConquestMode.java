@@ -138,9 +138,9 @@ public final class ConquestMode implements GameMode {
 
   @Nonnull
   @Override
-  public Action<Player> leave(@Nonnull Player player) {
+  public Action<Player> leave(@Nonnull Identity identity) {
     setLastUpdated();
-    return new LeaveAction(player, players, nations);
+    return new LeaveAction(identity, players, nations);
   }
 
   @Nonnull
@@ -171,12 +171,6 @@ public final class ConquestMode implements GameMode {
   public ClaimAction claim(Identity identity, TerritoryId... ids) {
     setLastUpdated();
     return new ClaimAction(identity, Set.of(ids), players.getFirst().identity(), gameState, gameMap, nations);
-  }
-
-  @Nonnull
-  @CheckReturnValue
-  public ClaimAction claim(Player player, TerritoryId... ids) {
-    return this.claim(player.identity(), ids);
   }
 
   /* Private Methods */

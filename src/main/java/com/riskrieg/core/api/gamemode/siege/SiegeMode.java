@@ -88,7 +88,7 @@ public final class SiegeMode implements GameMode {
 
   @Nonnull
   @Override
-  public Action<Player> leave(@Nonnull Player player) {
+  public Action<Player> leave(@Nonnull Identity id) {
     return null;
   }
 
