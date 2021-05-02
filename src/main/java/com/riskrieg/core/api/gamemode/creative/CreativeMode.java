@@ -82,13 +82,13 @@ public final class CreativeMode implements GameMode { // TODO: D&D style
 
   @Nonnull
   @Override
-  public Action<Player> join(@Nonnull Identity id, @Nonnull String name, @Nonnull Color color) {
+  public Action<Player> join(@Nonnull Identity identity, @Nonnull String name, @Nonnull Color color) {
     return null;
   }
 
   @Nonnull
   @Override
-  public Action<Player> leave(@Nonnull Identity id) {
+  public Action<Player> leave(@Nonnull Identity identity) {
     return null;
   }
 
@@ -100,7 +100,7 @@ public final class CreativeMode implements GameMode { // TODO: D&D style
 
   @Nonnull
   @Override
-  public Action<Nation> formNation(@Nonnull Identity identity, @Nonnull TerritoryId id) {
+  public Action<Nation> formNation(@Nonnull Identity identity, @Nonnull TerritoryId territoryId) {
     return null;
   }
 

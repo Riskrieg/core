@@ -131,9 +131,9 @@ public final class ConquestMode implements GameMode {
 
   @Nonnull
   @Override
-  public Action<Player> join(@Nonnull Identity id, @Nonnull String name, @Nonnull Color color) {
+  public Action<Player> join(@Nonnull Identity identity, @Nonnull String name, @Nonnull Color color) {
     setLastUpdated();
-    return new JoinAction(id, name, color, gameState, players);
+    return new JoinAction(identity, name, color, gameState, players);
   }
 
   @Nonnull
@@ -152,9 +152,9 @@ public final class ConquestMode implements GameMode {
 
   @Nonnull
   @Override
-  public Action<Nation> formNation(@Nonnull Identity identity, @Nonnull TerritoryId id) {
+  public Action<Nation> formNation(@Nonnull Identity identity, @Nonnull TerritoryId territoryId) {
     setLastUpdated();
-    return new FormNationAction(identity, id, gameState, gameMap, players, nations);
+    return new FormNationAction(identity, territoryId, gameState, gameMap, players, nations);
   }
 
   @Nonnull
@@ -168,9 +168,9 @@ public final class ConquestMode implements GameMode {
 
   @Nonnull
   @CheckReturnValue
-  public ClaimAction claim(Identity identity, TerritoryId... ids) {
+  public ClaimAction claim(Identity identity, TerritoryId... territoryIds) {
     setLastUpdated();
-    return new ClaimAction(identity, Set.of(ids), players.getFirst().identity(), gameState, gameMap, nations);
+    return new ClaimAction(identity, Set.of(territoryIds), players.getFirst().identity(), gameState, gameMap, nations);
   }
 
   /* Private Methods */

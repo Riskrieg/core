@@ -45,7 +45,7 @@ public interface GameMode {
 
   @Nonnull
   @CheckReturnValue
-  Action<Player> join(@Nonnull Identity id, @Nonnull String name, @Nonnull Color color);
+  Action<Player> join(@Nonnull Identity identity, @Nonnull String name, @Nonnull Color color);
 
   @Nonnull
   @CheckReturnValue
@@ -55,7 +55,7 @@ public interface GameMode {
 
   @Nonnull
   @CheckReturnValue
-  Action<Player> leave(@Nonnull Identity id);
+  Action<Player> leave(@Nonnull Identity identity);
 
   @Nonnull
   @CheckReturnValue
@@ -63,7 +63,7 @@ public interface GameMode {
 
   @Nonnull
   @CheckReturnValue
-  Action<Nation> formNation(@Nonnull Identity identity, @Nonnull TerritoryId id);
+  Action<Nation> formNation(@Nonnull Identity identity, @Nonnull TerritoryId territoryId);
 
   @Nonnull
   @CheckReturnValue
