@@ -5,7 +5,8 @@ public enum GameModeType {
   UNKNOWN("Unknown", "N/A"),
   CLASSIC("Classic", "The original game mode. No capitals, no alliances."),
   CONQUEST("Conquest", "The default game mode. Has capitals and alliances."),
-  CONQUER("Conquer", "Conquer enemy capitals to defeat them. Has capitals, no alliances."),
+  SIEGE("Siege", "Conquer enemy capitals to defeat them. Has capitals, has alliances."),
+  BRAWL("Brawl", "Conquer enemy capitals to defeat them. Has capitals, no alliances."),
   CREATIVE("Creative", "A D&D-style game mode.");
 
   private final String displayName;

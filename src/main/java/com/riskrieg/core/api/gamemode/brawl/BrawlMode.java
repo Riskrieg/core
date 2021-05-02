@@ -1,4 +1,4 @@
-package com.riskrieg.core.api.gamemode.conquer;
+package com.riskrieg.core.api.gamemode.brawl;
 
 import com.riskrieg.core.api.Save;
 import com.riskrieg.core.api.gamemode.GameID;
@@ -18,13 +18,13 @@ import java.time.Instant;
 import java.util.Collection;
 import javax.annotation.Nonnull;
 
-public final class ConquerMode implements GameMode { // TODO: Capturing a capital defeats the entire nation
+public final class BrawlMode implements GameMode { // TODO: Capturing a capital defeats the entire nation
 
-  public ConquerMode() {
+  public BrawlMode() {
 
   }
 
-  public ConquerMode(Save save) {
+  public BrawlMode(Save save) {
 
   }
 

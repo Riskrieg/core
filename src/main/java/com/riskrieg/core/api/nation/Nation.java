@@ -68,7 +68,7 @@ public final class Nation {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(Object o) { // TODO: Maybe don't have this if there's a game mode where 1 player can be more than 1 nation
     if (this == o) {
       return true;
     }
@@ -83,5 +83,5 @@ public final class Nation {
   public int hashCode() {
     return Objects.hash(identity);
   }
-  
+
 }

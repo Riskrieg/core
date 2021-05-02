@@ -4,10 +4,11 @@ import com.aaronjyoder.util.json.gson.GsonUtil;
 import com.riskrieg.core.api.Group;
 import com.riskrieg.core.api.Save;
 import com.riskrieg.core.api.gamemode.GameMode;
+import com.riskrieg.core.api.gamemode.brawl.BrawlMode;
 import com.riskrieg.core.api.gamemode.classic.ClassicMode;
-import com.riskrieg.core.api.gamemode.conquer.ConquerMode;
 import com.riskrieg.core.api.gamemode.conquest.ConquestMode;
 import com.riskrieg.core.api.gamemode.creative.CreativeMode;
+import com.riskrieg.core.api.gamemode.siege.SiegeMode;
 import com.riskrieg.core.constant.Constants;
 import com.riskrieg.core.internal.action.CompletableAction;
 import com.riskrieg.core.internal.action.GenericAction;
@@ -105,7 +106,8 @@ public final class GroupImpl implements Group {
       return switch (save.getGameType()) {
         case CLASSIC -> new GenericAction<>(new ClassicMode(save));
         case CONQUEST -> new GenericAction<>(new ConquestMode(save));
-        case CONQUER -> new GenericAction<>(new ConquerMode(save));
+        case SIEGE -> new GenericAction<>(new SiegeMode(save));
+        case BRAWL -> new GenericAction<>(new BrawlMode(save));
         case CREATIVE -> new GenericAction<>(new CreativeMode(save));
         default -> throw new IllegalStateException("Invalid game mode");
       };
