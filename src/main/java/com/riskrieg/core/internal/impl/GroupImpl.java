@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -136,7 +137,7 @@ public final class GroupImpl implements Group {
         retrieveGameById(fileName).complete().ifPresent(result::add);
       }
     }
-    return result;
+    return Collections.unmodifiableSet(result);
   }
 
   @Nonnull
