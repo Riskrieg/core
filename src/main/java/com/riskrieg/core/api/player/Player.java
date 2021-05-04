@@ -50,12 +50,12 @@ public final class Player {
       return false;
     }
     Player player = (Player) o;
-    return color.equals(player.color);
+    return identity.equals(player.identity);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(color);
+    return Objects.hash(identity);
   }
 
 }
