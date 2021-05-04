@@ -31,6 +31,12 @@ public final class SiegeMode implements GameMode {
 
   @Nonnull
   @Override
+  public String displayName() {
+    return "Siege";
+  }
+
+  @Nonnull
+  @Override
   public GameID getId() {
     return null;
   }

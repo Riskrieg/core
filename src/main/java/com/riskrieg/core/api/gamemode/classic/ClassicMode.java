@@ -31,6 +31,12 @@ public final class ClassicMode implements GameMode { // TODO: No capitals, no al
 
   @Nonnull
   @Override
+  public String displayName() {
+    return "Classic";
+  }
+
+  @Nonnull
+  @Override
   public GameID getId() {
     return null;
   }

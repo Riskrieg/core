@@ -31,6 +31,12 @@ public final class CreativeMode implements GameMode { // TODO: D&D style
 
   @Nonnull
   @Override
+  public String displayName() {
+    return "Creative";
+  }
+
+  @Nonnull
+  @Override
   public GameID getId() {
     return null;
   }

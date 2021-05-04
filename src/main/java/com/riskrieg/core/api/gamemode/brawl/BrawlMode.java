@@ -31,6 +31,12 @@ public final class BrawlMode implements GameMode { // TODO: Capturing a capital 
 
   @Nonnull
   @Override
+  public String displayName() {
+    return "Brawl";
+  }
+
+  @Nonnull
+  @Override
   public GameID getId() {
     return null;
   }

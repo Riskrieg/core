@@ -20,6 +20,9 @@ import javax.annotation.Nonnull;
 public interface GameMode {
 
   @Nonnull
+  String displayName();
+
+  @Nonnull
   GameID getId();
 
   @Nonnull
