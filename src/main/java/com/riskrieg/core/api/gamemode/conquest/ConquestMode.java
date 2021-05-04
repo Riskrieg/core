@@ -8,6 +8,7 @@ import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.action.Action;
+import com.riskrieg.core.internal.action.GenericAction;
 import com.riskrieg.core.internal.action.running.ClaimAction;
 import com.riskrieg.core.internal.action.setup.FormNationAction;
 import com.riskrieg.core.internal.action.setup.JoinAction;
@@ -162,6 +163,25 @@ public final class ConquestMode implements GameMode {
   public Action<GameState> start(@Nonnull TurnOrder order) {
     players = order.sort(players);
     return new StartAction(this, gameMap, players, nations);
+  }
+
+  @Override
+  public boolean isTurn(@Nonnull Identity identity) {
+    return switch (gameState) {
+      case ENDED, SETUP -> false;
+      case RUNNING -> players.getFirst().identity().equals(identity);
+    };
+  }
+
+  @Override
+  public Action<Player> updateTurn() {
+    return switch (gameState) {
+      case ENDED, SETUP -> new GenericAction<>(new IllegalStateException("Attempted to update turn in invalid game state"));
+      case RUNNING -> {
+        players.addLast(players.removeFirst());
+        yield new GenericAction<>(players.getFirst());
+      }
+    };
   }
 
   /* Running */

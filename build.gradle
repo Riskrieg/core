@@ -23,7 +23,7 @@ publishing {
 }
 
 java {
-//    withJavadocJar()
+    withJavadocJar()
     withSourcesJar()
     toolchain {
         languageVersion = JavaLanguageVersion.of(15)

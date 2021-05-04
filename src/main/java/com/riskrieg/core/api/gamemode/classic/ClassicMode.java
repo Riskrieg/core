@@ -110,4 +110,14 @@ public final class ClassicMode implements GameMode { // TODO: No capitals, no al
     return null;
   }
 
+  @Override
+  public boolean isTurn(@Nonnull Identity identity) {
+    return false;
+  }
+
+  @Override
+  public Action<Player> updateTurn() {
+    return null;
+  }
+
 }

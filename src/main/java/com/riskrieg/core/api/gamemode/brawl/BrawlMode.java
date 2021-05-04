@@ -110,4 +110,14 @@ public final class BrawlMode implements GameMode { // TODO: Capturing a capital 
     return null;
   }
 
+  @Override
+  public boolean isTurn(@Nonnull Identity identity) {
+    return false;
+  }
+
+  @Override
+  public Action<Player> updateTurn() {
+    return null;
+  }
+
 }
