@@ -3,6 +3,7 @@ package com.riskrieg.core.api.gamemode.classic;
 import com.riskrieg.core.api.Save;
 import com.riskrieg.core.api.gamemode.GameID;
 import com.riskrieg.core.api.gamemode.GameMode;
+import com.riskrieg.core.api.nation.ClaimResult;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
@@ -110,11 +111,13 @@ public final class ClassicMode implements GameMode { // TODO: No capitals, no al
     return null;
   }
 
+  @Nonnull
   @Override
-  public boolean isTurn(@Nonnull Identity identity) {
-    return false;
+  public Action<ClaimResult> claim(Identity identity, TerritoryId... territoryIds) {
+    return null;
   }
 
+  @Nonnull
   @Override
   public Action<Player> updateTurn() {
     return null;

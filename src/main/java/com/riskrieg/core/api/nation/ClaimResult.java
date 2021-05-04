@@ -1,4 +1,4 @@
-package com.riskrieg.core.api.gamemode.conquest;
+package com.riskrieg.core.api.nation;
 
 import com.riskrieg.map.territory.TerritoryId;
 import java.util.Collections;

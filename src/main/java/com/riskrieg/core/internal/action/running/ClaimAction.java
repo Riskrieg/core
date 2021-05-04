@@ -1,7 +1,7 @@
 package com.riskrieg.core.internal.action.running;
 
 import com.riskrieg.core.api.Dice;
-import com.riskrieg.core.api.gamemode.conquest.ClaimResult;
+import com.riskrieg.core.api.nation.ClaimResult;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.constant.Constants;

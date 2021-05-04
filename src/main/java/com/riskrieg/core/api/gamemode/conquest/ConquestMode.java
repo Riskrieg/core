@@ -3,6 +3,7 @@ package com.riskrieg.core.api.gamemode.conquest;
 import com.riskrieg.core.api.Save;
 import com.riskrieg.core.api.gamemode.GameID;
 import com.riskrieg.core.api.gamemode.GameMode;
+import com.riskrieg.core.api.nation.ClaimResult;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
@@ -165,14 +166,16 @@ public final class ConquestMode implements GameMode {
     return new StartAction(this, gameMap, players, nations);
   }
 
-  @Override
-  public boolean isTurn(@Nonnull Identity identity) {
-    return switch (gameState) {
-      case ENDED, SETUP -> false;
-      case RUNNING -> players.getFirst().identity().equals(identity);
-    };
+  /* Running */
+
+  @Nonnull
+  @CheckReturnValue
+  public Action<ClaimResult> claim(Identity identity, TerritoryId... territoryIds) {
+    setLastUpdated();
+    return new ClaimAction(identity, Set.of(territoryIds), players.getFirst().identity(), gameState, gameMap, nations);
   }
 
+  @Nonnull
   @Override
   public Action<Player> updateTurn() { // TODO: Put end-game checks here...?
     return switch (gameState) {
@@ -182,15 +185,6 @@ public final class ConquestMode implements GameMode {
         yield new GenericAction<>(players.getFirst());
       }
     };
-  }
-
-  /* Running */
-
-  @Nonnull
-  @CheckReturnValue
-  public ClaimAction claim(Identity identity, TerritoryId... territoryIds) {
-    setLastUpdated();
-    return new ClaimAction(identity, Set.of(territoryIds), players.getFirst().identity(), gameState, gameMap, nations);
   }
 
   /* Private Methods */
