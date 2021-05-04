@@ -13,10 +13,14 @@ import com.riskrieg.core.constant.Constants;
 import com.riskrieg.core.internal.action.CompletableAction;
 import com.riskrieg.core.internal.action.GenericAction;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 public final class GroupImpl implements Group {
@@ -114,6 +118,25 @@ public final class GroupImpl implements Group {
     } catch (Exception e) {
       return new GenericAction<>(e);
     }
+  }
+
+  @Nonnull
+  @Override
+  public Set<GameMode> getGames() {
+    Set<GameMode> result = new HashSet<>();
+    Set<Path> saves;
+    try {
+      saves = Files.list(path).collect(Collectors.toSet());
+    } catch (IOException e) {
+      saves = new HashSet<>();
+    }
+    for (Path path : saves) {
+      if (path.getFileName().toString().endsWith(Constants.SAVE_FILE_EXT)) {
+        var fileName = path.getFileName().toString().split(Constants.SAVE_FILE_EXT)[0].trim();
+        retrieveGameById(fileName).complete().ifPresent(result::add);
+      }
+    }
+    return result;
   }
 
   @Nonnull

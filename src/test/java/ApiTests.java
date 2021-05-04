@@ -25,7 +25,9 @@ public class ApiTests {
   public void testRiskrieg() {
     Riskrieg api = RiskriegBuilder.create(Path.of("res/saves/")).build();
     var optGroup = api.createGroup("test").complete(failure -> System.out.println("failure: " + failure.getMessage()));
-    optGroup.ifPresent(group -> group.createGame("test", ConquestMode.class).submit());
+    optGroup.ifPresent(group -> group.createGame("testing", ConquestMode.class).submit());
+
+    optGroup.ifPresent(group-> System.out.println(group.getGames().size()));
   }
 
   @Test

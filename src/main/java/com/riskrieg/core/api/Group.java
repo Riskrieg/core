@@ -3,6 +3,7 @@ package com.riskrieg.core.api;
 import com.riskrieg.core.api.gamemode.GameMode;
 import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.action.CompletableAction;
+import java.util.Set;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
@@ -22,6 +23,9 @@ public interface Group {
   @Nonnull
   @CheckReturnValue
   CompletableAction<GameMode> retrieveGameById(@Nonnull String gameId);
+
+  @Nonnull
+  Set<GameMode> getGames();
 
   @Nonnull
   @CheckReturnValue
