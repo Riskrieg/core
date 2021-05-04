@@ -14,6 +14,18 @@ public final class RandomOrder implements TurnOrder {
 
   @Nonnull
   @Override
+  public String displayName() {
+    return "Random";
+  }
+
+  @Nonnull
+  @Override
+  public String description() {
+    return "Players take turns in an order that is randomized at the start of the game.";
+  }
+
+  @Nonnull
+  @Override
   public Deque<Player> sort(@Nonnull final Collection<Player> players) {
     Objects.requireNonNull(players);
     List<Player> playerList = new ArrayList<>(players);

@@ -7,6 +7,12 @@ import javax.annotation.Nonnull;
 
 public interface TurnOrder {
 
+  @Nonnull
+  String displayName();
+
+  @Nonnull
+  String description();
+
   /**
    * This method should always return a Deque that has the same elements, and number of elements, as the input Collection, regardless of implementation.
    *
