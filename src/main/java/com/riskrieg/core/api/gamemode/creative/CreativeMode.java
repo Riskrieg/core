@@ -106,7 +106,7 @@ public final class CreativeMode implements GameMode { // TODO: D&D style
 
   @Nonnull
   @Override
-  public Action<GameState> start(@Nonnull TurnOrder order) {
+  public Action<Player> start(@Nonnull TurnOrder order) {
     return null;
   }
 

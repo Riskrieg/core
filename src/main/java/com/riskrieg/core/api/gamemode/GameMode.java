@@ -67,7 +67,7 @@ public interface GameMode {
 
   @Nonnull
   @CheckReturnValue
-  Action<GameState> start(@Nonnull TurnOrder order);
+  Action<Player> start(@Nonnull TurnOrder order);
 
   boolean isTurn(@Nonnull Identity identity);
 

@@ -160,7 +160,7 @@ public final class ConquestMode implements GameMode {
 
   @Nonnull
   @Override
-  public Action<GameState> start(@Nonnull TurnOrder order) {
+  public Action<Player> start(@Nonnull TurnOrder order) {
     players = order.sort(players);
     return new StartAction(this, gameMap, players, nations);
   }
@@ -174,7 +174,7 @@ public final class ConquestMode implements GameMode {
   }
 
   @Override
-  public Action<Player> updateTurn() {
+  public Action<Player> updateTurn() { // TODO: Put end-game checks here...?
     return switch (gameState) {
       case ENDED, SETUP -> new GenericAction<>(new IllegalStateException("Attempted to update turn in invalid game state"));
       case RUNNING -> {

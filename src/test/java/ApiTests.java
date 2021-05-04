@@ -27,7 +27,7 @@ public class ApiTests {
     var optGroup = api.createGroup("test").complete(failure -> System.out.println("failure: " + failure.getMessage()));
     optGroup.ifPresent(group -> group.createGame("testing", ConquestMode.class).submit());
 
-    optGroup.ifPresent(group-> System.out.println(group.getGames().size()));
+    optGroup.ifPresent(group -> System.out.println(group.getGames().size()));
   }
 
   @Test

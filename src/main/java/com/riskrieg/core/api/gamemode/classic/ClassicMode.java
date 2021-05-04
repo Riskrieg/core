@@ -106,7 +106,7 @@ public final class ClassicMode implements GameMode { // TODO: No capitals, no al
 
   @Nonnull
   @Override
-  public Action<GameState> start(@Nonnull TurnOrder order) {
+  public Action<Player> start(@Nonnull TurnOrder order) {
     return null;
   }
 

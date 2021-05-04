@@ -106,7 +106,7 @@ public final class BrawlMode implements GameMode { // TODO: Capturing a capital 
 
   @Nonnull
   @Override
-  public Action<GameState> start(@Nonnull TurnOrder order) {
+  public Action<Player> start(@Nonnull TurnOrder order) {
     return null;
   }
 

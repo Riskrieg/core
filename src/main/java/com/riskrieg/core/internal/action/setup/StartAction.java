@@ -8,17 +8,18 @@ import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.unsorted.gamemode.GameState;
 import com.riskrieg.core.unsorted.map.GameMap;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
-public final class StartAction implements Action<GameState> {
+public final class StartAction implements Action<Player> {
 
   private final GameMode gameMode;
   private final GameMap gameMap;
-  private final Collection<Player> players;
+  private final Deque<Player> players;
   private final Collection<Nation> nations;
 
-  public StartAction(GameMode gameMode, GameMap gameMap, Collection<Player> players, Collection<Nation> nations) {
+  public StartAction(GameMode gameMode, GameMap gameMap, Deque<Player> players, Collection<Nation> nations) {
     this.gameMode = gameMode;
     this.gameMap = gameMap;
     this.players = players;
@@ -26,7 +27,7 @@ public final class StartAction implements Action<GameState> {
   }
 
   @Override
-  public void submit(@Nullable Consumer<? super GameState> success, @Nullable Consumer<? super Throwable> failure) {
+  public void submit(@Nullable Consumer<? super Player> success, @Nullable Consumer<? super Throwable> failure) {
     try {
       switch (gameMode.gameState()) {
         case ENDED, RUNNING -> throw new IllegalStateException("The map can only be set during the setup phase");
@@ -41,11 +42,11 @@ public final class StartAction implements Action<GameState> {
             throw new IllegalStateException("Not all players have selected a capital");
           }
           if (nations.size() > players.size()) {
-            throw new IllegalStateException("Critical error: game cannot be started and must be reset");
+            throw new IllegalStateException("Critical error: game cannot be started");
           }
           gameMode.setGameState(GameState.RUNNING);
           if (success != null) {
-            success.accept(gameMode.gameState());
+            success.accept(players.getFirst());
           }
         }
       }
