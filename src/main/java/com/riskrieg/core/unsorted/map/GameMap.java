@@ -17,48 +17,56 @@ import org.jgrapht.graph.SimpleGraph;
 
 public final class GameMap {
 
-  private RkmMap map;
+  private RkmMap rkmMap;
   private MapOptions options;
 
   public GameMap() {
-    this.map = null;
+    this.rkmMap = null;
     this.options = null;
   }
 
-  public GameMap(RkmMap map, MapOptions options) {
-    Objects.requireNonNull(map);
+  public GameMap(RkmMap rkmMap, MapOptions options) {
+    Objects.requireNonNull(rkmMap);
     Objects.requireNonNull(options);
-    this.map = map;
+    this.rkmMap = rkmMap;
     this.options = options;
   }
 
   public boolean isSet() {
-    return this.map != null && this.options != null;
+    return this.rkmMap != null && this.options != null;
   }
 
-  public void set(RkmMap map, MapOptions options) {
-    Objects.requireNonNull(map);
+  public void set(RkmMap rkmMap, MapOptions options) {
+    Objects.requireNonNull(rkmMap);
     Objects.requireNonNull(options);
-    this.map = map;
+    this.rkmMap = rkmMap;
     this.options = options;
   }
 
-  public MapName getMapName() {
-    return map.mapName();
+  public MapName mapName() {
+    return rkmMap.mapName();
   }
 
-  public MapAuthor getAuthor() {
-    return map.author();
+  public MapAuthor author() {
+    return rkmMap.author();
   }
 
-  public Graph<Territory, Border> getGraph() {
+  public MapImage mapImage() {
+    return rkmMap.mapImage();
+  }
+
+  public MapOptions options() {
+    return options;
+  }
+
+  public Graph<Territory, Border> graph() {
     var graph = new SimpleGraph<Territory, Border>(Border.class);
-    for (Territory territory : map.getGraph().vertices()) {
+    for (Territory territory : rkmMap.graph().vertices()) {
       graph.addVertex(territory);
     }
-    for (Border border : map.getGraph().edges()) {
-      var source = map.getGraph().vertices().stream().filter(t -> t.id().equals(border.source())).findAny().orElse(null);
-      var target = map.getGraph().vertices().stream().filter(t -> t.id().equals(border.target())).findAny().orElse(null);
+    for (Border border : rkmMap.graph().edges()) {
+      var source = rkmMap.graph().vertices().stream().filter(t -> t.id().equals(border.source())).findAny().orElse(null);
+      var target = rkmMap.graph().vertices().stream().filter(t -> t.id().equals(border.target())).findAny().orElse(null);
       if (source != null && target != null) {
         graph.addEdge(source, target, border);
       }
@@ -66,16 +74,8 @@ public final class GameMap {
     return graph;
   }
 
-  public MapImage getMapImage() {
-    return map.getMapImage();
-  }
-
-  public MapOptions getOptions() {
-    return options;
-  }
-
   public Set<TerritoryId> getNeighbors(TerritoryId id) {
-    var graph = getGraph();
+    var graph = graph();
     Territory territory = graph.vertexSet().stream().filter(t -> t.id().equals(id)).findAny().orElse(null);
     if (territory != null) {
       return Graphs.neighborSetOf(graph, territory).stream().map(Territory::id).collect(Collectors.toSet());
@@ -84,18 +84,18 @@ public final class GameMap {
   }
 
   public boolean areNeighbors(TerritoryId source, TerritoryId target) {
-    return getGraph().edgeSet().contains(new Border(source, target));
+    return graph().edgeSet().contains(new Border(source, target));
   }
 
   public boolean contains(TerritoryId id) {
     if (!isSet()) {
       return false;
     }
-    return getGraph().vertexSet().stream().anyMatch(territory -> territory.id().equals(id));
+    return graph().vertexSet().stream().anyMatch(territory -> territory.id().equals(id));
   }
 
   public Territory get(TerritoryId id) {
-    for (Territory t : map.getGraph().vertices()) {
+    for (Territory t : rkmMap.graph().vertices()) {
       if (t.id().equals(id)) {
         return t;
       }

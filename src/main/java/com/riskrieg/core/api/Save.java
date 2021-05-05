@@ -31,12 +31,12 @@ public final class Save {
   private final Set<Nation> nations;
 
   public <T extends GameMode> Save(T game) {
-    this.id = game.getId();
+    this.id = game.id();
     this.creationTime = Moment.of(game.creationTime());
     this.lastUpdated = Moment.of(game.lastUpdated());
     this.gameState = game.gameState();
     if (game.map().isSet()) {
-      this.mapCodeName = game.map().getMapName().name();
+      this.mapCodeName = game.map().mapName().simpleName();
     } else {
       this.mapCodeName = null;
     }
