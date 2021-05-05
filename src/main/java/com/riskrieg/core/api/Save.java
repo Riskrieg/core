@@ -25,7 +25,7 @@ public final class Save {
   private final Moment lastUpdated;
 
   private final GameState gameState;
-  private final String mapCodeName;
+  private final String mapSimpleName;
 
   private final Deque<Player> players;
   private final Set<Nation> nations;
@@ -36,9 +36,9 @@ public final class Save {
     this.lastUpdated = Moment.of(game.lastUpdated());
     this.gameState = game.gameState();
     if (game.map().isSet()) {
-      this.mapCodeName = game.map().mapName().simpleName();
+      this.mapSimpleName = game.map().mapName().simpleName();
     } else {
-      this.mapCodeName = null;
+      this.mapSimpleName = null;
     }
     this.players = new ArrayDeque<>(game.players());
     this.nations = new HashSet<>(game.nations());
@@ -57,7 +57,7 @@ public final class Save {
     }
   }
 
-  public GameModeType getGameType() {
+  public GameModeType gameType() {
     return gameType;
   }
 
@@ -77,8 +77,8 @@ public final class Save {
     return gameState;
   }
 
-  public String mapCodeName() {
-    return mapCodeName;
+  public String mapSimpleName() {
+    return mapSimpleName;
   }
 
   public Deque<Player> players() {

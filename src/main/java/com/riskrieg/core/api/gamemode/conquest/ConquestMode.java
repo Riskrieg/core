@@ -61,12 +61,12 @@ public final class ConquestMode implements GameMode {
     this.creationTime = save.creationTime().asInstant();
     this.lastUpdated = save.lastUpdated().asInstant();
     this.gameState = save.gameState();
-    if (save.mapCodeName() == null) {
+    if (save.mapSimpleName() == null) {
       this.gameMap = new GameMap();
     } else {
       // TODO: Temporary
-      var optMap = RkmMap.load(Path.of("res/maps/" + save.mapCodeName() + ".rkm"));
-      var optOptions = MapOptions.load(Path.of("res/maps/options/" + save.mapCodeName() + ".json"), false);
+      var optMap = RkmMap.load(Path.of("res/maps/" + save.mapSimpleName() + ".rkm"));
+      var optOptions = MapOptions.load(Path.of("res/maps/options/" + save.mapSimpleName() + ".json"), false);
       if (optMap.isPresent() && optOptions.isPresent()) {
         this.gameMap = new GameMap(optMap.get(), optOptions.get());
       } else {

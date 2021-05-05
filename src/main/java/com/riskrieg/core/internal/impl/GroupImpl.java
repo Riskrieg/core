@@ -108,7 +108,7 @@ public final class GroupImpl implements Group {
       if (save == null) {
         throw new IllegalStateException("Unable to read save file");
       }
-      return switch (save.getGameType()) {
+      return switch (save.gameType()) {
         case CLASSIC -> new GenericAction<>(new ClassicMode(save));
         case CONQUEST -> new GenericAction<>(new ConquestMode(save));
         case SIEGE -> new GenericAction<>(new SiegeMode(save));
