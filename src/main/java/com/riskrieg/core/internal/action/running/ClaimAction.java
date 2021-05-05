@@ -42,7 +42,7 @@ public final class ClaimAction implements Action<ClaimResult> {
       switch (gameState) {
         case ENDED, SETUP -> throw new IllegalStateException("Claims can only be made while the game is active");
         case RUNNING -> {
-          if (nations.stream().noneMatch(nation -> nation.getLeaderIdentity().equals(identity))) {
+          if (nations.stream().noneMatch(nation -> nation.identity().equals(identity))) {
             throw new IllegalStateException("Player is not present");
           }
           if (ids.isEmpty()) {
@@ -54,7 +54,7 @@ public final class ClaimAction implements Action<ClaimResult> {
           if (!gameMap.isSet()) {
             throw new IllegalStateException("The game map is not set");
           }
-          Nation nation = nations.stream().filter(n -> n.getLeaderIdentity().equals(identity)).findAny().orElseThrow();
+          Nation nation = nations.stream().filter(n -> n.identity().equals(identity)).findAny().orElseThrow();
 
           var invalidTerritories = ids.stream().filter(id -> !gameMap.contains(id)).collect(Collectors.toSet());
           var ownedTerritories = ids.stream().filter(id -> nation.territories().stream().anyMatch(tid -> tid.equals(id))).collect(Collectors.toSet());

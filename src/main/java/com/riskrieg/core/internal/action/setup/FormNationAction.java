@@ -48,7 +48,7 @@ public final class FormNationAction implements Action<Nation> {
           if (gameMap.getGraph().vertexSet().stream().noneMatch(t -> t.id().equals(id))) {
             throw new IllegalStateException("No such territory exists on the selected map");
           }
-          if (nations.stream().anyMatch(n -> n.getLeaderIdentity().equals(identity))) {
+          if (nations.stream().anyMatch(n -> n.identity().equals(identity))) {
             throw new IllegalStateException("That player has already selected a capital");
           }
           var territoryIds = nations.stream().map(Nation::territories).flatMap(Set::stream).collect(Collectors.toSet());

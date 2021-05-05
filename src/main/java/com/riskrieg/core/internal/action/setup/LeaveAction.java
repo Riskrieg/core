@@ -27,7 +27,7 @@ public final class LeaveAction implements Action<Player> {
       if (playerToRemove == null) {
         throw new IllegalStateException("Player is not present");
       }
-      nations.stream().filter(n -> n.getLeaderIdentity().equals(identity)).findAny().ifPresent(nations::remove);
+      nations.stream().filter(n -> n.identity().equals(identity)).findAny().ifPresent(nations::remove);
       players.remove(playerToRemove);
       if (success != null) {
         success.accept(playerToRemove);

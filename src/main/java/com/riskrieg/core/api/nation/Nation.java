@@ -23,7 +23,7 @@ public final class Nation {
     this.territories.add(capital);
   }
 
-  public Identity getLeaderIdentity() {
+  public Identity identity() {
     return identity;
   }
 
@@ -41,7 +41,7 @@ public final class Nation {
     return neighbors;
   }
 
-  public boolean isOfType(TerritoryId id, TerritoryType type) {
+  public boolean territoryIsOfType(TerritoryId id, TerritoryType type) {
     GameTerritory gameTerritory = territories.stream().filter(gt -> gt.id().equals(id)).findAny().orElse(null);
     return gameTerritory != null && gameTerritory.type().equals(type);
   }
