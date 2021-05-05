@@ -25,7 +25,7 @@ public interface Group {
   CompletableAction<GameMode> retrieveGameById(@Nonnull String gameId);
 
   @Nonnull
-  Set<GameMode> getGames();
+  Set<GameMode> retrieveGames();
 
   @Nonnull
   @CheckReturnValue

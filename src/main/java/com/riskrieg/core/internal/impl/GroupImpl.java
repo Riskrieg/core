@@ -123,7 +123,7 @@ public final class GroupImpl implements Group {
 
   @Nonnull
   @Override
-  public Set<GameMode> getGames() {
+  public Set<GameMode> retrieveGames() {
     Set<GameMode> result = new HashSet<>();
     Set<Path> saves;
     try {
