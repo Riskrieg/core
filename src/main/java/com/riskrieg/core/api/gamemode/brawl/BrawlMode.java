@@ -37,7 +37,7 @@ public final class BrawlMode implements GameMode { // TODO: Capturing a capital 
 
   @Nonnull
   @Override
-  public GameID getId() {
+  public GameID id() {
     return null;
   }
 

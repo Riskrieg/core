@@ -85,7 +85,7 @@ public final class ConquestMode implements GameMode {
 
   @Nonnull
   @Override
-  public GameID getId() {
+  public GameID id() {
     return id;
   }
 

@@ -37,7 +37,7 @@ public final class SiegeMode implements GameMode {
 
   @Nonnull
   @Override
-  public GameID getId() {
+  public GameID id() {
     return null;
   }
 

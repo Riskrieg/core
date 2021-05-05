@@ -37,7 +37,7 @@ public final class CreativeMode implements GameMode { // TODO: D&D style
 
   @Nonnull
   @Override
-  public GameID getId() {
+  public GameID id() {
     return null;
   }
 

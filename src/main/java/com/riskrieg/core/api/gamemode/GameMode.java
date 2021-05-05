@@ -23,7 +23,7 @@ public interface GameMode {
   String displayName();
 
   @Nonnull
-  GameID getId();
+  GameID id();
 
   @Nonnull
   Instant creationTime();
