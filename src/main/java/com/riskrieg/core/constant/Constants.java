@@ -3,7 +3,7 @@ package com.riskrieg.core.constant;
 public final class Constants {
 
   public static final String NAME = "Riskrieg";
-  public static final String VERSION = "2105.02a";
+  public static final String VERSION = "2105.05a";
   public static final String SAVE_FILE_EXT = ".json";
 
   public static final int MIN_PLAYERS = 2;
