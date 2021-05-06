@@ -2,6 +2,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.riskrieg.core.api.Riskrieg;
 import com.riskrieg.core.api.RiskriegBuilder;
+import com.riskrieg.core.api.gamemode.classic.ClassicMode;
 import com.riskrieg.core.api.gamemode.conquest.ConquestMode;
 import com.riskrieg.core.api.order.RandomOrder;
 import com.riskrieg.core.api.player.Identity;
@@ -32,7 +33,7 @@ public class ApiTests {
 
   @Test
   public void testJoin() {
-    ConquestMode game = new ConquestMode();
+    ClassicMode game = new ClassicMode();
     game.join("Name", new Color(1, 1, 1));
     assertEquals(0, game.players().size());
     game.join("Name", new Color(1, 1, 1)).submit();
@@ -51,7 +52,7 @@ public class ApiTests {
 
   @Test
   public void testConquest() {
-    ConquestMode game = new ConquestMode();
+    ClassicMode game = new ClassicMode();
 
     game.join(Identity.of("1234"), "Test", new Color(0, 0, 0));
     assertEquals(0, game.players().size());

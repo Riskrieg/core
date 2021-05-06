@@ -148,7 +148,7 @@ public final class ClassicMode implements GameMode { // No capitals, no alliance
   @Override
   public Action<Player> leave(@Nonnull Identity identity) {
     setLastUpdated();
-    return new LeaveAction(identity, players, nations);
+    return new LeaveAction(identity, this, players, nations);
   }
 
   @Nonnull
