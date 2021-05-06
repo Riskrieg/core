@@ -9,24 +9,72 @@ import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.action.Action;
+import com.riskrieg.core.internal.action.GenericAction;
+import com.riskrieg.core.internal.action.running.ClaimAction;
+import com.riskrieg.core.internal.action.setup.FormNationAction;
+import com.riskrieg.core.internal.action.setup.JoinAction;
+import com.riskrieg.core.internal.action.setup.LeaveAction;
+import com.riskrieg.core.internal.action.setup.SelectMapAction;
+import com.riskrieg.core.internal.action.setup.StartAction;
 import com.riskrieg.core.unsorted.gamemode.GameState;
 import com.riskrieg.core.unsorted.map.GameMap;
 import com.riskrieg.core.unsorted.map.MapOptions;
 import com.riskrieg.map.RkmMap;
 import com.riskrieg.map.territory.TerritoryId;
 import java.awt.Color;
+import java.nio.file.Path;
 import java.time.Instant;
+import java.util.ArrayDeque;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashSet;
+import java.util.Set;
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
-public final class ClassicMode implements GameMode { // TODO: No capitals, no alliances
+public final class ClassicMode implements GameMode { // No capitals, no alliances
+
+  private final GameID id;
+  private final Instant creationTime;
+  private Instant lastUpdated;
+
+  private GameState gameState;
+  private GameMap gameMap;
+
+  private Deque<Player> players;
+  private Set<Nation> nations;
 
   public ClassicMode() {
+    this.id = GameID.random();
+    this.creationTime = Instant.now();
+    this.lastUpdated = Instant.now();
+    this.gameState = GameState.SETUP;
+    this.gameMap = new GameMap();
 
+    this.players = new ArrayDeque<>();
+    this.nations = new HashSet<>();
   }
 
   public ClassicMode(Save save) {
-
+    this.id = save.id();
+    this.creationTime = save.creationTime().asInstant();
+    this.lastUpdated = save.lastUpdated().asInstant();
+    this.gameState = save.gameState();
+    if (save.mapSimpleName() == null) {
+      this.gameMap = new GameMap();
+    } else {
+      // TODO: Temporary
+      var optMap = RkmMap.load(Path.of("res/maps/" + save.mapSimpleName() + ".rkm"));
+      var optOptions = MapOptions.load(Path.of("res/maps/options/" + save.mapSimpleName() + ".json"), false);
+      if (optMap.isPresent() && optOptions.isPresent()) {
+        this.gameMap = new GameMap(optMap.get(), optOptions.get());
+      } else {
+        this.gameMap = new GameMap();
+      }
+    }
+    this.players = new ArrayDeque<>(save.players());
+    this.nations = new HashSet<>(save.nations());
   }
 
   @Nonnull
@@ -38,95 +86,117 @@ public final class ClassicMode implements GameMode { // TODO: No capitals, no al
   @Nonnull
   @Override
   public GameID id() {
-    return null;
+    return id;
   }
 
   @Nonnull
   @Override
   public Instant creationTime() {
-    return null;
+    return creationTime;
   }
 
   @Nonnull
   @Override
   public Instant lastUpdated() {
-    return null;
+    return lastUpdated;
   }
 
   @Nonnull
   @Override
   public GameState gameState() {
-    return null;
+    return gameState;
   }
 
   @Override
   public void setGameState(@Nonnull GameState gameState) {
-
+    this.gameState = gameState;
   }
 
   @Override
   public boolean isEnded() {
-    return false;
+    return gameState.equals(GameState.ENDED);
   }
 
   @Nonnull
   @Override
   public Collection<Player> players() {
-    return null;
+    return Collections.unmodifiableCollection(players);
   }
 
   @Nonnull
   @Override
   public Collection<Nation> nations() {
-    return null;
+    return Collections.unmodifiableCollection(nations);
   }
 
   @Nonnull
   @Override
   public GameMap map() {
-    return null;
-  }
+    return gameMap;
+  } // TODO: Return unmodifiable version of GameMap
+
+  /* Setup */
 
   @Nonnull
   @Override
   public Action<Player> join(@Nonnull Identity identity, @Nonnull String name, @Nonnull Color color) {
-    return null;
+    setLastUpdated();
+    return new JoinAction(identity, name, color, gameState, players);
   }
 
   @Nonnull
   @Override
   public Action<Player> leave(@Nonnull Identity identity) {
-    return null;
+    setLastUpdated();
+    return new LeaveAction(identity, players, nations);
   }
 
   @Nonnull
   @Override
   public Action<GameMap> selectMap(@Nonnull RkmMap rkmMap, @Nonnull MapOptions options) {
-    return null;
+    setLastUpdated();
+    return new SelectMapAction(rkmMap, options, gameState, gameMap, nations);
   }
 
   @Nonnull
   @Override
   public Action<Nation> formNation(@Nonnull Identity identity, @Nonnull TerritoryId territoryId) {
-    return null;
+    setLastUpdated();
+    return new FormNationAction(identity, territoryId, gameState, gameMap, players, nations);
   }
 
   @Nonnull
   @Override
   public Action<Player> start(@Nonnull TurnOrder order) {
-    return null;
+    players = order.sort(players);
+    return new StartAction(this, gameMap, players, nations);
   }
 
+  /* Running */
+
   @Nonnull
-  @Override
+  @CheckReturnValue
   public Action<ClaimResult> claim(Identity identity, TerritoryId... territoryIds) {
-    return null;
+    setLastUpdated();
+    return new ClaimAction(identity, Set.of(territoryIds), players.getFirst().identity(), gameState, gameMap, nations);
   }
 
   @Nonnull
   @Override
-  public Action<Player> updateTurn() {
-    return null;
+  public Action<Player> updateTurn() { // TODO: Put end-game checks here...?
+    return switch (gameState) {
+      case ENDED, SETUP -> new GenericAction<>(new IllegalStateException("Attempted to update turn in invalid game state"));
+      case RUNNING -> {
+        players.addLast(players.removeFirst());
+        yield new GenericAction<>(players.getFirst());
+      }
+    };
+  }
+
+  /* Private Methods */
+
+  private void setLastUpdated() {
+    this.lastUpdated = Instant.now();
   }
 
 }
