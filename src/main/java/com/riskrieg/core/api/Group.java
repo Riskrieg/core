@@ -31,6 +31,6 @@ public interface Group {
   @CheckReturnValue
   <T extends GameMode> Action<T> saveGame(@Nonnull String gameId, T game);
 
-  // TODO: Add delete method
+  boolean deleteGame(String gameId);
 
 }

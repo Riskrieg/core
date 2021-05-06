@@ -152,4 +152,17 @@ public final class GroupImpl implements Group {
     }
   }
 
+  @Override
+  public boolean deleteGame(String gameId) {
+    try {
+      boolean deleted = Files.deleteIfExists(path.resolve(gameId + Constants.SAVE_FILE_EXT));
+      if (Files.list(path).count() == 0) { // May or may not cause issues, locks files while counting.
+        Files.deleteIfExists(path);
+      }
+      return deleted;
+    } catch (IOException e) {
+      return false;
+    }
+  }
+
 }
