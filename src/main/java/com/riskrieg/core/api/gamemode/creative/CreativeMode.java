@@ -125,7 +125,7 @@ public final class CreativeMode implements GameMode { // TODO: D&D style
 
   @Nonnull
   @Override
-  public Action<Player> updateTurn() {
+  public Action<Player> update() {
     return null;
   }
 

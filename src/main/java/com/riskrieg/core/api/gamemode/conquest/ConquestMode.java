@@ -125,7 +125,7 @@ public final class ConquestMode implements GameMode {
 
   @Nonnull
   @Override
-  public Action<Player> updateTurn() {
+  public Action<Player> update() {
     return null;
   }
 

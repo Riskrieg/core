@@ -79,6 +79,6 @@ public interface GameMode {
 
   @Nonnull
   @CheckReturnValue
-  Action<Player> updateTurn();
+  Action<Player> update();
 
 }

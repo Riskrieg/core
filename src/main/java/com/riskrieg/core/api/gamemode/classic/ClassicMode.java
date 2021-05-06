@@ -183,7 +183,7 @@ public final class ClassicMode implements GameMode { // No capitals, no alliance
 
   @Nonnull
   @Override
-  public Action<Player> updateTurn() { // TODO: Put end-game checks here...?
+  public Action<Player> update() { // TODO: Put end-game checks here...?
     return switch (gameState) {
       case ENDED, SETUP -> new GenericAction<>(new IllegalStateException("Attempted to update turn in invalid game state"));
       case RUNNING -> {
