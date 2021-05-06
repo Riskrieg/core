@@ -3,11 +3,11 @@ package com.riskrieg.core.unsorted.gamemode;
 public enum GameModeType {
 
   UNKNOWN("Unknown", "N/A"),
-  CLASSIC("Classic", "The original game mode. No capitals, no alliances."),
+  CLASSIC("Classic", "The original, simpler game mode. No capitals, no alliances."),
   CONQUEST("Conquest", "The default game mode. Has capitals and alliances."),
-  SIEGE("Siege", "Conquer enemy capitals to defeat them. Has capitals, has alliances."),
-  BRAWL("Brawl", "Conquer enemy capitals to defeat them. Has capitals, no alliances."),
-  CREATIVE("Creative", "A D&D-style game mode.");
+  REGICIDE("Regicide", "Conquer enemy capitals to defeat them. Has capitals, has alliances."),
+  BRAWL("Brawl", "Build up your territories until no more are left, then attack. Has capitals, no alliances."),
+  CREATIVE("Creative", "A D&D-style role-playing game mode.");
 
   private final String displayName;
   private final String description;

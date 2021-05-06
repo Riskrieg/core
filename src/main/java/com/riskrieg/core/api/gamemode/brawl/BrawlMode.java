@@ -3,12 +3,12 @@ package com.riskrieg.core.api.gamemode.brawl;
 import com.riskrieg.core.api.Save;
 import com.riskrieg.core.api.gamemode.GameID;
 import com.riskrieg.core.api.gamemode.GameMode;
-import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.action.Action;
+import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.internal.bundle.LeaveBundle;
 import com.riskrieg.core.unsorted.gamemode.GameState;
 import com.riskrieg.core.unsorted.map.GameMap;
@@ -20,7 +20,7 @@ import java.time.Instant;
 import java.util.Collection;
 import javax.annotation.Nonnull;
 
-public final class BrawlMode implements GameMode { // TODO: Capturing a capital defeats the entire nation
+public final class BrawlMode implements GameMode { // TODO: Select territories by taking turns in setup state until no more are left, then start game from there.
 
   public BrawlMode() {
 

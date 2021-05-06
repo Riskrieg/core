@@ -6,7 +6,7 @@ import com.riskrieg.core.api.gamemode.brawl.BrawlMode;
 import com.riskrieg.core.api.gamemode.classic.ClassicMode;
 import com.riskrieg.core.api.gamemode.conquest.ConquestMode;
 import com.riskrieg.core.api.gamemode.creative.CreativeMode;
-import com.riskrieg.core.api.gamemode.siege.SiegeMode;
+import com.riskrieg.core.api.gamemode.regicide.RegicideMode;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.unsorted.gamemode.GameModeType;
@@ -46,8 +46,8 @@ public final class Save {
       this.gameType = GameModeType.CLASSIC;
     } else if (game instanceof ConquestMode) {
       this.gameType = GameModeType.CONQUEST;
-    } else if (game instanceof SiegeMode) {
-      this.gameType = GameModeType.SIEGE;
+    } else if (game instanceof RegicideMode) {
+      this.gameType = GameModeType.REGICIDE;
     } else if (game instanceof BrawlMode) {
       this.gameType = GameModeType.BRAWL;
     } else if (game instanceof CreativeMode) {

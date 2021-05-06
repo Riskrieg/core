@@ -1,14 +1,14 @@
-package com.riskrieg.core.api.gamemode.siege;
+package com.riskrieg.core.api.gamemode.regicide;
 
 import com.riskrieg.core.api.Save;
 import com.riskrieg.core.api.gamemode.GameID;
 import com.riskrieg.core.api.gamemode.GameMode;
-import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.action.Action;
+import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.internal.bundle.LeaveBundle;
 import com.riskrieg.core.unsorted.gamemode.GameState;
 import com.riskrieg.core.unsorted.map.GameMap;
@@ -20,20 +20,20 @@ import java.time.Instant;
 import java.util.Collection;
 import javax.annotation.Nonnull;
 
-public final class SiegeMode implements GameMode {
+public final class RegicideMode implements GameMode {
 
-  public SiegeMode() {
+  public RegicideMode() {
 
   }
 
-  public SiegeMode(Save save) {
+  public RegicideMode(Save save) {
 
   }
 
   @Nonnull
   @Override
   public String displayName() {
-    return "Siege";
+    return "Regicide";
   }
 
   @Nonnull
