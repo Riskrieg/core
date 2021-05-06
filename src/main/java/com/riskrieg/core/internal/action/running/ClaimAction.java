@@ -1,7 +1,7 @@
 package com.riskrieg.core.internal.action.running;
 
 import com.riskrieg.core.api.Dice;
-import com.riskrieg.core.api.nation.ClaimResult;
+import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.constant.Constants;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public final class ClaimAction implements Action<ClaimResult> {
+public final class ClaimAction implements Action<ClaimBundle> {
 
   private final Identity identity;
   private final Set<TerritoryId> ids;
@@ -37,7 +37,7 @@ public final class ClaimAction implements Action<ClaimResult> {
   }
 
   @Override
-  public void submit(@Nullable Consumer<? super ClaimResult> success, @Nullable Consumer<? super Throwable> failure) {
+  public void submit(@Nullable Consumer<? super ClaimBundle> success, @Nullable Consumer<? super Throwable> failure) {
     try {
       switch (gameState) {
         case ENDED, SETUP -> throw new IllegalStateException("Claims can only be made while the game is active");
@@ -96,7 +96,7 @@ public final class ClaimAction implements Action<ClaimResult> {
           }
 
           if (success != null) {
-            success.accept(new ClaimResult(claimed, taken, defended));
+            success.accept(new ClaimBundle(claimed, taken, defended));
           }
         }
       }

@@ -3,12 +3,13 @@ package com.riskrieg.core.api.gamemode.conquest;
 import com.riskrieg.core.api.Save;
 import com.riskrieg.core.api.gamemode.GameID;
 import com.riskrieg.core.api.gamemode.GameMode;
-import com.riskrieg.core.api.nation.ClaimResult;
+import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.action.Action;
+import com.riskrieg.core.internal.bundle.LeaveBundle;
 import com.riskrieg.core.unsorted.gamemode.GameState;
 import com.riskrieg.core.unsorted.map.GameMap;
 import com.riskrieg.core.unsorted.map.MapOptions;
@@ -95,7 +96,7 @@ public final class ConquestMode implements GameMode {
 
   @Nonnull
   @Override
-  public Action<Player> leave(@Nonnull Identity identity) {
+  public Action<LeaveBundle> leave(@Nonnull Identity identity) {
     return null;
   }
 
@@ -119,7 +120,7 @@ public final class ConquestMode implements GameMode {
 
   @Nonnull
   @Override
-  public Action<ClaimResult> claim(Identity identity, TerritoryId... territoryIds) {
+  public Action<ClaimBundle> claim(Identity identity, TerritoryId... territoryIds) {
     return null;
   }
 

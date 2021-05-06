@@ -3,7 +3,7 @@ package com.riskrieg.core.api.gamemode.classic;
 import com.riskrieg.core.api.Save;
 import com.riskrieg.core.api.gamemode.GameID;
 import com.riskrieg.core.api.gamemode.GameMode;
-import com.riskrieg.core.api.nation.ClaimResult;
+import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
@@ -16,6 +16,7 @@ import com.riskrieg.core.internal.action.setup.JoinAction;
 import com.riskrieg.core.internal.action.setup.LeaveAction;
 import com.riskrieg.core.internal.action.setup.SelectMapAction;
 import com.riskrieg.core.internal.action.setup.StartAction;
+import com.riskrieg.core.internal.bundle.LeaveBundle;
 import com.riskrieg.core.unsorted.gamemode.GameState;
 import com.riskrieg.core.unsorted.map.GameMap;
 import com.riskrieg.core.unsorted.map.MapOptions;
@@ -146,7 +147,7 @@ public final class ClassicMode implements GameMode { // No capitals, no alliance
 
   @Nonnull
   @Override
-  public Action<Player> leave(@Nonnull Identity identity) {
+  public Action<LeaveBundle> leave(@Nonnull Identity identity) {
     setLastUpdated();
     return new LeaveAction(identity, this, players, nations);
   }
@@ -176,7 +177,7 @@ public final class ClassicMode implements GameMode { // No capitals, no alliance
 
   @Nonnull
   @CheckReturnValue
-  public Action<ClaimResult> claim(Identity identity, TerritoryId... territoryIds) {
+  public Action<ClaimBundle> claim(Identity identity, TerritoryId... territoryIds) {
     setLastUpdated();
     return new ClaimAction(identity, Set.of(territoryIds), players.getFirst().identity(), gameState, gameMap, nations);
   }
