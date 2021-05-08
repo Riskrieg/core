@@ -38,11 +38,11 @@ public final class FormNationAction implements Action<Nation> {
 
   @Override
   public void submit(@Nullable Consumer<? super Nation> success, @Nullable Consumer<? super Throwable> failure) {
-    switch (gameState) {
-      case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
-      case RUNNING -> throw new IllegalStateException("Capitals can only be selected during the setup phase");
-      case SETUP -> {
-        try {
+    try {
+      switch (gameState) {
+        case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
+        case RUNNING -> throw new IllegalStateException("Capitals can only be selected during the setup phase");
+        case SETUP -> {
           if (players.stream().noneMatch(p -> p.identity().equals(identity))) {
             throw new IllegalStateException("Player is not present");
           }
@@ -64,11 +64,11 @@ public final class FormNationAction implements Action<Nation> {
           if (success != null) {
             success.accept(nation);
           }
-        } catch (Exception e) {
-          if (failure != null) {
-            failure.accept(e);
-          }
         }
+      }
+    } catch (Exception e) {
+      if (failure != null) {
+        failure.accept(e);
       }
     }
   }
