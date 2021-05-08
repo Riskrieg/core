@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
-public class UpdateAction implements Action<UpdateBundle> {
+public final class UpdateAction implements Action<UpdateBundle> {
 
   private final GameMode gameMode;
   private final GameState gameState;

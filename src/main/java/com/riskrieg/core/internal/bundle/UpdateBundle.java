@@ -5,7 +5,7 @@ import com.riskrieg.core.internal.GameEndReason;
 import java.util.Set;
 import javax.annotation.Nullable;
 
-public class UpdateBundle {
+public final class UpdateBundle {
 
   private final Player previousPlayer;
   private final Player currentTurnPlayer;
