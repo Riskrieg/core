@@ -10,6 +10,8 @@ import com.riskrieg.core.unsorted.gamemode.GameState;
 import com.riskrieg.core.unsorted.map.GameMap;
 import java.util.Collection;
 import java.util.Deque;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
@@ -38,6 +40,15 @@ public class UpdateAction implements Action<UpdateBundle> {
         case RUNNING -> {
           var gameEndReason = GameEndReason.NONE;
 
+          /* Defeated Check */
+          Set<Player> defeated = new HashSet<>();
+          for (Nation nation : nations) {
+            if (nation.territories().size() == 0) {
+              players.stream().filter(p -> p.identity().equals(nation.identity())).findAny().ifPresent(defeated::add);
+            }
+          }
+          defeated.forEach(p -> gameMode.leave(p.identity()).submit());
+
           /* End State Check */
           if (players.size() == 0) {
             gameEndReason = GameEndReason.NO_PLAYERS;
@@ -54,7 +65,7 @@ public class UpdateAction implements Action<UpdateBundle> {
             Player currentTurnPlayer = players.size() > 0 ? players.getFirst() : null;
             Nation nation = currentTurnPlayer == null ? null : nations.stream().filter(n -> n.identity().equals(currentTurnPlayer.identity())).findAny().orElse(null);
             int claims = nation == null ? -1 : nation.getClaimAmount(gameMode.map());
-            success.accept(new UpdateBundle(currentTurnPlayer, gameEndReason, claims));
+            success.accept(new UpdateBundle(currentTurnPlayer, gameEndReason, claims, defeated));
           }
         }
       }
