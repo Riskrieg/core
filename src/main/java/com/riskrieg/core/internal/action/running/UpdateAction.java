@@ -36,9 +36,11 @@ public class UpdateAction implements Action<UpdateBundle> {
         case ENDED, SETUP -> throw new IllegalStateException("Attempted to update turn in invalid game state");
         case RUNNING -> {
           var gameEndReason = GameEndReason.NONE;
-          
+
           /* End State Check */
-          if (players.size() <= 1) {
+          if (players.size() == 0) {
+            gameEndReason = GameEndReason.NO_PLAYERS;
+          } else if (players.size() == 1) {
             gameMode.setGameState(GameState.ENDED);
             gameEndReason = GameEndReason.DEFEAT;
           } else if (nations.stream().allMatch(n -> n.getClaimAmount(gameMap) == 0)) {
