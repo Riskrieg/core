@@ -59,13 +59,13 @@ public class UpdateAction implements Action<UpdateBundle> {
             gameMode.setGameState(GameState.ENDED);
             gameEndReason = GameEndReason.STALEMATE;
           }
-
+          Player previousPlayer = players.size() == 0 ? null : players.getFirst();
           players.addLast(players.removeFirst());
           if (success != null) {
             Player currentTurnPlayer = players.size() > 0 ? players.getFirst() : null;
             Nation nation = currentTurnPlayer == null ? null : nations.stream().filter(n -> n.identity().equals(currentTurnPlayer.identity())).findAny().orElse(null);
             int claims = nation == null ? -1 : nation.getClaimAmount(gameMode.map());
-            success.accept(new UpdateBundle(currentTurnPlayer, gameEndReason, claims, defeated));
+            success.accept(new UpdateBundle(previousPlayer, currentTurnPlayer, gameEndReason, claims, defeated));
           }
         }
       }
