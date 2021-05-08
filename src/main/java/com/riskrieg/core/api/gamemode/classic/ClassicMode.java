@@ -21,6 +21,7 @@ import com.riskrieg.core.internal.bundle.UpdateBundle;
 import com.riskrieg.core.unsorted.gamemode.GameState;
 import com.riskrieg.core.unsorted.map.GameMap;
 import com.riskrieg.core.unsorted.map.MapOptions;
+import com.riskrieg.core.unsorted.map.TerritoryType;
 import com.riskrieg.map.RkmMap;
 import com.riskrieg.map.territory.TerritoryId;
 import java.awt.Color;
@@ -164,7 +165,7 @@ public final class ClassicMode implements GameMode { // No capitals, no alliance
   @Override
   public Action<Nation> formNation(@Nonnull Identity identity, @Nonnull TerritoryId territoryId) {
     setLastUpdated();
-    return new FormNationAction(identity, territoryId, gameState, gameMap, players, nations);
+    return new FormNationAction(TerritoryType.NORMAL, identity, territoryId, gameState, gameMap, players, nations);
   }
 
   @Nonnull

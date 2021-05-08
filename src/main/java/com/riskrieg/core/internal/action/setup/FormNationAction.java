@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
 
 public final class FormNationAction implements Action<Nation> {
 
+  private final TerritoryType firstTerritoryType;
   private final Identity identity;
   private final TerritoryId id;
   private final GameState gameState;
@@ -24,7 +25,9 @@ public final class FormNationAction implements Action<Nation> {
   private final Collection<Player> players;
   private final Collection<Nation> nations;
 
-  public FormNationAction(Identity identity, TerritoryId id, GameState gameState, GameMap gameMap, Collection<Player> players, Collection<Nation> nations) {
+  public FormNationAction(TerritoryType firstTerritoryType, Identity identity, TerritoryId id, GameState gameState, GameMap gameMap,
+      Collection<Player> players, Collection<Nation> nations) {
+    this.firstTerritoryType = firstTerritoryType;
     this.identity = identity;
     this.id = id;
     this.gameState = gameState;
@@ -56,7 +59,7 @@ public final class FormNationAction implements Action<Nation> {
           if (territoryIds.contains(id)) {
             throw new IllegalStateException("That territory is already taken by someone else");
           }
-          Nation nation = new Nation(identity, new GameTerritory(id, TerritoryType.CAPITAL));
+          Nation nation = new Nation(identity, new GameTerritory(id, firstTerritoryType));
           nations.add(nation);
           if (success != null) {
             success.accept(nation);
