@@ -10,6 +10,7 @@ import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.internal.bundle.LeaveBundle;
+import com.riskrieg.core.internal.bundle.UpdateBundle;
 import com.riskrieg.core.unsorted.gamemode.GameState;
 import com.riskrieg.core.unsorted.map.GameMap;
 import com.riskrieg.core.unsorted.map.MapOptions;
@@ -126,7 +127,7 @@ public final class CreativeMode implements GameMode { // TODO: D&D style
 
   @Nonnull
   @Override
-  public Action<Player> update() {
+  public Action<UpdateBundle> update() {
     return null;
   }
 

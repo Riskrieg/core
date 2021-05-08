@@ -1,6 +1,7 @@
 package com.riskrieg.core.api.nation;
 
 import com.riskrieg.core.api.player.Identity;
+import com.riskrieg.core.constant.Constants;
 import com.riskrieg.core.unsorted.map.GameMap;
 import com.riskrieg.core.unsorted.map.GameTerritory;
 import com.riskrieg.core.unsorted.map.TerritoryType;
@@ -38,6 +39,17 @@ public final class Nation {
       neighbors.addAll(gameMap.getNeighbors(id));
     }
     neighbors.removeAll(ids);
+    return neighbors;
+  }
+
+  public int getClaimAmount(GameMap gameMap) {
+    int claims = Constants.MINIMUM_CLAIM_AMOUNT + (int) (Math.floor(territories.size() / Constants.CLAIM_INCREASE_THRESHOLD));
+    return Math.min(getClaimableTerritories(gameMap).size(), claims);
+  }
+
+  private Set<TerritoryId> getClaimableTerritories(GameMap gameMap) {
+    Set<TerritoryId> neighbors = neighbors(gameMap);
+    // TODO: Remove allied territories
     return neighbors;
   }
 

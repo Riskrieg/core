@@ -8,8 +8,8 @@ import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.action.Action;
-import com.riskrieg.core.internal.action.GenericAction;
 import com.riskrieg.core.internal.action.running.ClaimAction;
+import com.riskrieg.core.internal.action.running.UpdateAction;
 import com.riskrieg.core.internal.action.setup.FormNationAction;
 import com.riskrieg.core.internal.action.setup.JoinAction;
 import com.riskrieg.core.internal.action.setup.LeaveAction;
@@ -17,6 +17,7 @@ import com.riskrieg.core.internal.action.setup.SelectMapAction;
 import com.riskrieg.core.internal.action.setup.StartAction;
 import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.internal.bundle.LeaveBundle;
+import com.riskrieg.core.internal.bundle.UpdateBundle;
 import com.riskrieg.core.unsorted.gamemode.GameState;
 import com.riskrieg.core.unsorted.map.GameMap;
 import com.riskrieg.core.unsorted.map.MapOptions;
@@ -184,14 +185,9 @@ public final class ClassicMode implements GameMode { // No capitals, no alliance
 
   @Nonnull
   @Override
-  public Action<Player> update() { // TODO: Put end-game checks here...?
-    return switch (gameState) {
-      case ENDED, SETUP -> new GenericAction<>(new IllegalStateException("Attempted to update turn in invalid game state"));
-      case RUNNING -> {
-        players.addLast(players.removeFirst());
-        yield new GenericAction<>(players.getFirst());
-      }
-    };
+  public Action<UpdateBundle> update() { // TODO: Put end-game checks here...?
+    setLastUpdated();
+    return new UpdateAction(gameState, players);
   }
 
   /* Private Methods */

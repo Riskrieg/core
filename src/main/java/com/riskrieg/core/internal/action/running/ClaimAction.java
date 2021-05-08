@@ -3,7 +3,6 @@ package com.riskrieg.core.internal.action.running;
 import com.riskrieg.core.api.Dice;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.player.Identity;
-import com.riskrieg.core.constant.Constants;
 import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.unsorted.gamemode.GameState;
@@ -15,7 +14,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public final class ClaimAction implements Action<ClaimBundle> {
@@ -69,7 +67,7 @@ public final class ClaimAction implements Action<ClaimBundle> {
           if (!notBorderingTerritories.isEmpty()) {
             throw new IllegalStateException("Not bordering territories: " + notBorderingTerritories.stream().map(TerritoryId::value).collect(Collectors.joining(", ")).trim());
           }
-          int claims = getClaimAmount(nation);
+          int claims = nation.getClaimAmount(gameMap);
           if (claims != ids.size()) {
             throw new IllegalStateException("Trying to claim " + ids.size() + (ids.size() == 1 ? " territory" : " territories")
                 + " but must claim " + claims + (claims == 1 ? " territory" : " territories"));
@@ -131,17 +129,6 @@ public final class ClaimAction implements Action<ClaimBundle> {
 
   private Nation getNation(TerritoryId id) {
     return nations.stream().filter(nation -> nation.territories().contains(id)).findAny().orElse(null);
-  }
-
-  private int getClaimAmount(@Nonnull Nation nation) {
-    int claims = Constants.MINIMUM_CLAIM_AMOUNT + (int) (Math.floor(nation.territories().size() / Constants.CLAIM_INCREASE_THRESHOLD));
-    return Math.min(getClaimableTerritories(nation).size(), claims);
-  }
-
-  private Set<TerritoryId> getClaimableTerritories(@Nonnull Nation nation) {
-    Set<TerritoryId> neighbors = nation.neighbors(gameMap);
-    // TODO: Remove allied territories
-    return neighbors;
   }
 
 }
