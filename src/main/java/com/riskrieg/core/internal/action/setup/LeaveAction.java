@@ -4,6 +4,7 @@ import com.riskrieg.core.api.gamemode.GameMode;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
+import com.riskrieg.core.internal.GameEndReason;
 import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.bundle.LeaveBundle;
 import com.riskrieg.core.unsorted.gamemode.GameState;
@@ -28,6 +29,7 @@ public final class LeaveAction implements Action<LeaveBundle> {
   @Override
   public void submit(@Nullable Consumer<? super LeaveBundle> success, @Nullable Consumer<? super Throwable> failure) {
     try {
+      var gameEndReason = GameEndReason.NONE;
       Player leavingPlayer = players.stream().filter(p -> p.identity().equals(identity)).findAny().orElse(null);
       if (leavingPlayer == null) {
         throw new IllegalStateException("Player is not present");
@@ -36,11 +38,13 @@ public final class LeaveAction implements Action<LeaveBundle> {
       players.remove(leavingPlayer);
       if (gameMode.gameState().equals(GameState.SETUP) && players.size() == 0) {
         gameMode.setGameState(GameState.ENDED);
+        gameEndReason = GameEndReason.NO_PLAYERS;
       } else if (gameMode.gameState().equals(GameState.RUNNING) && players.size() <= 1) {
         gameMode.setGameState(GameState.ENDED);
+        gameEndReason = GameEndReason.FORFEIT;
       }
       if (success != null) {
-        success.accept(new LeaveBundle(leavingPlayer, gameMode.gameState()));
+        success.accept(new LeaveBundle(leavingPlayer, gameMode.gameState(), gameEndReason));
       }
     } catch (Exception e) {
       if (failure != null) {

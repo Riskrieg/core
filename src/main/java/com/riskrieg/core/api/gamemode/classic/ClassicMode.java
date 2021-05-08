@@ -185,9 +185,9 @@ public final class ClassicMode implements GameMode { // No capitals, no alliance
 
   @Nonnull
   @Override
-  public Action<UpdateBundle> update() { // TODO: Put end-game checks here...?
+  public Action<UpdateBundle> update() {
     setLastUpdated();
-    return new UpdateAction(gameState, players);
+    return new UpdateAction(this, gameState, gameMap, players, nations);
   }
 
   /* Private Methods */
