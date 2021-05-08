@@ -33,7 +33,8 @@ public class UpdateAction implements Action<UpdateBundle> {
   public void submit(@Nullable Consumer<? super UpdateBundle> success, @Nullable Consumer<? super Throwable> failure) {
     try {
       switch (gameState) {
-        case ENDED, SETUP -> throw new IllegalStateException("Attempted to update turn in invalid game state");
+        case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
+        case SETUP -> throw new IllegalStateException("Attempted to update turn in invalid game state");
         case RUNNING -> {
           var gameEndReason = GameEndReason.NONE;
 

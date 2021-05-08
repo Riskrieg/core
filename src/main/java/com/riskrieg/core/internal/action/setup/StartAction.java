@@ -30,7 +30,8 @@ public final class StartAction implements Action<Player> {
   public void submit(@Nullable Consumer<? super Player> success, @Nullable Consumer<? super Throwable> failure) {
     try {
       switch (gameMode.gameState()) {
-        case ENDED, RUNNING -> throw new IllegalStateException("The map can only be set during the setup phase");
+        case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
+        case RUNNING -> throw new IllegalStateException("The map can only be set during the setup phase");
         case SETUP -> {
           if (players.size() < Constants.MIN_PLAYERS) {
             throw new IllegalStateException("Two or more players are required to play");
