@@ -2,22 +2,25 @@ package com.riskrieg.core.internal.bundle;
 
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.GameEndReason;
-import com.riskrieg.core.unsorted.gamemode.GameState;
+import javax.annotation.Nullable;
 
 public final class LeaveBundle {
 
+  private final Player currentTurnPlayer;
   private final Player leavingPlayer;
-  private final GameState gameState;
   private final GameEndReason reason;
+  private final int claims;
 
-  public LeaveBundle(Player leavingPlayer, GameState gameState, GameEndReason reason) {
+  public LeaveBundle(Player currentTurnPlayer, Player leavingPlayer, GameEndReason reason, int claims) {
+    this.currentTurnPlayer = currentTurnPlayer;
     this.leavingPlayer = leavingPlayer;
-    this.gameState = gameState;
     this.reason = reason;
+    this.claims = claims;
   }
 
-  public GameState gameState() {
-    return gameState;
+  @Nullable
+  public Player currentTurnPlayer() {
+    return currentTurnPlayer;
   }
 
   public Player leavingPlayer() {
@@ -26,6 +29,10 @@ public final class LeaveBundle {
 
   public GameEndReason reason() {
     return reason;
+  }
+
+  public int claims() {
+    return claims;
   }
 
 }

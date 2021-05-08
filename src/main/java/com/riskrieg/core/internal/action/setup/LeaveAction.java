@@ -9,6 +9,7 @@ import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.bundle.LeaveBundle;
 import com.riskrieg.core.unsorted.gamemode.GameState;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
@@ -16,10 +17,10 @@ public final class LeaveAction implements Action<LeaveBundle> {
 
   private final Identity identity;
   private final GameMode gameMode;
-  private final Collection<Player> players;
+  private final Deque<Player> players;
   private final Collection<Nation> nations;
 
-  public LeaveAction(Identity identity, GameMode gameMode, Collection<Player> players, Collection<Nation> nations) {
+  public LeaveAction(Identity identity, GameMode gameMode, Deque<Player> players, Collection<Nation> nations) {
     this.identity = identity;
     this.gameMode = gameMode;
     this.players = players;
@@ -44,7 +45,10 @@ public final class LeaveAction implements Action<LeaveBundle> {
         gameEndReason = GameEndReason.FORFEIT;
       }
       if (success != null) {
-        success.accept(new LeaveBundle(leavingPlayer, gameMode.gameState(), gameEndReason));
+        Player currentTurnPlayer = players.size() > 0 ? players.getFirst() : null;
+        Nation nation = currentTurnPlayer == null ? null : nations.stream().filter(n -> n.identity().equals(currentTurnPlayer.identity())).findAny().orElse(null);
+        int claims = nation == null ? -1 : nation.getClaimAmount(gameMode.map());
+        success.accept(new LeaveBundle(currentTurnPlayer, leavingPlayer, gameEndReason, claims));
       }
     } catch (Exception e) {
       if (failure != null) {

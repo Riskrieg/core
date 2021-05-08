@@ -2,30 +2,31 @@ package com.riskrieg.core.internal.bundle;
 
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.GameEndReason;
-import com.riskrieg.core.unsorted.gamemode.GameState;
+import javax.annotation.Nullable;
 
 public class UpdateBundle {
 
   private final Player currentTurnPlayer;
-  private final GameState gameState;
   private final GameEndReason reason;
+  private final int claims;
 
-  public UpdateBundle(Player currentTurnPlayer, GameState gameState, GameEndReason reason) {
+  public UpdateBundle(Player currentTurnPlayer, GameEndReason reason, int claims) {
     this.currentTurnPlayer = currentTurnPlayer;
-    this.gameState = gameState;
     this.reason = reason;
+    this.claims = claims;
   }
 
-  public GameState gameState() {
-    return gameState;
-  }
-
+  @Nullable
   public Player currentTurnPlayer() {
     return currentTurnPlayer;
   }
 
   public GameEndReason reason() {
     return reason;
+  }
+
+  public int claims() {
+    return claims;
   }
 
 }

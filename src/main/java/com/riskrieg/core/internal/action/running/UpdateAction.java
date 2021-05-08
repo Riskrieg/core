@@ -51,7 +51,10 @@ public class UpdateAction implements Action<UpdateBundle> {
 
           players.addLast(players.removeFirst());
           if (success != null) {
-            success.accept(new UpdateBundle(players.getFirst(), gameState, gameEndReason));
+            Player currentTurnPlayer = players.size() > 0 ? players.getFirst() : null;
+            Nation nation = currentTurnPlayer == null ? null : nations.stream().filter(n -> n.identity().equals(currentTurnPlayer.identity())).findAny().orElse(null);
+            int claims = nation == null ? -1 : nation.getClaimAmount(gameMode.map());
+            success.accept(new UpdateBundle(currentTurnPlayer, gameEndReason, claims));
           }
         }
       }
