@@ -36,6 +36,7 @@ public class UpdateAction implements Action<UpdateBundle> {
         case ENDED, SETUP -> throw new IllegalStateException("Attempted to update turn in invalid game state");
         case RUNNING -> {
           var gameEndReason = GameEndReason.NONE;
+          
           /* End State Check */
           if (players.size() <= 1) {
             gameMode.setGameState(GameState.ENDED);
