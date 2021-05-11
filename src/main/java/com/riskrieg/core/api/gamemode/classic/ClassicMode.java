@@ -8,7 +8,7 @@ import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.action.Action;
-import com.riskrieg.core.internal.action.running.ClaimAction;
+import com.riskrieg.core.internal.action.running.SimpleClaimAction;
 import com.riskrieg.core.internal.action.running.UpdateAction;
 import com.riskrieg.core.internal.action.setup.FormNationAction;
 import com.riskrieg.core.internal.action.setup.JoinAction;
@@ -181,7 +181,7 @@ public final class ClassicMode implements GameMode { // No capitals, no alliance
   @CheckReturnValue
   public Action<ClaimBundle> claim(Identity identity, TerritoryId... territoryIds) {
     setLastUpdated();
-    return new ClaimAction(identity, Set.of(territoryIds), players.getFirst().identity(), gameState, gameMap, nations);
+    return new SimpleClaimAction(identity, Set.of(territoryIds), players.getFirst().identity(), gameState, gameMap, nations);
   }
 
   @Nonnull

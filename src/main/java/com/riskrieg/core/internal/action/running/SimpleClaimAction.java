@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
-public final class ClaimAction implements Action<ClaimBundle> {
+public final class SimpleClaimAction implements Action<ClaimBundle> {
 
   private final Identity identity;
   private final Set<TerritoryId> ids;
@@ -25,7 +25,7 @@ public final class ClaimAction implements Action<ClaimBundle> {
   private final GameMap gameMap;
   private final Collection<Nation> nations;
 
-  public ClaimAction(Identity identity, Set<TerritoryId> ids, Identity currentTurnIdentity, GameState gameState, GameMap gameMap, Collection<Nation> nations) {
+  public SimpleClaimAction(Identity identity, Set<TerritoryId> ids, Identity currentTurnIdentity, GameState gameState, GameMap gameMap, Collection<Nation> nations) {
     this.identity = identity;
     this.ids = ids;
     this.currentTurnIdentity = currentTurnIdentity;
@@ -119,8 +119,6 @@ public final class ClaimAction implements Action<ClaimBundle> {
         defenseRolls++;
       }
     }
-    // TODO: Configure capital boost
-    // TODO: Configure not connected to capital debuff
     Dice attackDice = new Dice(attackSides, attackRolls);
     Dice defenseDice = new Dice(defenseSides, defenseRolls);
     int attackerMax = Arrays.stream(attackDice.roll()).summaryStatistics().getMax();

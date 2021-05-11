@@ -6,6 +6,7 @@ import com.riskrieg.core.unsorted.map.GameMap;
 import com.riskrieg.core.unsorted.map.GameTerritory;
 import com.riskrieg.core.unsorted.map.TerritoryType;
 import com.riskrieg.map.territory.TerritoryId;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -15,6 +16,7 @@ public final class Nation {
 
   private Identity identity;
   private final Set<GameTerritory> territories;
+  private final Set<Identity> allies;
 
   public Nation(Identity identity, GameTerritory capital) {
     Objects.requireNonNull(identity);
@@ -22,6 +24,7 @@ public final class Nation {
     this.identity = identity;
     this.territories = new HashSet<>();
     this.territories.add(capital);
+    this.allies = new HashSet<>();
   }
 
   public Identity identity() {
@@ -32,6 +35,10 @@ public final class Nation {
     return territories.stream().map(GameTerritory::id).collect(Collectors.toUnmodifiableSet());
   }
 
+  public Set<Identity> allies() {
+    return Collections.unmodifiableSet(allies);
+  }
+
   public Set<TerritoryId> neighbors(GameMap gameMap) {
     Set<TerritoryId> neighbors = new HashSet<>();
     var ids = territories();
@@ -39,7 +46,7 @@ public final class Nation {
       neighbors.addAll(gameMap.getNeighbors(id));
     }
     neighbors.removeAll(ids);
-    return neighbors;
+    return Collections.unmodifiableSet(neighbors);
   }
 
   public int getClaimAmount(GameMap gameMap) {
@@ -49,8 +56,8 @@ public final class Nation {
 
   private Set<TerritoryId> getClaimableTerritories(GameMap gameMap) {
     Set<TerritoryId> neighbors = neighbors(gameMap);
-    // TODO: Remove allied territories
-    return neighbors;
+    // TODO: Remove territories that belong to allies
+    return Collections.unmodifiableSet(neighbors);
   }
 
   public boolean territoryIsOfType(TerritoryId id, TerritoryType type) {
@@ -70,7 +77,6 @@ public final class Nation {
     return territories.add(new GameTerritory(id, type));
   }
 
-  // TODO: If capital is removed, select a new capital
   public boolean remove(GameTerritory territory) {
     return territories.remove(territory);
   }
@@ -78,6 +84,22 @@ public final class Nation {
   public boolean remove(TerritoryId id) {
     return territories.removeIf(gt -> gt.id().equals(id));
   }
+
+  public boolean isAllied(Identity identity) {
+    return allies.contains(identity);
+  }
+
+  public boolean addAlly(Identity identity) {
+    if (this.identity.equals(identity)) {
+      return false;
+    }
+    return allies.add(identity);
+  }
+
+  public boolean removeAlly(Identity identity) {
+    return allies.add(identity);
+  }
+
 
   @Override
   public boolean equals(Object o) { // TODO: Maybe don't have this if there's a game mode where 1 player can be more than 1 nation
