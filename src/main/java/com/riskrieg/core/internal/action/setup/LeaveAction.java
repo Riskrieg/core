@@ -48,7 +48,7 @@ public final class LeaveAction implements Action<LeaveBundle> {
       if (success != null) {
         Player currentTurnPlayer = players.size() > 0 ? players.getFirst() : null;
         Nation nation = currentTurnPlayer == null ? null : nations.stream().filter(n -> n.identity().equals(currentTurnPlayer.identity())).findAny().orElse(null);
-        int claims = nation == null ? -1 : nation.getClaimAmount(gameMode.map());
+        int claims = nation == null ? -1 : nation.getClaimAmount(gameMode.map(), nations);
         success.accept(new LeaveBundle(currentTurnPlayer, leavingPlayer, gameEndReason, claims));
       }
     } catch (Exception e) {

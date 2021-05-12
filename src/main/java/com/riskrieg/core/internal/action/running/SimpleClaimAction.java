@@ -68,7 +68,7 @@ public final class SimpleClaimAction implements Action<ClaimBundle> {
           if (!notBorderingTerritories.isEmpty()) {
             throw new IllegalStateException("Not bordering territories: " + notBorderingTerritories.stream().map(TerritoryId::value).collect(Collectors.joining(", ")).trim());
           }
-          int claims = nation.getClaimAmount(gameMap);
+          int claims = nation.getClaimAmount(gameMap, nations);
           if (claims != ids.size()) {
             throw new IllegalStateException("Trying to claim " + ids.size() + (ids.size() == 1 ? " territory" : " territories")
                 + " but must claim " + claims + (claims == 1 ? " territory" : " territories"));

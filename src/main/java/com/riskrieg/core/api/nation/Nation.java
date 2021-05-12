@@ -6,6 +6,7 @@ import com.riskrieg.core.unsorted.map.GameMap;
 import com.riskrieg.core.unsorted.map.GameTerritory;
 import com.riskrieg.core.unsorted.map.TerritoryType;
 import com.riskrieg.map.territory.TerritoryId;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
@@ -49,14 +50,15 @@ public final class Nation {
     return neighbors;
   }
 
-  public int getClaimAmount(GameMap gameMap) {
+  public int getClaimAmount(GameMap gameMap, Collection<Nation> nations) {
     int claims = Constants.MINIMUM_CLAIM_AMOUNT + (int) (Math.floor(territories.size() / Constants.CLAIM_INCREASE_THRESHOLD));
-    return Math.min(getClaimableTerritories(gameMap).size(), claims);
+    return Math.min(getClaimableTerritories(gameMap, nations).size(), claims);
   }
 
-  private Set<TerritoryId> getClaimableTerritories(GameMap gameMap) {
-    Set<TerritoryId> neighbors = neighbors(gameMap);
-    // TODO: Remove territories that belong to allies
+  private Set<TerritoryId> getClaimableTerritories(GameMap gameMap, Collection<Nation> nations) {
+    Set<TerritoryId> neighbors = new HashSet<>(neighbors(gameMap));
+    Set<Nation> allies = nations.stream().filter(n -> this.allies.contains(n.identity())).collect(Collectors.toSet());
+    neighbors.removeIf(territoryId -> allies.stream().anyMatch(n -> n.territories().contains(territoryId)));
     return Collections.unmodifiableSet(neighbors);
   }
 

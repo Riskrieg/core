@@ -55,7 +55,7 @@ public final class UpdateAction implements Action<UpdateBundle> {
           } else if (players.size() == 1) {
             gameMode.setGameState(GameState.ENDED);
             gameEndReason = GameEndReason.DEFEAT;
-          } else if (nations.stream().allMatch(n -> n.getClaimAmount(gameMap) == 0)) {
+          } else if (nations.stream().allMatch(n -> n.getClaimAmount(gameMap, nations) == 0)) {
             gameMode.setGameState(GameState.ENDED);
             gameEndReason = GameEndReason.STALEMATE;
           }
@@ -64,7 +64,7 @@ public final class UpdateAction implements Action<UpdateBundle> {
           if (success != null) {
             Player currentTurnPlayer = players.size() > 0 ? players.getFirst() : null;
             Nation nation = currentTurnPlayer == null ? null : nations.stream().filter(n -> n.identity().equals(currentTurnPlayer.identity())).findAny().orElse(null);
-            int claims = nation == null ? -1 : nation.getClaimAmount(gameMode.map());
+            int claims = nation == null ? -1 : nation.getClaimAmount(gameMode.map(), nations);
             success.accept(new UpdateBundle(previousPlayer, currentTurnPlayer, gameEndReason, claims, defeated));
           }
         }
