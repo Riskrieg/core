@@ -87,7 +87,7 @@ public final class ConquestMode implements AlliableMode {
   @Nonnull
   @Override
   public String displayName() {
-    return "Classic";
+    return "Conquest";
   }
 
   @Nonnull
