@@ -35,6 +35,7 @@ public final class LeaveAction implements Action<LeaveBundle> {
       if (leavingPlayer == null) {
         throw new IllegalStateException("Player is not present");
       }
+      nations.stream().filter(n -> n.allies().contains(identity)).forEach(nation -> nation.removeAlly(identity));
       nations.stream().filter(n -> n.identity().equals(identity)).findAny().ifPresent(nations::remove);
       players.remove(leavingPlayer);
       if (gameMode.gameState().equals(GameState.SETUP) && players.size() == 0) {
