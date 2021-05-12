@@ -7,10 +7,13 @@ import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.unsorted.gamemode.GameState;
 import com.riskrieg.core.unsorted.map.GameMap;
+import com.riskrieg.core.unsorted.map.TerritoryType;
 import com.riskrieg.map.territory.TerritoryId;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -78,13 +81,19 @@ public final class ConquestClaimAction implements Action<ClaimBundle> {
           Set<TerritoryId> taken = new HashSet<>();
           Set<TerritoryId> defended = new HashSet<>();
 
-          // TODO: If capital is removed, select a new capital
-
           for (TerritoryId id : ids) {
             var defender = getNation(id);
             if (defender != null) {
               if (attack(nation, defender, id)) {
+                boolean wasCapital = defender.territoryIsOfType(id, TerritoryType.CAPITAL);
                 defender.remove(id);
+                if (wasCapital) { // Select new capital
+                  Optional<TerritoryId> randomTerritory = defender.territories().stream().skip(new Random().nextInt(defender.territories().size())).findFirst();
+                  randomTerritory.ifPresent(t -> {
+                    defender.remove(t);
+                    defender.add(t, TerritoryType.CAPITAL);
+                  });
+                }
                 nation.add(id);
                 taken.add(id);
               } else {
@@ -116,12 +125,18 @@ public final class ConquestClaimAction implements Action<ClaimBundle> {
     var neighbors = gameMap.getNeighbors(id);
     for (TerritoryId neighbor : neighbors) {
       if (attacker.territories().contains(neighbor)) {
-        attackRolls++;
+        if (attacker.territoryIsOfType(neighbor, TerritoryType.CAPITAL)) {
+          attackRolls += 2;
+        } else {
+          attackRolls++;
+        }
       } else if (defender.territories().contains(neighbor)) {
         defenseRolls++;
+        if (defender.territoryIsOfType(id, TerritoryType.CAPITAL)) {
+          defenseSides++;
+        }
       }
     }
-    // TODO: Configure capital boost
     // TODO: Configure not connected to capital debuff
     Dice attackDice = new Dice(attackSides, attackRolls);
     Dice defenseDice = new Dice(defenseSides, defenseRolls);

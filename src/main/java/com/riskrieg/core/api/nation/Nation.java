@@ -46,7 +46,7 @@ public final class Nation {
       neighbors.addAll(gameMap.getNeighbors(id));
     }
     neighbors.removeAll(ids);
-    return Collections.unmodifiableSet(neighbors);
+    return neighbors;
   }
 
   public int getClaimAmount(GameMap gameMap) {
