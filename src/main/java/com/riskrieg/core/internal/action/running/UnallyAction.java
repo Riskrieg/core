@@ -31,8 +31,8 @@ public final class UnallyAction implements Action<AllianceBundle> {
   public void submit(@Nullable Consumer<? super AllianceBundle> success, @Nullable Consumer<? super Throwable> failure) {
     try {
       switch (gameState) {
+        default -> throw new IllegalStateException("Alliances can only be broken while the game is active");
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
-        case SETUP -> throw new IllegalStateException("Alliances can only be broken while the game is active");
         case RUNNING -> {
           Optional<Player> optPlayer1 = players.stream().filter(player -> player.identity().equals(identity1)).findAny();
           Optional<Player> optPlayer2 = players.stream().filter(player -> player.identity().equals(identity2)).findAny();

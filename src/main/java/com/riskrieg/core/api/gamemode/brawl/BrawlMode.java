@@ -12,7 +12,7 @@ import com.riskrieg.core.internal.action.running.AllyAction;
 import com.riskrieg.core.internal.action.running.SelectTerritoryAction;
 import com.riskrieg.core.internal.action.running.UnallyAction;
 import com.riskrieg.core.internal.action.running.claim.BrawlClaimAction;
-import com.riskrieg.core.internal.action.running.update.SimpleUpdateAction;
+import com.riskrieg.core.internal.action.running.update.BrawlUpdateAction;
 import com.riskrieg.core.internal.action.setup.JoinAction;
 import com.riskrieg.core.internal.action.setup.LeaveAction;
 import com.riskrieg.core.internal.action.setup.SelectMapAction;
@@ -176,7 +176,7 @@ public final class BrawlMode implements AlliableMode {
   @Override
   public Action<Player> start(@Nonnull TurnOrder order) {
     players = order.sort(players);
-    return new StartAction(this, gameMap, players, nations);
+    return new StartAction(GameState.SELECTION, this, gameMap, players, nations);
   }
 
   /* Running */
@@ -192,7 +192,7 @@ public final class BrawlMode implements AlliableMode {
   @Override
   public Action<UpdateBundle> update() {
     setLastUpdated();
-    return new SimpleUpdateAction(this, gameState, gameMap, players, nations);
+    return new BrawlUpdateAction(this, gameState, gameMap, players, nations);
   }
 
   @Override

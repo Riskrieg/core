@@ -41,8 +41,8 @@ public final class ConquestClaimAction implements Action<ClaimBundle> {
   public void submit(@Nullable Consumer<? super ClaimBundle> success, @Nullable Consumer<? super Throwable> failure) {
     try {
       switch (gameState) {
+        default -> throw new IllegalStateException("Claims can only be made while the game is active");
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
-        case SETUP -> throw new IllegalStateException("Claims can only be made while the game is active");
         case RUNNING -> {
           if (nations.stream().noneMatch(nation -> nation.identity().equals(identity))) {
             throw new IllegalStateException("Player is not present");

@@ -172,7 +172,7 @@ public final class RegicideMode implements GameMode {
   @Override
   public Action<Player> start(@Nonnull TurnOrder order) {
     players = order.sort(players);
-    return new StartAction(this, gameMap, players, nations);
+    return new StartAction(GameState.RUNNING, this, gameMap, players, nations);
   }
 
   /* Running */

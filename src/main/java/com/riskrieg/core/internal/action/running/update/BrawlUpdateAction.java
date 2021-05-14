@@ -8,7 +8,6 @@ import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.bundle.UpdateBundle;
 import com.riskrieg.core.unsorted.gamemode.GameState;
 import com.riskrieg.core.unsorted.map.GameMap;
-import com.riskrieg.core.unsorted.map.TerritoryType;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.HashSet;
@@ -16,7 +15,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
-public class RegicideUpdateAction implements Action<UpdateBundle> {
+public class BrawlUpdateAction implements Action<UpdateBundle> {
 
   private final GameMode gameMode;
   private final GameState gameState;
@@ -24,7 +23,7 @@ public class RegicideUpdateAction implements Action<UpdateBundle> {
   private final Deque<Player> players;
   private final Collection<Nation> nations;
 
-  public RegicideUpdateAction(GameMode gameMode, GameState gameState, GameMap gameMap, Deque<Player> players, Collection<Nation> nations) {
+  public BrawlUpdateAction(GameMode gameMode, GameState gameState, GameMap gameMap, Deque<Player> players, Collection<Nation> nations) {
     this.gameMode = gameMode;
     this.gameState = gameState;
     this.gameMap = gameMap;
@@ -36,15 +35,18 @@ public class RegicideUpdateAction implements Action<UpdateBundle> {
   public void submit(@Nullable Consumer<? super UpdateBundle> success, @Nullable Consumer<? super Throwable> failure) {
     try {
       switch (gameState) {
-        default -> throw new IllegalStateException("Attempted to update turn in invalid game state");
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
+        case SETUP -> throw new IllegalStateException("Attempted to update turn in invalid game state");
+        case SELECTION -> {
+          // TODO: Implement
+        }
         case RUNNING -> {
           var gameEndReason = GameEndReason.NONE;
 
           /* Defeated Check */
           Set<Player> defeated = new HashSet<>();
           for (Nation nation : nations) {
-            if (nation.territories().size() == 0 || nation.territories().stream().noneMatch(tid -> nation.territoryIsOfType(tid, TerritoryType.CAPITAL))) {
+            if (nation.territories().size() == 0) {
               players.stream().filter(p -> p.identity().equals(nation.identity())).findAny().ifPresent(defeated::add);
             }
           }

@@ -15,11 +15,13 @@ import javax.annotation.Nullable;
 public final class StartAction implements Action<Player> {
 
   private final GameMode gameMode;
+  private final GameState setToState;
   private final GameMap gameMap;
   private final Deque<Player> players;
   private final Collection<Nation> nations;
 
-  public StartAction(GameMode gameMode, GameMap gameMap, Deque<Player> players, Collection<Nation> nations) {
+  public StartAction(GameState setToState, GameMode gameMode, GameMap gameMap, Deque<Player> players, Collection<Nation> nations) {
+    this.setToState = setToState;
     this.gameMode = gameMode;
     this.gameMap = gameMap;
     this.players = players;
@@ -30,8 +32,8 @@ public final class StartAction implements Action<Player> {
   public void submit(@Nullable Consumer<? super Player> success, @Nullable Consumer<? super Throwable> failure) {
     try {
       switch (gameMode.gameState()) {
+        default -> throw new IllegalStateException("The map can only be set during the setup phase");
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
-        case RUNNING -> throw new IllegalStateException("The map can only be set during the setup phase");
         case SETUP -> {
           if (players.size() < Constants.MIN_PLAYERS) {
             throw new IllegalStateException("Two or more players are required to play");
@@ -45,7 +47,7 @@ public final class StartAction implements Action<Player> {
           if (nations.size() > players.size()) {
             throw new IllegalStateException("Critical error: game cannot be started");
           }
-          gameMode.setGameState(GameState.RUNNING);
+          gameMode.setGameState(setToState);
           if (success != null) {
             success.accept(players.getFirst());
           }
