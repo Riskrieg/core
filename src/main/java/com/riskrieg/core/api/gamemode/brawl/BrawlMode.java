@@ -1,22 +1,23 @@
 package com.riskrieg.core.api.gamemode.brawl;
 
 import com.riskrieg.core.api.Save;
+import com.riskrieg.core.api.gamemode.AlliableMode;
 import com.riskrieg.core.api.gamemode.GameID;
-import com.riskrieg.core.api.gamemode.GameMode;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.action.Action;
+import com.riskrieg.core.internal.action.running.AllyAction;
 import com.riskrieg.core.internal.action.running.SelectTerritoryAction;
+import com.riskrieg.core.internal.action.running.UnallyAction;
 import com.riskrieg.core.internal.action.running.claim.BrawlClaimAction;
-import com.riskrieg.core.internal.action.running.claim.SimpleClaimAction;
-import com.riskrieg.core.internal.action.running.update.RegicideUpdateAction;
 import com.riskrieg.core.internal.action.running.update.SimpleUpdateAction;
 import com.riskrieg.core.internal.action.setup.JoinAction;
 import com.riskrieg.core.internal.action.setup.LeaveAction;
 import com.riskrieg.core.internal.action.setup.SelectMapAction;
 import com.riskrieg.core.internal.action.setup.StartAction;
+import com.riskrieg.core.internal.bundle.AllianceBundle;
 import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.internal.bundle.LeaveBundle;
 import com.riskrieg.core.internal.bundle.UpdateBundle;
@@ -34,11 +35,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
-public final class BrawlMode implements GameMode {
+public final class BrawlMode implements AlliableMode {
 
   private final GameID id;
   private final Instant creationTime;
@@ -191,6 +193,30 @@ public final class BrawlMode implements GameMode {
   public Action<UpdateBundle> update() {
     setLastUpdated();
     return new SimpleUpdateAction(this, gameState, gameMap, players, nations);
+  }
+
+  @Override
+  public boolean allied(Identity identity1, Identity identity2) {
+    Optional<Nation> nation1 = nations.stream().filter(nation -> nation.identity().equals(identity1)).findAny();
+    Optional<Nation> nation2 = nations.stream().filter(nation -> nation.identity().equals(identity2)).findAny();
+    if (nation1.isPresent() && nation2.isPresent()) {
+      return nation1.get().isAllied(identity2) && nation2.get().isAllied(identity1);
+    }
+    return false;
+  }
+
+  @Nonnull
+  @Override
+  public Action<AllianceBundle> ally(Identity identity1, Identity identity2) {
+    setLastUpdated();
+    return new AllyAction(identity1, identity2, gameState, players, nations);
+  }
+
+  @Nonnull
+  @Override
+  public Action<AllianceBundle> unally(Identity identity1, Identity identity2) {
+    setLastUpdated();
+    return new UnallyAction(identity1, identity2, gameState, players, nations);
   }
 
   /* Private Methods */
