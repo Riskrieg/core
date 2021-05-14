@@ -165,7 +165,7 @@ public final class RegicideMode implements GameMode {
   @Override
   public Action<Nation> selectTerritory(@Nonnull Identity identity, @Nonnull TerritoryId territoryId) {
     setLastUpdated();
-    return new FormNationAction(TerritoryType.CAPITAL, identity, territoryId, gameState, gameMap, players, nations);
+    return new FormNationAction(identity, territoryId, TerritoryType.CAPITAL, gameState, gameMap, players, nations);
   }
 
   @Nonnull

@@ -9,8 +9,8 @@ import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.action.running.AllyAction;
-import com.riskrieg.core.internal.action.running.claim.ConquestClaimAction;
 import com.riskrieg.core.internal.action.running.UnallyAction;
+import com.riskrieg.core.internal.action.running.claim.ConquestClaimAction;
 import com.riskrieg.core.internal.action.running.update.SimpleUpdateAction;
 import com.riskrieg.core.internal.action.setup.FormNationAction;
 import com.riskrieg.core.internal.action.setup.JoinAction;
@@ -169,7 +169,7 @@ public final class ConquestMode implements AlliableMode {
   @Override
   public Action<Nation> selectTerritory(@Nonnull Identity identity, @Nonnull TerritoryId territoryId) {
     setLastUpdated();
-    return new FormNationAction(TerritoryType.CAPITAL, identity, territoryId, gameState, gameMap, players, nations);
+    return new FormNationAction(identity, territoryId, TerritoryType.CAPITAL, gameState, gameMap, players, nations);
   }
 
   @Nonnull

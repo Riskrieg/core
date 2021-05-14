@@ -1,4 +1,4 @@
-package com.riskrieg.core.internal.action.setup;
+package com.riskrieg.core.internal.action.running;
 
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.player.Identity;
@@ -15,21 +15,21 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
-public final class FormNationAction implements Action<Nation> {
+public class SelectTerritoryAction implements Action<Nation> {
 
   private final Identity identity;
   private final TerritoryId id;
-  private final TerritoryType firstTerritoryType;
+  private final TerritoryType territoryType;
   private final GameState gameState;
   private final GameMap gameMap;
   private final Collection<Player> players;
   private final Collection<Nation> nations;
 
-  public FormNationAction(Identity identity, TerritoryId id, TerritoryType firstTerritoryType, GameState gameState, GameMap gameMap,
+  public SelectTerritoryAction(Identity identity, TerritoryId id, TerritoryType territoryType, GameState gameState, GameMap gameMap,
       Collection<Player> players, Collection<Nation> nations) {
     this.identity = identity;
     this.id = id;
-    this.firstTerritoryType = firstTerritoryType;
+    this.territoryType = territoryType;
     this.gameState = gameState;
     this.gameMap = gameMap;
     this.players = players;
@@ -59,7 +59,7 @@ public final class FormNationAction implements Action<Nation> {
           if (territoryIds.contains(id)) {
             throw new IllegalStateException("That territory is already taken by someone else");
           }
-          Nation nation = new Nation(identity, new GameTerritory(id, firstTerritoryType));
+          Nation nation = new Nation(identity, new GameTerritory(id, territoryType));
           nations.add(nation);
           if (success != null) {
             success.accept(nation);

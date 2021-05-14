@@ -165,7 +165,7 @@ public final class ClassicMode implements GameMode { // No capitals, no alliance
   @Override
   public Action<Nation> selectTerritory(@Nonnull Identity identity, @Nonnull TerritoryId territoryId) {
     setLastUpdated();
-    return new FormNationAction(TerritoryType.NORMAL, identity, territoryId, gameState, gameMap, players, nations);
+    return new FormNationAction(identity, territoryId, TerritoryType.NORMAL, gameState, gameMap, players, nations);
   }
 
   @Nonnull
