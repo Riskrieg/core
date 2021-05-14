@@ -1,4 +1,4 @@
-package com.riskrieg.core.internal.action.running;
+package com.riskrieg.core.internal.action.running.claim;
 
 import com.riskrieg.core.api.Dice;
 import com.riskrieg.core.api.nation.Nation;
@@ -7,16 +7,19 @@ import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.unsorted.gamemode.GameState;
 import com.riskrieg.core.unsorted.map.GameMap;
+import com.riskrieg.core.unsorted.map.TerritoryType;
 import com.riskrieg.map.territory.TerritoryId;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
-public final class SimpleClaimAction implements Action<ClaimBundle> {
+public final class ConquestClaimAction implements Action<ClaimBundle> {
 
   private final Identity identity;
   private final Set<TerritoryId> ids;
@@ -25,7 +28,7 @@ public final class SimpleClaimAction implements Action<ClaimBundle> {
   private final GameMap gameMap;
   private final Collection<Nation> nations;
 
-  public SimpleClaimAction(Identity identity, Set<TerritoryId> ids, Identity currentTurnIdentity, GameState gameState, GameMap gameMap, Collection<Nation> nations) {
+  public ConquestClaimAction(Identity identity, Set<TerritoryId> ids, Identity currentTurnIdentity, GameState gameState, GameMap gameMap, Collection<Nation> nations) {
     this.identity = identity;
     this.ids = ids;
     this.currentTurnIdentity = currentTurnIdentity;
@@ -82,7 +85,15 @@ public final class SimpleClaimAction implements Action<ClaimBundle> {
             var defender = getNation(id);
             if (defender != null) {
               if (attack(nation, defender, id)) {
+                boolean wasCapital = defender.territoryIsOfType(id, TerritoryType.CAPITAL);
                 defender.remove(id);
+                if (wasCapital) { // Select new capital
+                  Optional<TerritoryId> randomTerritory = defender.territories().stream().skip(new Random().nextInt(defender.territories().size())).findFirst();
+                  randomTerritory.ifPresent(t -> {
+                    defender.remove(t);
+                    defender.add(t, TerritoryType.CAPITAL);
+                  });
+                }
                 nation.add(id);
                 taken.add(id);
               } else {
@@ -114,11 +125,19 @@ public final class SimpleClaimAction implements Action<ClaimBundle> {
     var neighbors = gameMap.getNeighbors(id);
     for (TerritoryId neighbor : neighbors) {
       if (attacker.territories().contains(neighbor)) {
-        attackRolls++;
+        if (attacker.territoryIsOfType(neighbor, TerritoryType.CAPITAL)) {
+          attackRolls += 2;
+        } else {
+          attackRolls++;
+        }
       } else if (defender.territories().contains(neighbor)) {
         defenseRolls++;
+        if (defender.territoryIsOfType(id, TerritoryType.CAPITAL)) {
+          defenseSides++;
+        }
       }
     }
+    // TODO: Configure not connected to capital debuff
     Dice attackDice = new Dice(attackSides, attackRolls);
     Dice defenseDice = new Dice(defenseSides, defenseRolls);
     int attackerMax = Arrays.stream(attackDice.roll()).summaryStatistics().getMax();

@@ -1,4 +1,4 @@
-package com.riskrieg.core.internal.action.running;
+package com.riskrieg.core.internal.action.running.claim;
 
 import com.riskrieg.core.api.Dice;
 import com.riskrieg.core.api.nation.Nation;
@@ -7,7 +7,6 @@ import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.unsorted.gamemode.GameState;
 import com.riskrieg.core.unsorted.map.GameMap;
-import com.riskrieg.core.unsorted.map.TerritoryType;
 import com.riskrieg.map.territory.TerritoryId;
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,7 +16,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
-public class RegicideClaimAction implements Action<ClaimBundle> {
+public final class SimpleClaimAction implements Action<ClaimBundle> {
 
   private final Identity identity;
   private final Set<TerritoryId> ids;
@@ -26,7 +25,7 @@ public class RegicideClaimAction implements Action<ClaimBundle> {
   private final GameMap gameMap;
   private final Collection<Nation> nations;
 
-  public RegicideClaimAction(Identity identity, Set<TerritoryId> ids, Identity currentTurnIdentity, GameState gameState, GameMap gameMap, Collection<Nation> nations) {
+  public SimpleClaimAction(Identity identity, Set<TerritoryId> ids, Identity currentTurnIdentity, GameState gameState, GameMap gameMap, Collection<Nation> nations) {
     this.identity = identity;
     this.ids = ids;
     this.currentTurnIdentity = currentTurnIdentity;
@@ -59,12 +58,6 @@ public class RegicideClaimAction implements Action<ClaimBundle> {
           var invalidTerritories = ids.stream().filter(id -> !gameMap.contains(id)).collect(Collectors.toSet());
           var ownedTerritories = ids.stream().filter(id -> nation.territories().stream().anyMatch(tid -> tid.equals(id))).collect(Collectors.toSet());
           var notBorderingTerritories = ids.stream().filter(id -> nation.territories().stream().noneMatch(tid -> gameMap.areNeighbors(tid, id))).collect(Collectors.toSet());
-          var alliedTerritories = new HashSet<TerritoryId>();
-          for (Nation potentialAlly : nations) {
-            if (nation.allies().contains(potentialAlly.identity())) {
-              alliedTerritories.addAll(ids.stream().filter(id -> potentialAlly.territories().contains(id)).collect(Collectors.toSet()));
-            }
-          }
 
           if (!invalidTerritories.isEmpty()) {
             throw new IllegalStateException("Invalid territories: " + invalidTerritories.stream().map(TerritoryId::value).collect(Collectors.joining(", ")).trim());
@@ -74,9 +67,6 @@ public class RegicideClaimAction implements Action<ClaimBundle> {
           }
           if (!notBorderingTerritories.isEmpty()) {
             throw new IllegalStateException("Not bordering territories: " + notBorderingTerritories.stream().map(TerritoryId::value).collect(Collectors.joining(", ")).trim());
-          }
-          if (!alliedTerritories.isEmpty()) {
-            throw new IllegalStateException("Territories belong to allies: " + alliedTerritories.stream().map(TerritoryId::value).collect(Collectors.joining(", ")).trim());
           }
           int claims = nation.getClaimAmount(gameMap, nations);
           if (claims != ids.size()) {
@@ -124,19 +114,11 @@ public class RegicideClaimAction implements Action<ClaimBundle> {
     var neighbors = gameMap.getNeighbors(id);
     for (TerritoryId neighbor : neighbors) {
       if (attacker.territories().contains(neighbor)) {
-        if (attacker.territoryIsOfType(neighbor, TerritoryType.CAPITAL)) {
-          attackRolls += 2;
-        } else {
-          attackRolls++;
-        }
+        attackRolls++;
       } else if (defender.territories().contains(neighbor)) {
         defenseRolls++;
-        if (defender.territoryIsOfType(id, TerritoryType.CAPITAL)) {
-          defenseSides++;
-        }
       }
     }
-    // TODO: Configure not connected to capital debuff
     Dice attackDice = new Dice(attackSides, attackRolls);
     Dice defenseDice = new Dice(defenseSides, defenseRolls);
     int attackerMax = Arrays.stream(attackDice.roll()).summaryStatistics().getMax();
@@ -149,4 +131,3 @@ public class RegicideClaimAction implements Action<ClaimBundle> {
   }
 
 }
-

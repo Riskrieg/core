@@ -1,4 +1,4 @@
-package com.riskrieg.core.internal.action.running;
+package com.riskrieg.core.internal.action.running.update;
 
 import com.riskrieg.core.api.gamemode.GameMode;
 import com.riskrieg.core.api.nation.Nation;
@@ -8,7 +8,6 @@ import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.bundle.UpdateBundle;
 import com.riskrieg.core.unsorted.gamemode.GameState;
 import com.riskrieg.core.unsorted.map.GameMap;
-import com.riskrieg.core.unsorted.map.TerritoryType;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.HashSet;
@@ -16,7 +15,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
-public class RegicideUpdateAction implements Action<UpdateBundle> {
+public final class SimpleUpdateAction implements Action<UpdateBundle> {
 
   private final GameMode gameMode;
   private final GameState gameState;
@@ -24,7 +23,7 @@ public class RegicideUpdateAction implements Action<UpdateBundle> {
   private final Deque<Player> players;
   private final Collection<Nation> nations;
 
-  public RegicideUpdateAction(GameMode gameMode, GameState gameState, GameMap gameMap, Deque<Player> players, Collection<Nation> nations) {
+  public SimpleUpdateAction(GameMode gameMode, GameState gameState, GameMap gameMap, Deque<Player> players, Collection<Nation> nations) {
     this.gameMode = gameMode;
     this.gameState = gameState;
     this.gameMap = gameMap;
@@ -44,7 +43,7 @@ public class RegicideUpdateAction implements Action<UpdateBundle> {
           /* Defeated Check */
           Set<Player> defeated = new HashSet<>();
           for (Nation nation : nations) {
-            if (nation.territories().size() == 0 || nation.territories().stream().noneMatch(tid -> nation.territoryIsOfType(tid, TerritoryType.CAPITAL))) {
+            if (nation.territories().size() == 0) {
               players.stream().filter(p -> p.identity().equals(nation.identity())).findAny().ifPresent(defeated::add);
             }
           }

@@ -8,8 +8,8 @@ import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.action.Action;
-import com.riskrieg.core.internal.action.running.SimpleClaimAction;
-import com.riskrieg.core.internal.action.running.UpdateAction;
+import com.riskrieg.core.internal.action.running.claim.SimpleClaimAction;
+import com.riskrieg.core.internal.action.running.update.SimpleUpdateAction;
 import com.riskrieg.core.internal.action.setup.FormNationAction;
 import com.riskrieg.core.internal.action.setup.JoinAction;
 import com.riskrieg.core.internal.action.setup.LeaveAction;
@@ -188,7 +188,7 @@ public final class ClassicMode implements GameMode { // No capitals, no alliance
   @Override
   public Action<UpdateBundle> update() {
     setLastUpdated();
-    return new UpdateAction(this, gameState, gameMap, players, nations);
+    return new SimpleUpdateAction(this, gameState, gameMap, players, nations);
   }
 
   /* Private Methods */
