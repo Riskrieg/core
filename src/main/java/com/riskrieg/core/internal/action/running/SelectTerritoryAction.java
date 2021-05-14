@@ -26,7 +26,7 @@ public class SelectTerritoryAction implements Action<Nation> {
   private final Collection<Nation> nations;
 
   public SelectTerritoryAction(Identity identity, TerritoryId id, TerritoryType territoryType, GameState gameState, GameMap gameMap,
-      Collection<Player> players, Collection<Nation> nations) {
+      Collection<Player> players, Collection<Nation> nations) { // TODO: Implement proper functionality
     this.identity = identity;
     this.id = id;
     this.territoryType = territoryType;

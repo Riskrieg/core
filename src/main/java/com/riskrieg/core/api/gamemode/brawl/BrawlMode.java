@@ -9,8 +9,10 @@ import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.action.running.SelectTerritoryAction;
+import com.riskrieg.core.internal.action.running.claim.BrawlClaimAction;
 import com.riskrieg.core.internal.action.running.claim.SimpleClaimAction;
 import com.riskrieg.core.internal.action.running.update.RegicideUpdateAction;
+import com.riskrieg.core.internal.action.running.update.SimpleUpdateAction;
 import com.riskrieg.core.internal.action.setup.JoinAction;
 import com.riskrieg.core.internal.action.setup.LeaveAction;
 import com.riskrieg.core.internal.action.setup.SelectMapAction;
@@ -181,14 +183,14 @@ public final class BrawlMode implements GameMode {
   @CheckReturnValue
   public Action<ClaimBundle> claim(Identity identity, TerritoryId... territoryIds) {
     setLastUpdated();
-    return new SimpleClaimAction(identity, Set.of(territoryIds), players.getFirst().identity(), gameState, gameMap, nations);
+    return new BrawlClaimAction(identity, Set.of(territoryIds), players.getFirst().identity(), gameState, gameMap, nations);
   }
 
   @Nonnull
   @Override
   public Action<UpdateBundle> update() {
     setLastUpdated();
-    return new RegicideUpdateAction(this, gameState, gameMap, players, nations);
+    return new SimpleUpdateAction(this, gameState, gameMap, players, nations);
   }
 
   /* Private Methods */

@@ -61,6 +61,12 @@ public final class ConquestClaimAction implements Action<ClaimBundle> {
           var invalidTerritories = ids.stream().filter(id -> !gameMap.contains(id)).collect(Collectors.toSet());
           var ownedTerritories = ids.stream().filter(id -> nation.territories().stream().anyMatch(tid -> tid.equals(id))).collect(Collectors.toSet());
           var notBorderingTerritories = ids.stream().filter(id -> nation.territories().stream().noneMatch(tid -> gameMap.areNeighbors(tid, id))).collect(Collectors.toSet());
+          var alliedTerritories = new HashSet<TerritoryId>();
+          for (Nation potentialAlly : nations) {
+            if (nation.allies().contains(potentialAlly.identity())) {
+              alliedTerritories.addAll(ids.stream().filter(id -> potentialAlly.territories().contains(id)).collect(Collectors.toSet()));
+            }
+          }
 
           if (!invalidTerritories.isEmpty()) {
             throw new IllegalStateException("Invalid territories: " + invalidTerritories.stream().map(TerritoryId::value).collect(Collectors.joining(", ")).trim());
@@ -70,6 +76,9 @@ public final class ConquestClaimAction implements Action<ClaimBundle> {
           }
           if (!notBorderingTerritories.isEmpty()) {
             throw new IllegalStateException("Not bordering territories: " + notBorderingTerritories.stream().map(TerritoryId::value).collect(Collectors.joining(", ")).trim());
+          }
+          if (!alliedTerritories.isEmpty()) {
+            throw new IllegalStateException("Territories belong to allies: " + alliedTerritories.stream().map(TerritoryId::value).collect(Collectors.joining(", ")).trim());
           }
           int claims = nation.getClaimAmount(gameMap, nations);
           if (claims != ids.size()) {
