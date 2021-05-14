@@ -474,7 +474,7 @@ public class Conquest implements Game, IAlliances {
   private boolean rollAttack(Nation attacker, Nation defender, Territory territory) {
     int attackRolls = 0;
     int defenseRolls = 0;
-    int attackSides = 7;
+    int attackSides = 8;
     int defenseSides = 6;
     if (getMap().isPresent()) {
       Set<Territory> neighbors = getMap().get().getNeighbors(territory);
@@ -486,11 +486,10 @@ public class Conquest implements Game, IAlliances {
         }
       }
       if (neighbors.contains(attacker.getCapital())) {
-        attackRolls += Constants.CAPITAL_ATTACK_ROLL_BOOST;
+        attackRolls += 1 + Constants.CAPITAL_ATTACK_ROLL_BOOST;
       }
       if (territory.equals(defender.getCapital())) {
-        defenseRolls += Constants.CAPITAL_DEFENSE_ROLL_BOOST;
-        defenseSides = 8;
+        defenseSides += 1 + Constants.CAPITAL_DEFENSE_ROLL_BOOST;
       }
       Dice attackDice = new Dice(attackSides, Math.max(1, attackRolls)); // just in case, I think the rolls should always be at least 1 though.
       Dice defenseDice = new Dice(defenseSides, Math.max(1, defenseRolls));
