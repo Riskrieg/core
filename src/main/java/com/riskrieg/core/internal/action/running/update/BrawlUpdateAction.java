@@ -46,9 +46,7 @@ public class BrawlUpdateAction implements Action<UpdateBundle> {
           }
           if (success != null) {
             Player currentTurnPlayer = players.size() > 0 ? players.getFirst() : null;
-            Nation nation = currentTurnPlayer == null ? null : nations.stream().filter(n -> n.identity().equals(currentTurnPlayer.identity())).findAny().orElse(null);
-            int claims = nation == null ? -1 : nation.getClaimAmount(gameMode.map(), nations);
-            success.accept(new UpdateBundle(previousPlayer, currentTurnPlayer, gameMode.gameState(), GameEndReason.NONE, claims, new HashSet<>()));
+            success.accept(new UpdateBundle(previousPlayer, currentTurnPlayer, gameMode.gameState(), GameEndReason.NONE, 1, new HashSet<>()));
           }
         }
         case RUNNING -> {
