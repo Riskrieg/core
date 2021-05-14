@@ -3,6 +3,7 @@ package com.riskrieg.core.internal.action.running.claim;
 import com.riskrieg.core.api.Dice;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.player.Identity;
+import com.riskrieg.core.constant.Constants;
 import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.unsorted.gamemode.GameState;
@@ -116,14 +117,14 @@ public class RegicideClaimAction implements Action<ClaimBundle> {
     for (TerritoryId neighbor : neighbors) {
       if (attacker.territories().contains(neighbor)) {
         if (attacker.territoryIsOfType(neighbor, TerritoryType.CAPITAL)) {
-          attackRolls += 2;
+          attackRolls += Constants.CAPITAL_ATTACK_ROLL_BOOST;
         } else {
           attackRolls++;
         }
       } else if (defender.territories().contains(neighbor)) {
         defenseRolls++;
         if (defender.territoryIsOfType(id, TerritoryType.CAPITAL)) {
-          defenseSides++;
+          defenseSides += Constants.CAPITAL_DEFENSE_ROLL_BOOST;
         }
       }
     }
