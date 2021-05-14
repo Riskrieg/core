@@ -14,7 +14,7 @@ import com.riskrieg.core.internal.action.setup.FormNationAction;
 import com.riskrieg.core.internal.action.setup.JoinAction;
 import com.riskrieg.core.internal.action.setup.LeaveAction;
 import com.riskrieg.core.internal.action.setup.SelectMapAction;
-import com.riskrieg.core.internal.action.setup.StartAction;
+import com.riskrieg.core.internal.action.setup.start.StartAction;
 import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.internal.bundle.LeaveBundle;
 import com.riskrieg.core.internal.bundle.UpdateBundle;
@@ -172,7 +172,7 @@ public final class RegicideMode implements GameMode {
   @Override
   public Action<Player> start(@Nonnull TurnOrder order) {
     players = order.sort(players);
-    return new StartAction(GameState.RUNNING, this, gameMap, players, nations);
+    return new StartAction(this, gameMap, players, nations);
   }
 
   /* Running */

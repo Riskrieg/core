@@ -1,4 +1,4 @@
-package com.riskrieg.core.internal.action.setup;
+package com.riskrieg.core.internal.action.setup.start;
 
 import com.riskrieg.core.api.gamemode.GameMode;
 import com.riskrieg.core.api.nation.Nation;
@@ -12,16 +12,14 @@ import java.util.Deque;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
-public final class StartAction implements Action<Player> {
+public class BrawlStartAction implements Action<Player> {
 
   private final GameMode gameMode;
-  private final GameState setToState;
   private final GameMap gameMap;
   private final Deque<Player> players;
   private final Collection<Nation> nations;
 
-  public StartAction(GameState setToState, GameMode gameMode, GameMap gameMap, Deque<Player> players, Collection<Nation> nations) {
-    this.setToState = setToState;
+  public BrawlStartAction(GameMode gameMode, GameMap gameMap, Deque<Player> players, Collection<Nation> nations) {
     this.gameMode = gameMode;
     this.gameMap = gameMap;
     this.players = players;
@@ -41,13 +39,10 @@ public final class StartAction implements Action<Player> {
           if (!gameMap.isSet()) {
             throw new IllegalStateException("A valid map must be selected before starting the game");
           }
-          if (nations.size() < players.size()) {
-            throw new IllegalStateException("Not all players have selected a capital");
-          }
           if (nations.size() > players.size()) {
             throw new IllegalStateException("Critical error: game cannot be started");
           }
-          gameMode.setGameState(setToState);
+          gameMode.setGameState(GameState.SELECTION);
           if (success != null) {
             success.accept(players.getFirst());
           }
@@ -61,3 +56,4 @@ public final class StartAction implements Action<Player> {
   }
 
 }
+

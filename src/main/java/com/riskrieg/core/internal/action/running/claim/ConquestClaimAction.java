@@ -136,14 +136,14 @@ public final class ConquestClaimAction implements Action<ClaimBundle> {
     for (TerritoryId neighbor : neighbors) {
       if (attacker.territories().contains(neighbor)) {
         if (attacker.territoryIsOfType(neighbor, TerritoryType.CAPITAL)) {
-          attackRolls += Constants.CAPITAL_ATTACK_ROLL_BOOST;
+          attackRolls += 1 + Constants.CAPITAL_ATTACK_ROLL_BOOST;
         } else {
           attackRolls++;
         }
       } else if (defender.territories().contains(neighbor)) {
         defenseRolls++;
         if (defender.territoryIsOfType(id, TerritoryType.CAPITAL)) {
-          defenseSides += Constants.CAPITAL_DEFENSE_ROLL_BOOST;
+          defenseSides += 1 + Constants.CAPITAL_DEFENSE_ROLL_BOOST;
         }
       }
     }
