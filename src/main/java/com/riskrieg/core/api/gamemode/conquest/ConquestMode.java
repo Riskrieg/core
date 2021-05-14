@@ -175,7 +175,10 @@ public final class ConquestMode implements AlliableMode {
   @Nonnull
   @Override
   public Action<Player> start(@Nonnull TurnOrder order) {
-    players = order.sort(players);
+    if (gameState.equals(GameState.SETUP)) {
+      setLastUpdated();
+      players = order.sort(players);
+    }
     return new StartAction(this, gameMap, players, nations);
   }
 
