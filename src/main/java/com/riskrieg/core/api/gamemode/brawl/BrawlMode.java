@@ -109,7 +109,7 @@ public final class BrawlMode implements GameMode { // TODO: Select territories b
 
   @Nonnull
   @Override
-  public Action<Nation> formNation(@Nonnull Identity identity, @Nonnull TerritoryId territoryId) {
+  public Action<Nation> selectTerritory(@Nonnull Identity identity, @Nonnull TerritoryId territoryId) {
     return null;
   }
 

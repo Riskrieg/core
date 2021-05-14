@@ -69,7 +69,7 @@ public interface GameMode {
 
   @Nonnull
   @CheckReturnValue
-  Action<Nation> formNation(@Nonnull Identity identity, @Nonnull TerritoryId territoryId);
+  Action<Nation> selectTerritory(@Nonnull Identity identity, @Nonnull TerritoryId territoryId);
 
   @Nonnull
   @CheckReturnValue

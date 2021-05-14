@@ -109,7 +109,7 @@ public final class CreativeMode implements GameMode { // TODO: D&D style
 
   @Nonnull
   @Override
-  public Action<Nation> formNation(@Nonnull Identity identity, @Nonnull TerritoryId territoryId) {
+  public Action<Nation> selectTerritory(@Nonnull Identity identity, @Nonnull TerritoryId territoryId) {
     return null;
   }
 
