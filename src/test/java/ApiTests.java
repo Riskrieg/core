@@ -4,7 +4,7 @@ import com.riskrieg.core.api.Riskrieg;
 import com.riskrieg.core.api.RiskriegBuilder;
 import com.riskrieg.core.api.gamemode.classic.ClassicMode;
 import com.riskrieg.core.api.gamemode.conquest.ConquestMode;
-import com.riskrieg.core.api.order.RandomOrder;
+import com.riskrieg.core.api.order.FullRandomOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.unsorted.gamemode.GameState;
 import com.riskrieg.core.unsorted.map.MapOptions;
@@ -63,7 +63,7 @@ public class ApiTests {
     game.join(Identity.of("1234"), "Test", new Color(0, 0, 0)).submit();
     assertEquals(1, game.players().size());
 
-    game.start(new RandomOrder()).submit();
+    game.start(new FullRandomOrder()).submit();
     assertEquals(game.gameState(), GameState.SETUP);
 
 //    assertFalse(game.map().isSet());
@@ -84,13 +84,13 @@ public class ApiTests {
     assertEquals(2, game.players().size());
     assertEquals(1, game.nations().size());
 
-    game.start(new RandomOrder()).submit();
+    game.start(new FullRandomOrder()).submit();
     assertEquals(game.gameState(), GameState.SETUP);
 
     game.selectTerritory(Identity.of("1234"), game.map().graph().vertexSet().toArray(new Territory[0])[1].id()).submit();
     assertEquals(2, game.nations().size());
 
-    game.start(new RandomOrder()).submit();
+    game.start(new FullRandomOrder()).submit();
     assertEquals(game.gameState(), GameState.RUNNING);
 
   }
