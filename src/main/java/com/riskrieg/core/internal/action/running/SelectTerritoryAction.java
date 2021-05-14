@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
-public class SelectTerritoryAction implements Action<Nation> {
+public class SelectTerritoryAction implements Action<Nation> { // Meant for Brawl Mode only
 
   private final Identity identity;
   private final TerritoryId id;
@@ -26,7 +26,7 @@ public class SelectTerritoryAction implements Action<Nation> {
   private final Collection<Nation> nations;
 
   public SelectTerritoryAction(Identity identity, TerritoryId id, TerritoryType territoryType, GameState gameState, GameMap gameMap,
-      Collection<Player> players, Collection<Nation> nations) { // TODO: Implement proper functionality
+      Collection<Player> players, Collection<Nation> nations) {
     this.identity = identity;
     this.id = id;
     this.territoryType = territoryType;
@@ -41,29 +41,24 @@ public class SelectTerritoryAction implements Action<Nation> {
     try {
       switch (gameState) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
-        case RUNNING -> throw new IllegalStateException("Capitals can only be selected during the setup phase");
+        case SETUP, RUNNING -> throw new IllegalStateException("Territories can only be selected during the setup phase");
         case SELECTION -> {
-          // TODO: Implement
-        }
-        case SETUP -> {
           if (players.stream().noneMatch(p -> p.identity().equals(identity))) {
             throw new IllegalStateException("Player is not present");
           }
-          if (!gameMap.isSet()) {
-            throw new IllegalStateException("A valid map must be selected before selecting a capital");
-          }
           if (gameMap.graph().vertexSet().stream().noneMatch(t -> t.id().equals(id))) {
-            throw new IllegalStateException("No such territory exists on the selected map");
-          }
-          if (nations.stream().anyMatch(n -> n.identity().equals(identity))) {
-            throw new IllegalStateException("That player has already selected a capital");
+            throw new IllegalStateException("No such territory exists on the map");
           }
           var territoryIds = nations.stream().map(Nation::territories).flatMap(Set::stream).collect(Collectors.toSet());
           if (territoryIds.contains(id)) {
-            throw new IllegalStateException("That territory is already taken by someone else");
+            throw new IllegalStateException("That territory is already taken");
           }
-          Nation nation = new Nation(identity, new GameTerritory(id, territoryType));
-          nations.add(nation);
+          Nation nation = nations.stream().filter(n -> n.identity().equals(identity)).findAny().orElse(null);
+          if (nation == null) {
+            nation = new Nation(identity, new GameTerritory(id, territoryType));
+          } else {
+            nation.add(id, territoryType);
+          }
           if (success != null) {
             success.accept(nation);
           }

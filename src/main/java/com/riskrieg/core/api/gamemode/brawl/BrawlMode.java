@@ -169,7 +169,7 @@ public final class BrawlMode implements AlliableMode {
   @Override
   public Action<Nation> selectTerritory(@Nonnull Identity identity, @Nonnull TerritoryId territoryId) {
     setLastUpdated();
-    return new SelectTerritoryAction(identity, territoryId, TerritoryType.CAPITAL, gameState, gameMap, players, nations);
+    return new SelectTerritoryAction(identity, territoryId, TerritoryType.NORMAL, gameState, gameMap, players, nations);
   }
 
   @Nonnull
