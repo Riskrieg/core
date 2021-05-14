@@ -13,6 +13,7 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 public class BrawlUpdateAction implements Action<UpdateBundle> {
@@ -38,7 +39,17 @@ public class BrawlUpdateAction implements Action<UpdateBundle> {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case SETUP -> throw new IllegalStateException("Attempted to update turn in invalid game state");
         case SELECTION -> {
-          // TODO: Implement
+          Player previousPlayer = players.size() == 0 ? null : players.getFirst();
+          players.addLast(players.removeFirst());
+          if (nations.stream().map(Nation::territories).flatMap(Set::stream).collect(Collectors.toSet()).size() == gameMap.graph().vertexSet().size()) {
+            gameMode.setGameState(GameState.RUNNING);
+          }
+          if (success != null) {
+            Player currentTurnPlayer = players.size() > 0 ? players.getFirst() : null;
+            Nation nation = currentTurnPlayer == null ? null : nations.stream().filter(n -> n.identity().equals(currentTurnPlayer.identity())).findAny().orElse(null);
+            int claims = nation == null ? -1 : nation.getClaimAmount(gameMode.map(), nations);
+            success.accept(new UpdateBundle(previousPlayer, currentTurnPlayer, gameMode.gameState(), GameEndReason.NONE, claims, new HashSet<>()));
+          }
         }
         case RUNNING -> {
           var gameEndReason = GameEndReason.NONE;
@@ -54,6 +65,7 @@ public class BrawlUpdateAction implements Action<UpdateBundle> {
 
           /* End State Check */
           if (players.size() == 0) {
+            gameMode.setGameState(GameState.ENDED);
             gameEndReason = GameEndReason.NO_PLAYERS;
           } else if (players.size() == 1) {
             gameMode.setGameState(GameState.ENDED);
@@ -68,7 +80,7 @@ public class BrawlUpdateAction implements Action<UpdateBundle> {
             Player currentTurnPlayer = players.size() > 0 ? players.getFirst() : null;
             Nation nation = currentTurnPlayer == null ? null : nations.stream().filter(n -> n.identity().equals(currentTurnPlayer.identity())).findAny().orElse(null);
             int claims = nation == null ? -1 : nation.getClaimAmount(gameMode.map(), nations);
-            success.accept(new UpdateBundle(previousPlayer, currentTurnPlayer, gameEndReason, claims, defeated));
+            success.accept(new UpdateBundle(previousPlayer, currentTurnPlayer, gameMode.gameState(), gameEndReason, claims, defeated));
           }
         }
       }

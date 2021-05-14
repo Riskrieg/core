@@ -51,6 +51,7 @@ public final class SimpleUpdateAction implements Action<UpdateBundle> {
 
           /* End State Check */
           if (players.size() == 0) {
+            gameMode.setGameState(GameState.ENDED);
             gameEndReason = GameEndReason.NO_PLAYERS;
           } else if (players.size() == 1) {
             gameMode.setGameState(GameState.ENDED);
@@ -65,7 +66,7 @@ public final class SimpleUpdateAction implements Action<UpdateBundle> {
             Player currentTurnPlayer = players.size() > 0 ? players.getFirst() : null;
             Nation nation = currentTurnPlayer == null ? null : nations.stream().filter(n -> n.identity().equals(currentTurnPlayer.identity())).findAny().orElse(null);
             int claims = nation == null ? -1 : nation.getClaimAmount(gameMode.map(), nations);
-            success.accept(new UpdateBundle(previousPlayer, currentTurnPlayer, gameEndReason, claims, defeated));
+            success.accept(new UpdateBundle(previousPlayer, currentTurnPlayer, gameMode.gameState(), gameEndReason, claims, defeated));
           }
         }
       }
