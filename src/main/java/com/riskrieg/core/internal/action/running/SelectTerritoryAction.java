@@ -56,6 +56,7 @@ public class SelectTerritoryAction implements Action<Nation> { // Meant for Braw
           Nation nation = nations.stream().filter(n -> n.identity().equals(identity)).findAny().orElse(null);
           if (nation == null) {
             nation = new Nation(identity, new GameTerritory(id, territoryType));
+            nations.add(nation);
           } else {
             nation.add(id, territoryType);
           }
