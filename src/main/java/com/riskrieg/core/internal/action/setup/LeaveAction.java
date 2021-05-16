@@ -38,7 +38,7 @@ public final class LeaveAction implements Action<LeaveBundle> {
       nations.stream().filter(n -> n.allies().contains(identity)).forEach(nation -> nation.removeAlly(identity));
       nations.stream().filter(n -> n.identity().equals(identity)).findAny().ifPresent(nations::remove);
       players.remove(leavingPlayer);
-      if (gameMode.gameState().equals(GameState.SETUP) && players.size() == 0) {
+      if (gameMode.gameState().equals(GameState.SETUP) && players.size() == 0) { // TODO: Handle allied victory
         gameMode.setGameState(GameState.ENDED);
         gameEndReason = GameEndReason.NO_PLAYERS;
       } else if (gameMode.gameState().equals(GameState.RUNNING) && players.size() <= 1) {
