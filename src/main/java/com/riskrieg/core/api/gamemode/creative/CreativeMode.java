@@ -21,7 +21,7 @@ import java.time.Instant;
 import java.util.Collection;
 import javax.annotation.Nonnull;
 
-public final class CreativeMode implements GameMode { // TODO: D&D style
+public final class CreativeMode implements GameMode { // TODO: Implement
 
   public CreativeMode() {
 

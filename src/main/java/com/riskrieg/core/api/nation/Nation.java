@@ -104,7 +104,7 @@ public final class Nation {
 
 
   @Override
-  public boolean equals(Object o) { // TODO: Maybe don't have this if there's a game mode where 1 player can be more than 1 nation
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
