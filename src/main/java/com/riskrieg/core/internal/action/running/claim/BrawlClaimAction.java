@@ -26,7 +26,7 @@ public class BrawlClaimAction implements Action<ClaimBundle> {
   private final Collection<Nation> nations;
 
   public BrawlClaimAction(Identity identity, Set<TerritoryId> ids, Identity currentTurnIdentity, GameState gameState, GameMap gameMap, Collection<Nation> nations) {
-    this.identity = identity; // TODO: Only allow claims to be made if past territory select phase
+    this.identity = identity;
     this.ids = ids;
     this.currentTurnIdentity = currentTurnIdentity;
     this.gameState = gameState;

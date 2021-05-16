@@ -38,13 +38,18 @@ public final class LeaveAction implements Action<LeaveBundle> {
       nations.stream().filter(n -> n.allies().contains(identity)).forEach(nation -> nation.removeAlly(identity));
       nations.stream().filter(n -> n.identity().equals(identity)).findAny().ifPresent(nations::remove);
       players.remove(leavingPlayer);
-      if (gameMode.gameState().equals(GameState.SETUP) && players.size() == 0) { // TODO: Handle allied victory
+
+      if (gameMode.gameState().equals(GameState.SETUP) && players.size() == 0) {
         gameMode.setGameState(GameState.ENDED);
         gameEndReason = GameEndReason.NO_PLAYERS;
-      } else if (gameMode.gameState().equals(GameState.RUNNING) && players.size() <= 1) {
+      } else if ((gameMode.gameState().equals(GameState.RUNNING) || gameMode.gameState().equals(GameState.SELECTION)) && players.size() <= 1) {
         gameMode.setGameState(GameState.ENDED);
         gameEndReason = GameEndReason.FORFEIT;
+      } else if (gameMode.gameState().equals(GameState.RUNNING) && nations.stream().allMatch(n -> n.allies().size() == (players.size() - 1))) {
+        gameMode.setGameState(GameState.ENDED);
+        gameEndReason = GameEndReason.ALLIED_VICTORY;
       }
+
       if (success != null) {
         Player currentTurnPlayer = players.size() > 0 ? players.getFirst() : null;
         Nation nation = currentTurnPlayer == null ? null : nations.stream().filter(n -> n.identity().equals(currentTurnPlayer.identity())).findAny().orElse(null);

@@ -71,7 +71,11 @@ public class BrawlUpdateAction implements Action<UpdateBundle> {
           } else if (nations.stream().allMatch(n -> n.getClaimAmount(gameMap, nations) == 0)) {
             gameMode.setGameState(GameState.ENDED);
             gameEndReason = GameEndReason.STALEMATE;
+          } else if (gameMode.gameState().equals(GameState.RUNNING) && nations.stream().allMatch(n -> n.allies().size() == (players.size() - 1))) {
+            gameMode.setGameState(GameState.ENDED);
+            gameEndReason = GameEndReason.ALLIED_VICTORY;
           }
+
           Player previousPlayer = players.size() == 0 ? null : players.getFirst();
           players.addLast(players.removeFirst());
           if (success != null) {
