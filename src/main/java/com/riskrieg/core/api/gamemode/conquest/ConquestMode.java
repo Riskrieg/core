@@ -212,7 +212,7 @@ public final class ConquestMode implements AlliableMode {
   @Override
   public Action<AllianceBundle> ally(Identity identity1, Identity identity2) {
     setLastUpdated();
-    return new AllyAction(identity1, identity2, gameState, players, nations);
+    return new AllyAction(identity1, identity2, this, gameState, players, nations);
   }
 
   @Nonnull

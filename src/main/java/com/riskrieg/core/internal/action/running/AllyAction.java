@@ -1,8 +1,10 @@
 package com.riskrieg.core.internal.action.running;
 
+import com.riskrieg.core.api.gamemode.GameMode;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
+import com.riskrieg.core.internal.GameEndReason;
 import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.bundle.AllianceBundle;
 import com.riskrieg.core.unsorted.gamemode.GameState;
@@ -15,13 +17,15 @@ public final class AllyAction implements Action<AllianceBundle> {
 
   private final Identity identity1;
   private final Identity identity2;
+  private GameMode gameMode;
   private final GameState gameState;
   private final Collection<Player> players;
   private final Collection<Nation> nations;
 
-  public AllyAction(Identity identity1, Identity identity2, GameState gameState, Collection<Player> players, Collection<Nation> nations) {
+  public AllyAction(Identity identity1, Identity identity2, GameMode gameMode, GameState gameState, Collection<Player> players, Collection<Nation> nations) {
     this.identity1 = identity1;
     this.identity2 = identity2;
+    this.gameMode = gameMode;
     this.gameState = gameState;
     this.players = players;
     this.nations = nations;
@@ -52,10 +56,14 @@ public final class AllyAction implements Action<AllianceBundle> {
 
           nation1.addAlly(nation2.identity());
 
-          // TODO: Check allied victory condition
+          GameEndReason gameEndReason = GameEndReason.NONE;
+          if (gameMode.gameState().equals(GameState.RUNNING) && nations.stream().allMatch(n -> n.allies().size() == (players.size() - 1))) {
+            gameMode.setGameState(GameState.ENDED);
+            gameEndReason = GameEndReason.ALLIED_VICTORY;
+          }
 
           if (success != null) {
-            success.accept(new AllianceBundle(optPlayer1.get(), optPlayer2.get()));
+            success.accept(new AllianceBundle(optPlayer1.get(), optPlayer2.get(), gameEndReason));
           }
         }
       }

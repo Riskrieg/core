@@ -3,6 +3,7 @@ package com.riskrieg.core.internal.action.running;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
+import com.riskrieg.core.internal.GameEndReason;
 import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.bundle.AllianceBundle;
 import com.riskrieg.core.unsorted.gamemode.GameState;
@@ -53,7 +54,7 @@ public final class UnallyAction implements Action<AllianceBundle> {
           nation1.removeAlly(nation2.identity());
           nation2.removeAlly(nation1.identity());
           if (success != null) {
-            success.accept(new AllianceBundle(optPlayer1.get(), optPlayer2.get()));
+            success.accept(new AllianceBundle(optPlayer1.get(), optPlayer2.get(), GameEndReason.NONE));
           }
         }
       }

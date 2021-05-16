@@ -1,15 +1,18 @@
 package com.riskrieg.core.internal.bundle;
 
 import com.riskrieg.core.api.player.Player;
+import com.riskrieg.core.internal.GameEndReason;
 
 public final class AllianceBundle {
 
   private final Player player1;
   private final Player player2;
+  private final GameEndReason reason;
 
-  public AllianceBundle(Player player1, Player player2) {
+  public AllianceBundle(Player player1, Player player2, GameEndReason reason) {
     this.player1 = player1;
     this.player2 = player2;
+    this.reason = reason;
   }
 
   public Player player1() {
@@ -18,6 +21,10 @@ public final class AllianceBundle {
 
   public Player player2() {
     return player2;
+  }
+
+  public GameEndReason reason() {
+    return reason;
   }
 
 }
