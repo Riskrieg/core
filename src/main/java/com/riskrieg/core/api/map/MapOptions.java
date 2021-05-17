@@ -1,10 +1,10 @@
-package com.riskrieg.core.unsorted.map;
+package com.riskrieg.core.api.map;
 
 import com.aaronjyoder.util.json.gson.GsonUtil;
-import com.riskrieg.core.unsorted.map.options.Availability;
-import com.riskrieg.core.unsorted.map.options.InterfaceAlignment;
-import com.riskrieg.core.unsorted.map.options.alignment.HorizontalAlignment;
-import com.riskrieg.core.unsorted.map.options.alignment.VerticalAlignment;
+import com.riskrieg.core.api.map.options.Availability;
+import com.riskrieg.core.api.map.options.InterfaceAlignment;
+import com.riskrieg.core.api.map.options.alignment.HorizontalAlignment;
+import com.riskrieg.core.api.map.options.alignment.VerticalAlignment;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;

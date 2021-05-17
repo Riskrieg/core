@@ -1,4 +1,4 @@
-package com.riskrieg.core.unsorted.map;
+package com.riskrieg.core.api.map;
 
 import com.riskrieg.map.RkmMap;
 import com.riskrieg.map.data.MapAuthor;

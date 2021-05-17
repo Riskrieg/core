@@ -1,4 +1,4 @@
-package com.riskrieg.core.unsorted.gamemode;
+package com.riskrieg.core.internal;
 
 import java.time.Instant;
 import java.util.Objects;

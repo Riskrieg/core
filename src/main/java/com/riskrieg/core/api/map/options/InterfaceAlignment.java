@@ -1,7 +1,7 @@
-package com.riskrieg.core.unsorted.map.options;
+package com.riskrieg.core.api.map.options;
 
-import com.riskrieg.core.unsorted.map.options.alignment.HorizontalAlignment;
-import com.riskrieg.core.unsorted.map.options.alignment.VerticalAlignment;
+import com.riskrieg.core.api.map.options.alignment.HorizontalAlignment;
+import com.riskrieg.core.api.map.options.alignment.VerticalAlignment;
 import java.util.Objects;
 
 public final class InterfaceAlignment {

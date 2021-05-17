@@ -1,10 +1,10 @@
 package com.riskrieg.core.api.nation;
 
+import com.riskrieg.core.api.map.GameMap;
+import com.riskrieg.core.api.map.GameTerritory;
+import com.riskrieg.core.api.map.TerritoryType;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.constant.Constants;
-import com.riskrieg.core.unsorted.map.GameMap;
-import com.riskrieg.core.unsorted.map.GameTerritory;
-import com.riskrieg.core.unsorted.map.TerritoryType;
 import com.riskrieg.map.territory.TerritoryId;
 import java.util.Collection;
 import java.util.Collections;

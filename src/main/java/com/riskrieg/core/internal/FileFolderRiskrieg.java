@@ -1,4 +1,4 @@
-package com.riskrieg.core.internal.impl;
+package com.riskrieg.core.internal;
 
 import com.riskrieg.core.api.Group;
 import com.riskrieg.core.api.Riskrieg;
@@ -9,11 +9,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.annotation.Nonnull;
 
-public final class RiskriegImpl implements Riskrieg {
+public final class FileFolderRiskrieg implements Riskrieg {
 
   private final Path repository;
 
-  public RiskriegImpl(Path repository) {
+  public FileFolderRiskrieg(Path repository) {
     this.repository = repository;
   }
 
@@ -27,7 +27,7 @@ public final class RiskriegImpl implements Riskrieg {
     try {
       Path groupPath = repository.resolve(id);
       Files.createDirectories(groupPath);
-      return new GenericAction<>(new GroupImpl(groupPath));
+      return new GenericAction<>(new FileFolderGroup(groupPath));
     } catch (Exception e) {
       return new GenericAction<>(e);
     }
@@ -41,7 +41,7 @@ public final class RiskriegImpl implements Riskrieg {
       if (!Files.exists(groupPath)) {
         throw new FileNotFoundException("Group path does not exist");
       }
-      return new GenericAction<>(new GroupImpl(groupPath));
+      return new GenericAction<>(new FileFolderGroup(groupPath));
     } catch (Exception e) {
       return new GenericAction<>(e);
     }

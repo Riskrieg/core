@@ -1,5 +1,7 @@
 package com.riskrieg.core.api.gamemode;
 
+import com.riskrieg.core.api.map.GameMap;
+import com.riskrieg.core.api.map.MapOptions;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
@@ -8,9 +10,6 @@ import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.internal.bundle.LeaveBundle;
 import com.riskrieg.core.internal.bundle.UpdateBundle;
-import com.riskrieg.core.unsorted.gamemode.GameState;
-import com.riskrieg.core.unsorted.map.GameMap;
-import com.riskrieg.core.unsorted.map.MapOptions;
 import com.riskrieg.map.RkmMap;
 import com.riskrieg.map.territory.TerritoryId;
 import java.awt.Color;

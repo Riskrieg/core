@@ -1,4 +1,4 @@
-package com.riskrieg.core.internal.impl;
+package com.riskrieg.core.internal;
 
 import com.aaronjyoder.util.json.gson.GsonUtil;
 import com.riskrieg.core.api.Group;
@@ -24,11 +24,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
-public final class GroupImpl implements Group {
+public final class FileFolderGroup implements Group {
 
   private final Path path;
 
-  public GroupImpl(Path path) {
+  public FileFolderGroup(Path path) {
     Objects.requireNonNull(path);
     this.path = path;
   }
@@ -45,7 +45,7 @@ public final class GroupImpl implements Group {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    GroupImpl group = (GroupImpl) o;
+    FileFolderGroup group = (FileFolderGroup) o;
     return path.equals(group.path);
   }
 

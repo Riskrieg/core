@@ -1,4 +1,4 @@
-package com.riskrieg.core.unsorted.map.options;
+package com.riskrieg.core.api.map.options;
 
 public enum Availability {
 

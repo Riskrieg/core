@@ -1,11 +1,11 @@
 package com.riskrieg.core.internal.action.setup;
 
+import com.riskrieg.core.api.gamemode.GameState;
+import com.riskrieg.core.api.map.GameMap;
+import com.riskrieg.core.api.map.MapOptions;
+import com.riskrieg.core.api.map.options.Availability;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.internal.action.Action;
-import com.riskrieg.core.unsorted.gamemode.GameState;
-import com.riskrieg.core.unsorted.map.GameMap;
-import com.riskrieg.core.unsorted.map.MapOptions;
-import com.riskrieg.core.unsorted.map.options.Availability;
 import com.riskrieg.map.RkmMap;
 import java.util.Collection;
 import java.util.Objects;

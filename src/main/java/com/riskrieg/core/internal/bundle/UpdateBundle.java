@@ -1,8 +1,8 @@
 package com.riskrieg.core.internal.bundle;
 
+import com.riskrieg.core.api.gamemode.GameState;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.GameEndReason;
-import com.riskrieg.core.unsorted.gamemode.GameState;
 import java.util.Set;
 import javax.annotation.Nullable;
 

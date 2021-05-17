@@ -1,13 +1,13 @@
 package com.riskrieg.core.internal.action.running.update;
 
 import com.riskrieg.core.api.gamemode.GameMode;
+import com.riskrieg.core.api.gamemode.GameState;
+import com.riskrieg.core.api.map.GameMap;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.GameEndReason;
 import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.bundle.UpdateBundle;
-import com.riskrieg.core.unsorted.gamemode.GameState;
-import com.riskrieg.core.unsorted.map.GameMap;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.HashSet;

@@ -1,13 +1,13 @@
 package com.riskrieg.core.internal.action.setup;
 
 import com.riskrieg.core.api.gamemode.GameMode;
+import com.riskrieg.core.api.gamemode.GameState;
 import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.GameEndReason;
 import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.bundle.LeaveBundle;
-import com.riskrieg.core.unsorted.gamemode.GameState;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.function.Consumer;

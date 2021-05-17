@@ -1,6 +1,6 @@
 package com.riskrieg.core.api;
 
-import com.riskrieg.core.internal.impl.RiskriegImpl;
+import com.riskrieg.core.internal.FileFolderRiskrieg;
 import java.nio.file.Path;
 import java.util.Objects;
 import javax.annotation.CheckReturnValue;
@@ -22,7 +22,7 @@ public final class RiskriegBuilder {
   }
 
   public Riskrieg build() {
-    return new RiskriegImpl(repository);
+    return new FileFolderRiskrieg(repository);
   }
 
 }

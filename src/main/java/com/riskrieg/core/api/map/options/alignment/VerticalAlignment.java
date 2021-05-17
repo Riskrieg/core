@@ -1,4 +1,4 @@
-package com.riskrieg.core.unsorted.map.options.alignment;
+package com.riskrieg.core.api.map.options.alignment;
 
 public enum VerticalAlignment {
 
