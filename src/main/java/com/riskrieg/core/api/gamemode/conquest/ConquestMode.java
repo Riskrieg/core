@@ -12,18 +12,20 @@ import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.action.Action;
+import com.riskrieg.core.internal.action.LeaveAction;
 import com.riskrieg.core.internal.action.running.AllyAction;
+import com.riskrieg.core.internal.action.running.SkipAction;
 import com.riskrieg.core.internal.action.running.UnallyAction;
 import com.riskrieg.core.internal.action.running.claim.ConquestClaimAction;
 import com.riskrieg.core.internal.action.running.update.SimpleUpdateAction;
 import com.riskrieg.core.internal.action.setup.FormNationAction;
 import com.riskrieg.core.internal.action.setup.JoinAction;
-import com.riskrieg.core.internal.action.setup.LeaveAction;
 import com.riskrieg.core.internal.action.setup.SelectMapAction;
 import com.riskrieg.core.internal.action.setup.start.StartAction;
 import com.riskrieg.core.internal.bundle.AllianceBundle;
 import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.internal.bundle.LeaveBundle;
+import com.riskrieg.core.internal.bundle.SkipBundle;
 import com.riskrieg.core.internal.bundle.UpdateBundle;
 import com.riskrieg.map.RkmMap;
 import com.riskrieg.map.territory.TerritoryId;
@@ -37,7 +39,6 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
 public final class ConquestMode implements AlliableMode {
@@ -185,7 +186,14 @@ public final class ConquestMode implements AlliableMode {
   /* Running */
 
   @Nonnull
-  @CheckReturnValue
+  @Override
+  public Action<SkipBundle> skip(Identity identity) {
+    setLastUpdated();
+    return new SkipAction(identity, gameState, gameMap, players, nations);
+  }
+
+  @Nonnull
+  @Override
   public Action<ClaimBundle> claim(Identity identity, TerritoryId... territoryIds) {
     setLastUpdated();
     return new ConquestClaimAction(identity, Set.of(territoryIds), players.getFirst().identity(), gameState, gameMap, nations);

@@ -8,16 +8,16 @@ import javax.annotation.Nullable;
 
 public final class UpdateBundle {
 
-  private final Player previousPlayer;
   private final Player currentTurnPlayer;
+  private final Player previousPlayer;
   private final GameState gameState;
   private final GameEndReason reason;
   private final int claims;
   private final Set<Player> defeated;
 
-  public UpdateBundle(Player previousPlayer, Player currentTurnPlayer, GameState gameState, GameEndReason reason, int claims, Set<Player> defeated) {
-    this.previousPlayer = previousPlayer;
+  public UpdateBundle(Player currentTurnPlayer, Player previousPlayer, GameState gameState, GameEndReason reason, int claims, Set<Player> defeated) {
     this.currentTurnPlayer = currentTurnPlayer;
+    this.previousPlayer = previousPlayer;
     this.gameState = gameState;
     this.reason = reason;
     this.claims = claims;

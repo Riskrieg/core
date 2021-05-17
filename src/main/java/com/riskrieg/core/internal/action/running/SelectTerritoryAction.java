@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
-public class SelectTerritoryAction implements Action<Nation> { // Meant for Brawl Mode only
+public final class SelectTerritoryAction implements Action<Nation> { // Meant for Brawl Mode only
 
   private final Identity identity;
   private final TerritoryId id;

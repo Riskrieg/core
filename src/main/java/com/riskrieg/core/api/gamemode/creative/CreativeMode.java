@@ -13,6 +13,7 @@ import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.internal.bundle.LeaveBundle;
+import com.riskrieg.core.internal.bundle.SkipBundle;
 import com.riskrieg.core.internal.bundle.UpdateBundle;
 import com.riskrieg.map.RkmMap;
 import com.riskrieg.map.territory.TerritoryId;
@@ -116,6 +117,12 @@ public final class CreativeMode implements GameMode { // TODO: Implement
   @Nonnull
   @Override
   public Action<Player> start(@Nonnull TurnOrder order) {
+    return null;
+  }
+
+  @Nonnull
+  @Override
+  public Action<SkipBundle> skip(Identity identity) {
     return null;
   }
 
