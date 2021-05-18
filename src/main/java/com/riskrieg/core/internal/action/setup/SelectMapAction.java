@@ -32,7 +32,6 @@ public final class SelectMapAction implements Action<GameMap> {
   public void submit(@Nullable Consumer<? super GameMap> success, @Nullable Consumer<? super Throwable> failure) {
     try {
       switch (gameState) {
-        default -> throw new IllegalStateException("The map can only be set during the setup phase");
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case SETUP -> {
           Objects.requireNonNull(rkmMap);
@@ -46,6 +45,7 @@ public final class SelectMapAction implements Action<GameMap> {
             success.accept(gameMap);
           }
         }
+        default -> throw new IllegalStateException("The map can only be set during the setup phase");
       }
     } catch (Exception e) {
       if (failure != null) {

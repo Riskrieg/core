@@ -32,7 +32,6 @@ public final class SkipAction implements Action<SkipBundle> {
   public void submit(@Nullable Consumer<? super SkipBundle> success, @Nullable Consumer<? super Throwable> failure) {
     try {
       switch (gameState) {
-        default -> throw new IllegalStateException("Turns can only be skipped while the game is active");
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case RUNNING -> {
           Player skippedPlayer = players.stream().filter(p -> p.identity().equals(identity)).findAny().orElse(null);
@@ -48,6 +47,7 @@ public final class SkipAction implements Action<SkipBundle> {
             success.accept(new SkipBundle(currentTurnPlayer, skippedPlayer, claims));
           }
         }
+        default -> throw new IllegalStateException("Turns can only be skipped while the game is active");
       }
     } catch (Exception e) {
       if (failure != null) {

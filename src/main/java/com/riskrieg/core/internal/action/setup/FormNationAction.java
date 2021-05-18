@@ -40,7 +40,6 @@ public final class FormNationAction implements Action<Nation> {
   public void submit(@Nullable Consumer<? super Nation> success, @Nullable Consumer<? super Throwable> failure) {
     try {
       switch (gameState) {
-        default -> throw new IllegalStateException("Capitals can only be selected during the setup phase");
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case SETUP -> {
           if (players.stream().noneMatch(p -> p.identity().equals(identity))) {
@@ -65,6 +64,7 @@ public final class FormNationAction implements Action<Nation> {
             success.accept(nation);
           }
         }
+        default -> throw new IllegalStateException("Capitals can only be selected during the setup phase");
       }
     } catch (Exception e) {
       if (failure != null) {

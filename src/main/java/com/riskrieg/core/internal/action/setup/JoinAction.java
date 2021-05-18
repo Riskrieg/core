@@ -31,7 +31,6 @@ public final class JoinAction implements Action<Player> {
     try {
       Player player = new Player(id, color, name);
       switch (gameState) {
-        default -> throw new IllegalStateException("Players can only join the game during the setup phase");
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case SETUP -> {
           if (players.stream().anyMatch(p -> p.color().equals(player.color()))) {
@@ -48,6 +47,7 @@ public final class JoinAction implements Action<Player> {
             success.accept(player);
           }
         }
+        default -> throw new IllegalStateException("Players can only join the game during the setup phase");
       }
     } catch (Exception e) {
       if (failure != null) {

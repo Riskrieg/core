@@ -35,7 +35,6 @@ public final class SimpleUpdateAction implements Action<UpdateBundle> {
   public void submit(@Nullable Consumer<? super UpdateBundle> success, @Nullable Consumer<? super Throwable> failure) {
     try {
       switch (gameState) {
-        default -> throw new IllegalStateException("Attempted to update turn in invalid game state");
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case RUNNING -> {
           var gameEndReason = GameEndReason.NONE;
@@ -72,6 +71,7 @@ public final class SimpleUpdateAction implements Action<UpdateBundle> {
             success.accept(new UpdateBundle(currentTurnPlayer, previousPlayer, gameMode.gameState(), gameEndReason, claims, defeated));
           }
         }
+        default -> throw new IllegalStateException("Attempted to update turn in invalid game state");
       }
     } catch (Exception e) {
       if (failure != null) {

@@ -35,7 +35,6 @@ public final class AllyAction implements Action<AllianceBundle> {
   public void submit(@Nullable Consumer<? super AllianceBundle> success, @Nullable Consumer<? super Throwable> failure) {
     try {
       switch (gameState) {
-        default -> throw new IllegalStateException("Alliances can only be made while the game is active");
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case RUNNING -> {
           Optional<Player> optPlayer1 = players.stream().filter(player -> player.identity().equals(identity1)).findAny();
@@ -66,6 +65,7 @@ public final class AllyAction implements Action<AllianceBundle> {
             success.accept(new AllianceBundle(optPlayer1.get(), optPlayer2.get(), gameEndReason));
           }
         }
+        default -> throw new IllegalStateException("Alliances can only be made while the game is active");
       }
     } catch (Exception e) {
       if (failure != null) {

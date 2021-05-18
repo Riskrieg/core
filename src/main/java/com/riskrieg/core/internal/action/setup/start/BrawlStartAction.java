@@ -30,7 +30,6 @@ public class BrawlStartAction implements Action<Player> {
   public void submit(@Nullable Consumer<? super Player> success, @Nullable Consumer<? super Throwable> failure) {
     try {
       switch (gameMode.gameState()) {
-        default -> throw new IllegalStateException("The map can only be set during the setup phase");
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case SETUP -> {
           if (players.size() < Constants.MIN_PLAYERS) {
@@ -47,6 +46,7 @@ public class BrawlStartAction implements Action<Player> {
             success.accept(players.getFirst());
           }
         }
+        default -> throw new IllegalStateException("The map can only be set during the setup phase");
       }
     } catch (Exception e) {
       if (failure != null) {
