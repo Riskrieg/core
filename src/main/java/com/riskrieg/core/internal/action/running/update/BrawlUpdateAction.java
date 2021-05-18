@@ -39,14 +39,17 @@ public class BrawlUpdateAction implements Action<UpdateBundle> {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case SETUP -> throw new IllegalStateException("Attempted to update turn in invalid game state");
         case SELECTION -> {
+          int claims = 1;
           Player previousPlayer = players.size() == 0 ? null : players.getFirst();
           players.addLast(players.removeFirst());
+          Player currentTurnPlayer = players.size() > 0 ? players.getFirst() : null;
           if (nations.stream().map(Nation::territories).flatMap(Set::stream).collect(Collectors.toSet()).size() == gameMap.graph().vertexSet().size()) {
             gameMode.setGameState(GameState.RUNNING);
+            Nation nation = currentTurnPlayer == null ? null : nations.stream().filter(n -> n.identity().equals(currentTurnPlayer.identity())).findAny().orElse(null);
+            claims = nation == null ? -1 : nation.getClaimAmount(gameMode.map(), nations);
           }
           if (success != null) {
-            Player currentTurnPlayer = players.size() > 0 ? players.getFirst() : null;
-            success.accept(new UpdateBundle(currentTurnPlayer, previousPlayer, gameMode.gameState(), GameEndReason.NONE, 1, new HashSet<>()));
+            success.accept(new UpdateBundle(currentTurnPlayer, previousPlayer, gameMode.gameState(), GameEndReason.NONE, claims, new HashSet<>()));
           }
         }
         case RUNNING -> {

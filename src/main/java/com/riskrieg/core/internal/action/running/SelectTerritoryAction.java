@@ -47,7 +47,7 @@ public final class SelectTerritoryAction implements Action<Nation> { // Meant fo
             throw new IllegalStateException("Player is not present");
           }
           if (gameMap.graph().vertexSet().stream().noneMatch(t -> t.id().equals(id))) {
-            throw new IllegalStateException("No such territory exists on the map");
+            throw new IllegalStateException("No such territory exists on the map"); // TODO: Say which territory
           }
           var territoryIds = nations.stream().map(Nation::territories).flatMap(Set::stream).collect(Collectors.toSet());
           if (territoryIds.contains(id)) {
