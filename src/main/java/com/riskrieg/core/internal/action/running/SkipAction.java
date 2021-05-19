@@ -19,6 +19,7 @@ public final class SkipAction implements Action<SkipBundle> {
   private final GameMap gameMap;
   private final Deque<Player> players;
   private final Collection<Nation> nations;
+  private final boolean skipSelf;
 
   public SkipAction(Identity identity, GameState gameState, GameMap gameMap, Deque<Player> players, Collection<Nation> nations) {
     this.identity = identity;
@@ -26,6 +27,16 @@ public final class SkipAction implements Action<SkipBundle> {
     this.gameMap = gameMap;
     this.players = players;
     this.nations = nations;
+    this.skipSelf = false;
+  }
+
+  public SkipAction(Identity identity, GameState gameState, GameMap gameMap, Deque<Player> players, Collection<Nation> nations, boolean skipSelf) {
+    this.identity = identity;
+    this.gameState = gameState;
+    this.gameMap = gameMap;
+    this.players = players;
+    this.nations = nations;
+    this.skipSelf = skipSelf;
   }
 
   @Override
@@ -37,6 +48,10 @@ public final class SkipAction implements Action<SkipBundle> {
           Player skippedPlayer = players.stream().filter(p -> p.identity().equals(identity)).findAny().orElse(null);
           if (skippedPlayer == null) {
             throw new IllegalStateException("Player is not present");
+          }
+
+          if (skipSelf && !skippedPlayer.identity().equals(identity)) {
+            throw new IllegalStateException("Cannot skip another player's turn");
           }
 
           players.addLast(players.removeFirst());

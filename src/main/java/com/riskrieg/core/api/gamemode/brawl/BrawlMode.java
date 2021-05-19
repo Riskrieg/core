@@ -196,6 +196,13 @@ public final class BrawlMode implements AlliableMode {
 
   @Nonnull
   @Override
+  public Action<SkipBundle> skipSelf(Identity identity) {
+    setLastUpdated();
+    return new SkipAction(identity, gameState, gameMap, players, nations, true);
+  }
+
+  @Nonnull
+  @Override
   public Action<ClaimBundle> claim(Identity identity, TerritoryId... territoryIds) {
     setLastUpdated();
     return new BrawlClaimAction(identity, Set.of(territoryIds), players.getFirst().identity(), gameState, gameMap, nations);

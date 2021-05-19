@@ -128,6 +128,12 @@ public final class CreativeMode implements GameMode { // TODO: Implement
 
   @Nonnull
   @Override
+  public Action<SkipBundle> skipSelf(Identity identity) {
+    return null;
+  }
+
+  @Nonnull
+  @Override
   public Action<ClaimBundle> claim(Identity identity, TerritoryId... territoryIds) {
     return null;
   }

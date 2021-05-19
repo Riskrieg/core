@@ -81,6 +81,10 @@ public interface GameMode {
 
   @Nonnull
   @CheckReturnValue
+  Action<SkipBundle> skipSelf(Identity identity);
+
+  @Nonnull
+  @CheckReturnValue
   Action<ClaimBundle> claim(Identity identity, TerritoryId... territoryIds);
 
   @Nonnull

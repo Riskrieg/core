@@ -190,6 +190,13 @@ public final class RegicideMode implements GameMode {
 
   @Nonnull
   @Override
+  public Action<SkipBundle> skipSelf(Identity identity) {
+    setLastUpdated();
+    return new SkipAction(identity, gameState, gameMap, players, nations, true);
+  }
+
+  @Nonnull
+  @Override
   public Action<ClaimBundle> claim(Identity identity, TerritoryId... territoryIds) {
     setLastUpdated();
     return new RegicideClaimAction(identity, Set.of(territoryIds), players.getFirst().identity(), gameState, gameMap, nations);
