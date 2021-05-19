@@ -63,7 +63,7 @@ public final class ConquestClaimAction implements Action<ClaimBundle> {
           var notBorderingTerritories = ids.stream().filter(id -> nation.territories().stream().noneMatch(tid -> gameMap.areNeighbors(tid, id))).collect(Collectors.toSet());
           var alliedTerritories = new HashSet<TerritoryId>();
           for (Nation potentialAlly : nations) {
-            if (nation.allies().contains(potentialAlly.identity())) {
+            if (nation.isAllied(potentialAlly.identity()) && potentialAlly.isAllied(nation.identity())) {
               alliedTerritories.addAll(ids.stream().filter(id -> potentialAlly.territories().contains(id)).collect(Collectors.toSet()));
             }
           }

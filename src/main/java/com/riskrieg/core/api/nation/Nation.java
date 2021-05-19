@@ -57,7 +57,7 @@ public final class Nation {
 
   private Set<TerritoryId> getClaimableTerritories(GameMap gameMap, Collection<Nation> nations) {
     Set<TerritoryId> neighbors = new HashSet<>(neighbors(gameMap));
-    Set<Nation> allies = nations.stream().filter(n -> this.allies.contains(n.identity())).collect(Collectors.toSet());
+    Set<Nation> allies = nations.stream().filter(n -> this.isAllied(n.identity()) && n.isAllied(this.identity())).collect(Collectors.toSet());
     neighbors.removeIf(territoryId -> allies.stream().anyMatch(n -> n.territories().contains(territoryId)));
     return Collections.unmodifiableSet(neighbors);
   }
