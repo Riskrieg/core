@@ -96,7 +96,7 @@ public final class ConquestClaimAction implements Action<ClaimBundle> {
               if (attack(nation, defender, id)) {
                 boolean wasCapital = defender.territoryIsOfType(id, TerritoryType.CAPITAL);
                 defender.remove(id);
-                if (wasCapital) { // Select new capital
+                if (wasCapital && defender.territories().size() > 0) { // Select new capital
                   Optional<TerritoryId> randomTerritory = defender.territories().stream().skip(new Random().nextInt(defender.territories().size())).findFirst();
                   randomTerritory.ifPresent(t -> {
                     defender.remove(t);
