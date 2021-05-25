@@ -99,7 +99,7 @@ public final class Nation {
   }
 
   public boolean removeAlly(Identity identity) {
-    return allies.add(identity);
+    return allies.remove(identity);
   }
 
 

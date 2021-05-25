@@ -1,7 +1,10 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.riskrieg.core.api.Riskrieg;
 import com.riskrieg.core.api.RiskriegBuilder;
+import com.riskrieg.core.api.gamemode.AlliableMode;
 import com.riskrieg.core.api.gamemode.GameState;
 import com.riskrieg.core.api.gamemode.classic.ClassicMode;
 import com.riskrieg.core.api.gamemode.conquest.ConquestMode;
@@ -11,8 +14,10 @@ import com.riskrieg.core.api.map.options.InterfaceAlignment;
 import com.riskrieg.core.api.map.options.alignment.HorizontalAlignment;
 import com.riskrieg.core.api.map.options.alignment.VerticalAlignment;
 import com.riskrieg.core.api.order.FullRandomOrder;
+import com.riskrieg.core.api.order.StandardOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.map.RkmMap;
+import com.riskrieg.map.territory.TerritoryId;
 import com.riskrieg.map.vertex.Territory;
 import java.awt.Color;
 import java.io.IOException;
@@ -51,7 +56,44 @@ public class ApiTests {
   }
 
   @Test
-  public void testConquest() {
+  public void testAlliances() {
+    AlliableMode game = new ConquestMode();
+
+    game.join(Identity.of("1"), "Player1", Color.WHITE).submit();
+
+    game.join(Identity.of("2"), "Player2", Color.BLACK).submit();
+
+    game.join(Identity.of("3"), "Player3", Color.BLUE).submit();
+
+    try {
+      game.selectMap(
+          RkmMap.load(new URL("https://github.com/Riskrieg/maps/raw/main/antarctica.rkm")).orElseThrow(),
+          new MapOptions(Availability.AVAILABLE, new InterfaceAlignment(VerticalAlignment.BOTTOM, HorizontalAlignment.LEFT)))
+          .submit();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    game.selectTerritory(Identity.of("1"), new TerritoryId("1A")).submit();
+    game.selectTerritory(Identity.of("2"), new TerritoryId("2A")).submit();
+    game.selectTerritory(Identity.of("3"), new TerritoryId("3A")).submit();
+
+    game.start(new StandardOrder()).submit();
+    assertEquals(game.gameState(), GameState.RUNNING);
+
+    game.ally(Identity.of("1"), Identity.of("2")).submit();
+    assertFalse(game.allied(Identity.of("1"), Identity.of("2")));
+
+    game.ally(Identity.of("2"), Identity.of("1")).submit();
+    assertTrue(game.allied(Identity.of("1"), Identity.of("2")));
+
+    game.unally(Identity.of("1"), Identity.of("2")).submit();
+    assertFalse(game.allied(Identity.of("1"), Identity.of("2")));
+
+  }
+
+  @Test
+  public void testClassic() {
     ClassicMode game = new ClassicMode();
 
     game.join(Identity.of("1234"), "Test", new Color(0, 0, 0));
@@ -92,6 +134,7 @@ public class ApiTests {
 
     game.start(new FullRandomOrder()).submit();
     assertEquals(game.gameState(), GameState.RUNNING);
+
 
   }
 
