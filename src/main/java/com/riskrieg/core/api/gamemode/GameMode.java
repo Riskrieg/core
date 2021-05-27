@@ -7,6 +7,7 @@ import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.action.Action;
+import com.riskrieg.core.internal.action.GenericAction;
 import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.internal.bundle.LeaveBundle;
 import com.riskrieg.core.internal.bundle.SkipBundle;
@@ -62,6 +63,13 @@ public interface GameMode {
   @Nonnull
   @CheckReturnValue
   Action<LeaveBundle> leave(@Nonnull Identity identity);
+
+  @Nonnull
+  @CheckReturnValue
+  default Action<LeaveBundle> leave(@Nonnull Color color) {
+    var optPlayer = players().stream().filter(player -> player.color().equals(color)).findAny();
+    return optPlayer.map(player -> leave(player.identity())).orElseGet(() -> new GenericAction<>(new IllegalStateException("no player with that color is present")));
+  }
 
   @Nonnull
   @CheckReturnValue
