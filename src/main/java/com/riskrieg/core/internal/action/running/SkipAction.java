@@ -45,12 +45,12 @@ public final class SkipAction implements Action<SkipBundle> {
       switch (gameState) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case RUNNING -> {
-          Player skippedPlayer = players.stream().filter(p -> p.identity().equals(identity)).findAny().orElse(null);
-          if (skippedPlayer == null) {
+          Player playerUsingSkip = players.stream().filter(p -> p.identity().equals(identity)).findAny().orElse(null);
+          if (playerUsingSkip == null) {
             throw new IllegalStateException("Player is not present");
           }
 
-          if (skipSelf && !skippedPlayer.identity().equals(identity)) {
+          if (skipSelf && !playerUsingSkip.identity().equals(players.getFirst().identity())) {
             throw new IllegalStateException("Cannot skip another player's turn");
           }
 
@@ -59,7 +59,7 @@ public final class SkipAction implements Action<SkipBundle> {
             Player currentTurnPlayer = players.size() > 0 ? players.getFirst() : null;
             Nation nation = currentTurnPlayer == null ? null : nations.stream().filter(n -> n.identity().equals(currentTurnPlayer.identity())).findAny().orElse(null);
             int claims = nation == null ? -1 : nation.getClaimAmount(gameMap, nations);
-            success.accept(new SkipBundle(currentTurnPlayer, skippedPlayer, claims));
+            success.accept(new SkipBundle(currentTurnPlayer, playerUsingSkip, claims));
           }
         }
         default -> throw new IllegalStateException("Turns can only be skipped while the game is active");
