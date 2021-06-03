@@ -39,7 +39,7 @@ public final class FileFolderRiskrieg implements Riskrieg {
     try {
       Path groupPath = repository.resolve(id);
       if (!Files.exists(groupPath)) {
-        throw new FileNotFoundException("Group path does not exist");
+        throw new FileNotFoundException("No saves exist");
       }
       return new GenericAction<>(new FileFolderGroup(groupPath));
     } catch (Exception e) {

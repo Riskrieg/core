@@ -49,7 +49,7 @@ public final class StartAction implements Action<Player> {
             success.accept(players.getFirst());
           }
         }
-        default -> throw new IllegalStateException("The map can only be set during the setup phase");
+        default -> throw new IllegalStateException("The game is already active");
       }
     } catch (Exception e) {
       if (failure != null) {
