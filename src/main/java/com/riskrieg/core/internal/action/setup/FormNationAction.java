@@ -46,9 +46,6 @@ public final class FormNationAction implements Action<Nation> {
           if (players.stream().noneMatch(p -> p.identity().equals(identity))) {
             throw new IllegalStateException("Player is not present");
           }
-          if(!players.getFirst().identity().equals(identity)) {
-            throw new IllegalStateException("It is not that player's turn");
-          }
           if (!gameMap.isSet()) {
             throw new IllegalStateException("A valid map must be selected before selecting a capital");
           }
