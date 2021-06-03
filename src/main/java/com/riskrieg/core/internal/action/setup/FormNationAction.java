@@ -23,11 +23,11 @@ public final class FormNationAction implements Action<Nation> {
   private final TerritoryType firstTerritoryType;
   private final GameState gameState;
   private final GameMap gameMap;
-  private final Deque<Player> players;
+  private final Collection<Player> players;
   private final Collection<Nation> nations;
 
   public FormNationAction(Identity identity, TerritoryId id, TerritoryType firstTerritoryType, GameState gameState, GameMap gameMap,
-      Deque<Player> players, Collection<Nation> nations) {
+      Collection<Player> players, Collection<Nation> nations) {
     this.identity = identity;
     this.id = id;
     this.firstTerritoryType = firstTerritoryType;
