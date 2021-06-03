@@ -10,6 +10,7 @@ import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.map.territory.TerritoryId;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -22,11 +23,11 @@ public final class SelectTerritoryAction implements Action<Nation> { // Meant fo
   private final TerritoryType territoryType;
   private final GameState gameState;
   private final GameMap gameMap;
-  private final Collection<Player> players;
+  private final Deque<Player> players;
   private final Collection<Nation> nations;
 
   public SelectTerritoryAction(Identity identity, TerritoryId id, TerritoryType territoryType, GameState gameState, GameMap gameMap,
-      Collection<Player> players, Collection<Nation> nations) {
+      Deque<Player> players, Collection<Nation> nations) {
     this.identity = identity;
     this.id = id;
     this.territoryType = territoryType;
@@ -45,6 +46,9 @@ public final class SelectTerritoryAction implements Action<Nation> { // Meant fo
         case SELECTION -> {
           if (players.stream().noneMatch(p -> p.identity().equals(identity))) {
             throw new IllegalStateException("Player is not present");
+          }
+          if(!players.getFirst().identity().equals(identity)) {
+            throw new IllegalStateException("It is not that player's turn");
           }
           if (gameMap.graph().vertexSet().stream().noneMatch(t -> t.id().equals(id))) {
             throw new IllegalStateException("No such territory exists on the map"); // TODO: Say which territory

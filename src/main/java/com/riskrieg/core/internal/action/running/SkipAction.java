@@ -44,7 +44,7 @@ public final class SkipAction implements Action<SkipBundle> {
     try {
       switch (gameState) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
-        case RUNNING -> {
+        case RUNNING, SELECTION -> {
           if (skipSelf) {
             Player playerUsingSkip = players.stream().filter(p -> p.identity().equals(identity)).findAny().orElse(null);
             if (playerUsingSkip == null) {
