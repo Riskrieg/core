@@ -36,7 +36,7 @@ public final class SelectMapAction implements Action<GameMap> {
         case SETUP -> {
           Objects.requireNonNull(rkmMap);
           Objects.requireNonNull(options);
-          if (!options.availability().equals(Availability.AVAILABLE)) {
+          if (options.availability().equals(Availability.AVAILABLE) || options.availability().equals(Availability.CUSTOM)) {
             throw new IllegalStateException("That map is not available");
           }
           gameMap.set(rkmMap, options);
