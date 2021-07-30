@@ -46,6 +46,10 @@ public final class MapOptions {
     this.alignment = alignment;
   }
 
+  public Flavor flavor() {
+    return flavor;
+  }
+
   public InterfaceAlignment alignment() {
     return alignment;
   }
@@ -54,11 +58,18 @@ public final class MapOptions {
     return availability;
   }
 
+  public void setFlavor(Flavor flavor) {
+    Objects.requireNonNull(flavor);
+    this.flavor = flavor;
+  }
+
   public void setAlignment(InterfaceAlignment alignment) {
+    Objects.requireNonNull(alignment);
     this.alignment = alignment;
   }
 
   public void setAvailability(Availability availability) {
+    Objects.requireNonNull(availability);
     this.availability = availability;
   }
 
