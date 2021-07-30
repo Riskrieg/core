@@ -10,6 +10,7 @@ import com.riskrieg.core.api.gamemode.classic.ClassicMode;
 import com.riskrieg.core.api.gamemode.conquest.ConquestMode;
 import com.riskrieg.core.api.map.MapOptions;
 import com.riskrieg.core.api.map.options.Availability;
+import com.riskrieg.core.api.map.options.Flavor;
 import com.riskrieg.core.api.map.options.InterfaceAlignment;
 import com.riskrieg.core.api.map.options.alignment.HorizontalAlignment;
 import com.riskrieg.core.api.map.options.alignment.VerticalAlignment;
@@ -68,7 +69,7 @@ public class ApiTests {
     try {
       game.selectMap(
           RkmMap.load(new URL("https://github.com/Riskrieg/maps/raw/main/antarctica.rkm")).orElseThrow(),
-          new MapOptions(Availability.AVAILABLE, new InterfaceAlignment(VerticalAlignment.BOTTOM, HorizontalAlignment.LEFT)))
+          new MapOptions(Flavor.OFFICIAL, Availability.AVAILABLE, new InterfaceAlignment(VerticalAlignment.BOTTOM, HorizontalAlignment.LEFT)))
           .submit();
     } catch (IOException e) {
       e.printStackTrace();
@@ -113,7 +114,7 @@ public class ApiTests {
     try {
       game.selectMap(
           RkmMap.load(new URL("https://github.com/Riskrieg/maps/raw/main/antarctica.rkm")).orElseThrow(),
-          new MapOptions(Availability.AVAILABLE, new InterfaceAlignment(VerticalAlignment.BOTTOM, HorizontalAlignment.LEFT)))
+          new MapOptions(Flavor.OFFICIAL, Availability.AVAILABLE, new InterfaceAlignment(VerticalAlignment.BOTTOM, HorizontalAlignment.LEFT)))
           .submit();
     } catch (IOException e) {
       e.printStackTrace();

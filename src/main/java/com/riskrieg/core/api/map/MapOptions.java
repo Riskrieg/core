@@ -2,6 +2,7 @@ package com.riskrieg.core.api.map;
 
 import com.aaronjyoder.util.json.gson.GsonUtil;
 import com.riskrieg.core.api.map.options.Availability;
+import com.riskrieg.core.api.map.options.Flavor;
 import com.riskrieg.core.api.map.options.InterfaceAlignment;
 import com.riskrieg.core.api.map.options.alignment.HorizontalAlignment;
 import com.riskrieg.core.api.map.options.alignment.VerticalAlignment;
@@ -12,6 +13,7 @@ import javax.annotation.Nonnull;
 
 public final class MapOptions {
 
+  private Flavor flavor;
   private Availability availability;
   private InterfaceAlignment alignment;
 
@@ -30,13 +32,16 @@ public final class MapOptions {
   }
 
   public MapOptions() {
+    this.flavor = Flavor.UNKNOWN;
     this.availability = Availability.UNAVAILABLE;
     this.alignment = new InterfaceAlignment(VerticalAlignment.BOTTOM, HorizontalAlignment.LEFT);
   }
 
-  public MapOptions(Availability availability, InterfaceAlignment alignment) {
+  public MapOptions(Flavor flavor, Availability availability, InterfaceAlignment alignment) {
+    Objects.requireNonNull(flavor);
     Objects.requireNonNull(availability);
     Objects.requireNonNull(alignment);
+    this.flavor = flavor;
     this.availability = availability;
     this.alignment = alignment;
   }
