@@ -221,7 +221,12 @@ public final class BrawlMode implements AlliableMode {
   public CurrentStateBundle currentTurn() {
     Player currentTurnPlayer = players.size() > 0 ? players.getFirst() : null;
     Nation nation = currentTurnPlayer == null ? null : nations.stream().filter(n -> n.identity().equals(currentTurnPlayer.identity())).findAny().orElse(null);
-    int claims = nation == null ? -1 : nation.getClaimAmount(map(), nations);
+    int claims;
+    if (gameState().equals(GameState.SELECTION)) {
+      claims = 1;
+    } else {
+      claims = nation == null ? -1 : nation.getClaimAmount(map(), nations);
+    }
     return new CurrentStateBundle(players.getFirst(), gameState, claims);
   }
 

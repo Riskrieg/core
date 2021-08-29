@@ -42,7 +42,7 @@ public final class SelectTerritoryAction implements Action<Nation> { // Meant fo
     try {
       switch (gameState) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
-        case SETUP, RUNNING -> throw new IllegalStateException("Territories can only be selected during the setup phase");
+        case SETUP, RUNNING -> throw new IllegalStateException("Territories can only be selected during the selection phase");
         case SELECTION -> {
           if (players.stream().noneMatch(p -> p.identity().equals(identity))) {
             throw new IllegalStateException("Player is not present");
