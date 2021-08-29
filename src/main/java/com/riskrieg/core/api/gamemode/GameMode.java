@@ -9,6 +9,7 @@ import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.action.GenericAction;
 import com.riskrieg.core.internal.bundle.ClaimBundle;
+import com.riskrieg.core.internal.bundle.CurrentStateBundle;
 import com.riskrieg.core.internal.bundle.LeaveBundle;
 import com.riskrieg.core.internal.bundle.SkipBundle;
 import com.riskrieg.core.internal.bundle.UpdateBundle;
@@ -98,5 +99,9 @@ public interface GameMode {
   @Nonnull
   @CheckReturnValue
   Action<UpdateBundle> update();
+
+  @Nonnull
+  @CheckReturnValue
+  CurrentStateBundle currentTurn();
 
 }

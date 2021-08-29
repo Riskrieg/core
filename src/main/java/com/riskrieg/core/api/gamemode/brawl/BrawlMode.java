@@ -24,6 +24,7 @@ import com.riskrieg.core.internal.action.setup.SelectMapAction;
 import com.riskrieg.core.internal.action.setup.start.BrawlStartAction;
 import com.riskrieg.core.internal.bundle.AllianceBundle;
 import com.riskrieg.core.internal.bundle.ClaimBundle;
+import com.riskrieg.core.internal.bundle.CurrentStateBundle;
 import com.riskrieg.core.internal.bundle.LeaveBundle;
 import com.riskrieg.core.internal.bundle.SkipBundle;
 import com.riskrieg.core.internal.bundle.UpdateBundle;
@@ -213,6 +214,15 @@ public final class BrawlMode implements AlliableMode {
   public Action<UpdateBundle> update() {
     setLastUpdated();
     return new BrawlUpdateAction(this, gameState, gameMap, players, nations);
+  }
+
+  @Nonnull
+  @Override
+  public CurrentStateBundle currentTurn() {
+    Player currentTurnPlayer = players.size() > 0 ? players.getFirst() : null;
+    Nation nation = currentTurnPlayer == null ? null : nations.stream().filter(n -> n.identity().equals(currentTurnPlayer.identity())).findAny().orElse(null);
+    int claims = nation == null ? -1 : nation.getClaimAmount(map(), nations);
+    return new CurrentStateBundle(players.getFirst(), gameState, claims);
   }
 
   @Override
