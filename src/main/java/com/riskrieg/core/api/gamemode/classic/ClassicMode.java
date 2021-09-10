@@ -11,7 +11,9 @@ import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
+import com.riskrieg.core.constant.Constants;
 import com.riskrieg.core.constant.color.ColorId;
+import com.riskrieg.core.constant.color.PlayerColor;
 import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.action.LeaveAction;
 import com.riskrieg.core.internal.action.running.SkipAction;
@@ -82,7 +84,13 @@ public final class ClassicMode implements GameMode {
     // TODO: Temp workaround
     Deque<Player> newPlayers = new ArrayDeque<>();
     for (Player p : save.players()) {
-      newPlayers.add(new Player(p.identity(), p.colorId(), p.name()));
+      if (p.colorId() == null && p.color() != null) {
+        for (PlayerColor pc : Constants.DEFAULT_PLAYER_COLORS.toSet()) {
+          if (p.color().equals(pc.value())) {
+            newPlayers.add(new Player(p.identity(), pc.id(), p.name()));
+          }
+        }
+      }
     }
     // End temp
     this.players = new ArrayDeque<>(newPlayers);
