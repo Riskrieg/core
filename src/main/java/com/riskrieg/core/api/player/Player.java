@@ -9,15 +9,15 @@ import java.util.Objects;
 public final class Player {
 
   @Deprecated
-  private final Color color;
-  private final ColorId colorId;
+  private Color color;
+  private ColorId colorId;
   private final Identity identity;
   private String name;
 
   @Deprecated
   public Player(Identity identity, Color color, String name) {
     Objects.requireNonNull(identity);
-    Objects.requireNonNull(color);
+//    Objects.requireNonNull(color);
     Objects.requireNonNull(name);
     if (name.isBlank()) {
       throw new IllegalArgumentException("name cannot be blank");
@@ -30,7 +30,7 @@ public final class Player {
 
   public Player(Identity identity, ColorId colorId, String name) {
     Objects.requireNonNull(identity);
-    Objects.requireNonNull(colorId);
+//    Objects.requireNonNull(colorId);
     Objects.requireNonNull(name);
     if (name.isBlank()) {
       throw new IllegalArgumentException("name cannot be blank");
