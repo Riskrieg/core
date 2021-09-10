@@ -2,6 +2,7 @@ package com.riskrieg.core.constant;
 
 import java.awt.Color;
 
+@Deprecated
 public enum StandardPlayerColor {
 
   SALMON(255, 140, 150),
