@@ -90,6 +90,8 @@ public final class RegicideMode implements GameMode {
             newPlayers.add(new Player(p.identity(), pc.id(), p.name()));
           }
         }
+      } else {
+        newPlayers.add(new Player(p.identity(), p.colorId(), p.name()));
       }
     }
     // End temp

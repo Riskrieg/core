@@ -94,6 +94,8 @@ public final class BrawlMode implements AlliableMode {
             newPlayers.add(new Player(p.identity(), pc.id(), p.name()));
           }
         }
+      } else {
+        newPlayers.add(new Player(p.identity(), p.colorId(), p.name()));
       }
     }
     // End temp
