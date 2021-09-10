@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.riskrieg'
-version '2.1.4'
+version '2.2.0'
 
 publishing {
     publications {
@@ -47,8 +47,8 @@ dependencies {
     implementation('com.github.aaronjyoder:json-utilities:1.1.2')
     implementation('com.riskrieg:rkm:1.0.8')
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
 }
 
 test {

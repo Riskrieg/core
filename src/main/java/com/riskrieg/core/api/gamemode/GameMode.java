@@ -6,6 +6,7 @@ import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
+import com.riskrieg.core.constant.color.ColorId;
 import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.action.GenericAction;
 import com.riskrieg.core.internal.bundle.ClaimBundle;
@@ -53,12 +54,32 @@ public interface GameMode {
 
   @Nonnull
   @CheckReturnValue
+  @Deprecated
   Action<Player> join(@Nonnull Identity identity, @Nonnull String name, @Nonnull Color color);
 
   @Nonnull
   @CheckReturnValue
+  @Deprecated
   default Action<Player> join(@Nonnull String name, @Nonnull Color color) {
     return this.join(Identity.random(), name, color);
+  }
+
+  @Nonnull
+  @CheckReturnValue
+  @Deprecated
+  default Action<LeaveBundle> leave(@Nonnull Color color) {
+    var optPlayer = players().stream().filter(player -> player.color().equals(color)).findAny();
+    return optPlayer.map(player -> leave(player.identity())).orElseGet(() -> new GenericAction<>(new IllegalStateException("no player with that color is present")));
+  }
+
+  @Nonnull
+  @CheckReturnValue
+  Action<Player> join(@Nonnull Identity identity, @Nonnull String name, @Nonnull ColorId colorId);
+
+  @Nonnull
+  @CheckReturnValue
+  default Action<Player> join(@Nonnull String name, @Nonnull ColorId colorId) {
+    return this.join(Identity.random(), name, colorId);
   }
 
   @Nonnull
@@ -67,8 +88,8 @@ public interface GameMode {
 
   @Nonnull
   @CheckReturnValue
-  default Action<LeaveBundle> leave(@Nonnull Color color) {
-    var optPlayer = players().stream().filter(player -> player.color().equals(color)).findAny();
+  default Action<LeaveBundle> leave(@Nonnull ColorId colorId) {
+    var optPlayer = players().stream().filter(player -> player.colorId().equals(colorId)).findAny();
     return optPlayer.map(player -> leave(player.identity())).orElseGet(() -> new GenericAction<>(new IllegalStateException("no player with that color is present")));
   }
 

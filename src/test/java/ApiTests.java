@@ -40,19 +40,19 @@ public class ApiTests {
   @Test
   public void testJoin() {
     ClassicMode game = new ClassicMode();
-    game.join("Name", new Color(1, 1, 1));
+    game.join("Name", new Color(255, 140, 150));
     assertEquals(0, game.players().size());
-    game.join("Name", new Color(1, 1, 1)).submit();
+    game.join("Name", new Color(255, 140, 150)).submit();
     assertEquals(1, game.players().size());
-    game.join("Name2", new Color(1, 1, 1)).submit();
+    game.join("Name2", new Color(255, 140, 150)).submit();
     assertEquals(1, game.players().size());
-    game.join(Identity.of("identity2"), "Name", new Color(1, 1, 1)).submit();
+    game.join(Identity.of("identity2"), "Name", new Color(255, 140, 150)).submit();
     assertEquals(1, game.players().size());
-    game.join(Identity.of("identity2"), "Name", new Color(2, 2, 2)).submit();
+    game.join(Identity.of("identity2"), "Name", new Color(95, 10, 0)).submit();
     assertEquals(2, game.players().size());
-    game.join(Identity.of("identity2"), "Name", new Color(3, 3, 3)).submit();
+    game.join(Identity.of("identity2"), "Name", new Color(0, 50, 120)).submit();
     assertEquals(2, game.players().size());
-    game.join(Identity.of("identity3"), "Name", new Color(3, 3, 3)).submit();
+    game.join(Identity.of("identity3"), "Name", new Color(0, 50, 120)).submit();
     assertEquals(3, game.players().size());
   }
 
@@ -60,11 +60,11 @@ public class ApiTests {
   public void testAlliances() {
     AlliableMode game = new ConquestMode();
 
-    game.join(Identity.of("1"), "Player1", Color.WHITE).submit();
+    game.join(Identity.of("1"), "Player1", new Color(255, 140, 150)).submit();
 
-    game.join(Identity.of("2"), "Player2", Color.BLACK).submit();
+    game.join(Identity.of("2"), "Player2", new Color(95, 10, 0)).submit();
 
-    game.join(Identity.of("3"), "Player3", Color.BLUE).submit();
+    game.join(Identity.of("3"), "Player3", new Color(0, 50, 120)).submit();
 
     try {
       game.selectMap(
@@ -97,13 +97,13 @@ public class ApiTests {
   public void testClassic() {
     ClassicMode game = new ClassicMode();
 
-    game.join(Identity.of("1234"), "Test", new Color(0, 0, 0));
+    game.join(Identity.of("1234"), "Test", new Color(140, 225, 175));
     assertEquals(0, game.players().size());
 
-    game.join(Identity.of("1234"), "Test", new Color(0, 0, 0)).submit();
+    game.join(Identity.of("1234"), "Test", new Color(140, 225, 175)).submit();
     assertEquals(1, game.players().size());
 
-    game.join(Identity.of("1234"), "Test", new Color(0, 0, 0)).submit();
+    game.join(Identity.of("1234"), "Test", new Color(140, 225, 175)).submit();
     assertEquals(1, game.players().size());
 
     game.start(new FullRandomOrder()).submit();

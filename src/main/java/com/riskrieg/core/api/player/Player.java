@@ -1,14 +1,20 @@
 package com.riskrieg.core.api.player;
 
+import com.riskrieg.core.constant.StandardPlayerColor;
+import com.riskrieg.core.constant.color.ColorId;
 import java.awt.Color;
+import java.net.StandardProtocolFamily;
 import java.util.Objects;
 
 public final class Player {
 
+  @Deprecated
   private final Color color;
+  private final ColorId colorId;
   private final Identity identity;
   private String name;
 
+  @Deprecated
   public Player(Identity identity, Color color, String name) {
     Objects.requireNonNull(identity);
     Objects.requireNonNull(color);
@@ -18,6 +24,20 @@ public final class Player {
     }
     this.identity = identity;
     this.color = color;
+    this.colorId = ColorId.of(StandardPlayerColor.valueOf(color).ordinal());
+    this.name = name;
+  }
+
+  public Player(Identity identity, ColorId colorId, String name) {
+    Objects.requireNonNull(identity);
+    Objects.requireNonNull(colorId);
+    Objects.requireNonNull(name);
+    if (name.isBlank()) {
+      throw new IllegalArgumentException("name cannot be blank");
+    }
+    this.identity = identity;
+    this.color = null;
+    this.colorId = colorId;
     this.name = name;
   }
 
@@ -29,6 +49,11 @@ public final class Player {
     return identity;
   }
 
+  public ColorId colorId() {
+    return colorId;
+  }
+
+  @Deprecated
   public Color color() {
     return color;
   }

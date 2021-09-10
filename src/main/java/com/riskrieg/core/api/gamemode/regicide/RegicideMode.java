@@ -11,6 +11,7 @@ import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
+import com.riskrieg.core.constant.color.ColorId;
 import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.action.LeaveAction;
 import com.riskrieg.core.internal.action.running.SkipAction;
@@ -144,9 +145,17 @@ public final class RegicideMode implements GameMode {
 
   @Nonnull
   @Override
+  @Deprecated
   public Action<Player> join(@Nonnull Identity identity, @Nonnull String name, @Nonnull Color color) {
     setLastUpdated();
     return new JoinAction(identity, name, color, gameState, players);
+  }
+
+  @Nonnull
+  @Override
+  public Action<Player> join(@Nonnull Identity identity, @Nonnull String name, @Nonnull ColorId colorId) {
+    setLastUpdated();
+    return new JoinAction(identity, name, colorId, gameState, players);
   }
 
   @Nonnull

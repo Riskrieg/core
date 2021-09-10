@@ -10,7 +10,9 @@ import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
+import com.riskrieg.core.constant.color.ColorId;
 import com.riskrieg.core.internal.action.Action;
+import com.riskrieg.core.internal.action.setup.JoinAction;
 import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.internal.bundle.CurrentStateBundle;
 import com.riskrieg.core.internal.bundle.LeaveBundle;
@@ -93,7 +95,14 @@ public final class CreativeMode implements GameMode { // TODO: Implement
 
   @Nonnull
   @Override
+  @Deprecated
   public Action<Player> join(@Nonnull Identity identity, @Nonnull String name, @Nonnull Color color) {
+    return null;
+  }
+
+  @Nonnull
+  @Override
+  public Action<Player> join(@Nonnull Identity identity, @Nonnull String name, @Nonnull ColorId colorId) {
     return null;
   }
 

@@ -4,6 +4,8 @@ import com.riskrieg.core.api.gamemode.GameState;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.constant.Constants;
+import com.riskrieg.core.constant.StandardPlayerColor;
+import com.riskrieg.core.constant.color.ColorId;
 import com.riskrieg.core.internal.action.Action;
 import java.awt.Color;
 import java.util.Collection;
@@ -15,13 +17,25 @@ public final class JoinAction implements Action<Player> {
   private final Identity id;
   private final String name;
   private final Color color;
+  private final ColorId colorId;
   private final GameState gameState;
   private final Collection<Player> players;
 
+  @Deprecated
   public JoinAction(Identity id, String name, Color color, GameState gameState, Collection<Player> players) {
     this.id = id;
     this.name = name;
     this.color = color;
+    this.colorId = ColorId.of(StandardPlayerColor.valueOf(color).ordinal());
+    this.gameState = gameState;
+    this.players = players;
+  }
+
+  public JoinAction(Identity id, String name, ColorId colorId, GameState gameState, Collection<Player> players) {
+    this.id = id;
+    this.name = name;
+    this.color = null;
+    this.colorId = colorId;
     this.gameState = gameState;
     this.players = players;
   }
@@ -29,11 +43,11 @@ public final class JoinAction implements Action<Player> {
   @Override
   public void submit(@Nullable Consumer<? super Player> success, @Nullable Consumer<? super Throwable> failure) {
     try {
-      Player player = new Player(id, color, name);
+      Player player = new Player(id, colorId, name);
       switch (gameState) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case SETUP -> {
-          if (players.stream().anyMatch(p -> p.color().equals(player.color()))) {
+          if (players.stream().anyMatch(p -> p.colorId().equals(player.colorId()))) {
             throw new IllegalArgumentException("That color is already taken");
           }
           if (players.contains(player)) {
