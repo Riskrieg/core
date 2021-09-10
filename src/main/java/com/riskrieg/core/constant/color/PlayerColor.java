@@ -39,7 +39,7 @@ public class PlayerColor implements Comparable<PlayerColor> {
     return name;
   }
 
-  public Color color() {
+  public Color value() {
     return new Color(r, g, b);
   }
 
