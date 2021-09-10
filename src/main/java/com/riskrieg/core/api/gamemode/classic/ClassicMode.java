@@ -79,7 +79,13 @@ public final class ClassicMode implements GameMode {
         this.gameMap = new GameMap();
       }
     }
-    this.players = new ArrayDeque<>(save.players());
+    // TODO: Temp workaround
+    Deque<Player> newPlayers = new ArrayDeque<>();
+    for (Player p : save.players()) {
+      newPlayers.add(new Player(p.identity(), p.colorId(), p.name()));
+    }
+    // End temp
+    this.players = new ArrayDeque<>(newPlayers);
     this.nations = new HashSet<>(save.nations());
   }
 

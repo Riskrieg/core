@@ -23,7 +23,7 @@ public final class Player {
       throw new IllegalArgumentException("name cannot be blank");
     }
     this.identity = identity;
-    this.color = color;
+    this.color = null;
     this.colorId = ColorId.of(StandardPlayerColor.valueOf(color).ordinal());
     this.name = name;
   }
@@ -41,8 +41,13 @@ public final class Player {
     this.name = name;
   }
 
+  @Deprecated
   public Player(Color color, String name) {
     this(Identity.random(), color, name);
+  }
+
+  public Player(ColorId colorId, String name) {
+    this(Identity.random(), colorId, name);
   }
 
   public Identity identity() {
