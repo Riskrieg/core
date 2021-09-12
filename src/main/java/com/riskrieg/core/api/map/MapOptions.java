@@ -16,6 +16,7 @@ public final class MapOptions {
   private Flavor flavor;
   private Availability availability;
   private InterfaceAlignment alignment;
+  private boolean autogenTitle;
 
   @Nonnull
   public static Optional<MapOptions> load(@Nonnull Path optionsPath, boolean createIfUnavailable) {
@@ -35,6 +36,7 @@ public final class MapOptions {
     this.flavor = Flavor.UNKNOWN;
     this.availability = Availability.UNAVAILABLE;
     this.alignment = new InterfaceAlignment(VerticalAlignment.BOTTOM, HorizontalAlignment.LEFT);
+    this.autogenTitle = true;
   }
 
   public MapOptions(Flavor flavor, Availability availability, InterfaceAlignment alignment) {
@@ -44,6 +46,7 @@ public final class MapOptions {
     this.flavor = flavor;
     this.availability = availability;
     this.alignment = alignment;
+    this.autogenTitle = true;
   }
 
   public Flavor flavor() {
@@ -56,6 +59,10 @@ public final class MapOptions {
 
   public Availability availability() {
     return availability;
+  }
+
+  public boolean autogenTitle() {
+    return autogenTitle;
   }
 
   public void setFlavor(Flavor flavor) {
@@ -71,6 +78,10 @@ public final class MapOptions {
   public void setAvailability(Availability availability) {
     Objects.requireNonNull(availability);
     this.availability = availability;
+  }
+
+  public void setAutogenTitle(boolean autogenTitle) {
+    this.autogenTitle = autogenTitle;
   }
 
 }
