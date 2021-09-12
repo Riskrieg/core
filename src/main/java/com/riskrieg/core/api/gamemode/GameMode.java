@@ -54,26 +54,6 @@ public interface GameMode {
 
   @Nonnull
   @CheckReturnValue
-  @Deprecated
-  Action<Player> join(@Nonnull Identity identity, @Nonnull String name, @Nonnull Color color);
-
-  @Nonnull
-  @CheckReturnValue
-  @Deprecated
-  default Action<Player> join(@Nonnull String name, @Nonnull Color color) {
-    return this.join(Identity.random(), name, color);
-  }
-
-  @Nonnull
-  @CheckReturnValue
-  @Deprecated
-  default Action<LeaveBundle> leave(@Nonnull Color color) {
-    var optPlayer = players().stream().filter(player -> player.color().equals(color)).findAny();
-    return optPlayer.map(player -> leave(player.identity())).orElseGet(() -> new GenericAction<>(new IllegalStateException("no player with that color is present")));
-  }
-
-  @Nonnull
-  @CheckReturnValue
   Action<Player> join(@Nonnull Identity identity, @Nonnull String name, @Nonnull ColorId colorId);
 
   @Nonnull

@@ -12,7 +12,6 @@ import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.constant.color.ColorId;
 import com.riskrieg.core.internal.action.Action;
-import com.riskrieg.core.internal.action.setup.JoinAction;
 import com.riskrieg.core.internal.bundle.ClaimBundle;
 import com.riskrieg.core.internal.bundle.CurrentStateBundle;
 import com.riskrieg.core.internal.bundle.LeaveBundle;
@@ -20,7 +19,6 @@ import com.riskrieg.core.internal.bundle.SkipBundle;
 import com.riskrieg.core.internal.bundle.UpdateBundle;
 import com.riskrieg.map.RkmMap;
 import com.riskrieg.map.territory.TerritoryId;
-import java.awt.Color;
 import java.time.Instant;
 import java.util.Collection;
 import javax.annotation.Nonnull;
@@ -90,13 +88,6 @@ public final class CreativeMode implements GameMode { // TODO: Implement
   @Nonnull
   @Override
   public GameMap map() {
-    return null;
-  }
-
-  @Nonnull
-  @Override
-  @Deprecated
-  public Action<Player> join(@Nonnull Identity identity, @Nonnull String name, @Nonnull Color color) {
     return null;
   }
 

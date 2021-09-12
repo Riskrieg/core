@@ -11,9 +11,7 @@ import com.riskrieg.core.api.nation.Nation;
 import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
-import com.riskrieg.core.constant.Constants;
 import com.riskrieg.core.constant.color.ColorId;
-import com.riskrieg.core.constant.color.PlayerColor;
 import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.action.LeaveAction;
 import com.riskrieg.core.internal.action.running.AllyAction;
@@ -33,7 +31,6 @@ import com.riskrieg.core.internal.bundle.SkipBundle;
 import com.riskrieg.core.internal.bundle.UpdateBundle;
 import com.riskrieg.map.RkmMap;
 import com.riskrieg.map.territory.TerritoryId;
-import java.awt.Color;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.ArrayDeque;
@@ -85,21 +82,7 @@ public final class BrawlMode implements AlliableMode {
         this.gameMap = new GameMap();
       }
     }
-    // TODO: Temp workaround
-    Deque<Player> newPlayers = new ArrayDeque<>();
-    for (Player p : save.players()) {
-      if (p.colorId() == null && p.color() != null) {
-        for (PlayerColor pc : Constants.DEFAULT_PLAYER_COLORS.toSet()) {
-          if (p.color().equals(pc.value())) {
-            newPlayers.add(new Player(p.identity(), pc.id(), p.name()));
-          }
-        }
-      } else {
-        newPlayers.add(new Player(p.identity(), p.colorId(), p.name()));
-      }
-    }
-    // End temp
-    this.players = new ArrayDeque<>(newPlayers);
+    this.players = new ArrayDeque<>(save.players());
     this.nations = new HashSet<>(save.nations());
   }
 
@@ -162,14 +145,6 @@ public final class BrawlMode implements AlliableMode {
   } // TODO: Return unmodifiable version of GameMap
 
   /* Setup */
-
-  @Nonnull
-  @Override
-  @Deprecated
-  public Action<Player> join(@Nonnull Identity identity, @Nonnull String name, @Nonnull Color color) {
-    setLastUpdated();
-    return new JoinAction(identity, name, color, gameState, players);
-  }
 
   @Nonnull
   @Override

@@ -17,6 +17,8 @@ import com.riskrieg.core.api.map.options.alignment.VerticalAlignment;
 import com.riskrieg.core.api.order.FullRandomOrder;
 import com.riskrieg.core.api.order.StandardOrder;
 import com.riskrieg.core.api.player.Identity;
+import com.riskrieg.core.constant.Constants;
+import com.riskrieg.core.constant.color.ColorId;
 import com.riskrieg.map.RkmMap;
 import com.riskrieg.map.territory.TerritoryId;
 import com.riskrieg.map.vertex.Territory;
@@ -40,19 +42,19 @@ public class ApiTests {
   @Test
   public void testJoin() {
     ClassicMode game = new ClassicMode();
-    game.join("Name", new Color(255, 140, 150));
+    game.join("Name", ColorId.of(0));
     assertEquals(0, game.players().size());
-    game.join("Name", new Color(255, 140, 150)).submit();
+    game.join("Name", ColorId.of(0)).submit();
     assertEquals(1, game.players().size());
-    game.join("Name2", new Color(255, 140, 150)).submit();
+    game.join("Name2", ColorId.of(0)).submit();
     assertEquals(1, game.players().size());
-    game.join(Identity.of("identity2"), "Name", new Color(255, 140, 150)).submit();
+    game.join(Identity.of("identity2"), "Name", ColorId.of(0)).submit();
     assertEquals(1, game.players().size());
-    game.join(Identity.of("identity2"), "Name", new Color(95, 10, 0)).submit();
+    game.join(Identity.of("identity2"), "Name", ColorId.of(1)).submit();
     assertEquals(2, game.players().size());
-    game.join(Identity.of("identity2"), "Name", new Color(0, 50, 120)).submit();
+    game.join(Identity.of("identity2"), "Name", ColorId.of(2)).submit();
     assertEquals(2, game.players().size());
-    game.join(Identity.of("identity3"), "Name", new Color(0, 50, 120)).submit();
+    game.join(Identity.of("identity3"), "Name", ColorId.of(2)).submit();
     assertEquals(3, game.players().size());
   }
 
@@ -60,11 +62,11 @@ public class ApiTests {
   public void testAlliances() {
     AlliableMode game = new ConquestMode();
 
-    game.join(Identity.of("1"), "Player1", new Color(255, 140, 150)).submit();
+    game.join(Identity.of("1"), "Player1", ColorId.of(0)).submit();
 
-    game.join(Identity.of("2"), "Player2", new Color(95, 10, 0)).submit();
+    game.join(Identity.of("2"), "Player2", ColorId.of(1)).submit();
 
-    game.join(Identity.of("3"), "Player3", new Color(0, 50, 120)).submit();
+    game.join(Identity.of("3"), "Player3", ColorId.of(2)).submit();
 
     try {
       game.selectMap(
@@ -97,13 +99,13 @@ public class ApiTests {
   public void testClassic() {
     ClassicMode game = new ClassicMode();
 
-    game.join(Identity.of("1234"), "Test", new Color(140, 225, 175));
+    game.join(Identity.of("1234"), "Test", ColorId.of(3));
     assertEquals(0, game.players().size());
 
-    game.join(Identity.of("1234"), "Test", new Color(140, 225, 175)).submit();
+    game.join(Identity.of("1234"), "Test", ColorId.of(3)).submit();
     assertEquals(1, game.players().size());
 
-    game.join(Identity.of("1234"), "Test", new Color(140, 225, 175)).submit();
+    game.join(Identity.of("1234"), "Test", ColorId.of(3)).submit();
     assertEquals(1, game.players().size());
 
     game.start(new FullRandomOrder()).submit();
@@ -121,7 +123,7 @@ public class ApiTests {
     }
 //    assertTrue(game.map().isSet());
 
-    game.join("Janice", new Color(1, 1, 1)).submit(player -> {
+    game.join("Janice", ColorId.of(4)).submit(player -> {
       game.selectTerritory(player.identity(), game.map().graph().vertexSet().toArray(new Territory[0])[0].id()).submit();
     });
     assertEquals(2, game.players().size());
