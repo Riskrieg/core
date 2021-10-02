@@ -3,6 +3,7 @@ package com.riskrieg.core.internal;
 import com.aaronjyoder.util.json.gson.GsonUtil;
 import com.riskrieg.core.api.Group;
 import com.riskrieg.core.api.Save;
+import com.riskrieg.core.api.gamemode.GameID;
 import com.riskrieg.core.api.gamemode.GameMode;
 import com.riskrieg.core.api.gamemode.brawl.BrawlMode;
 import com.riskrieg.core.api.gamemode.classic.ClassicMode;
@@ -153,10 +154,10 @@ public final class FileFolderGroup implements Group {
   }
 
   @Override
-  public boolean deleteGame(String gameId) {
+  public boolean deleteGame(String gameId) { // TODO: Delete by GameID instead of String
     try {
       boolean deleted = Files.deleteIfExists(path.resolve(gameId + Constants.SAVE_FILE_EXT));
-      if (Files.list(path).count() == 0) { // May or may not cause issues, locks files while counting.
+      if (Files.list(path).findAny().isEmpty()) { // May or may not cause issues, locks files while counting.
         Files.deleteIfExists(path);
       }
       return deleted;
