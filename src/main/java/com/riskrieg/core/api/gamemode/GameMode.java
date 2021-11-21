@@ -16,7 +16,6 @@ import com.riskrieg.core.internal.bundle.SkipBundle;
 import com.riskrieg.core.internal.bundle.UpdateBundle;
 import com.riskrieg.map.RkmMap;
 import com.riskrieg.map.territory.TerritoryId;
-import java.awt.Color;
 import java.time.Instant;
 import java.util.Collection;
 import javax.annotation.CheckReturnValue;
@@ -60,6 +59,17 @@ public interface GameMode {
   @CheckReturnValue
   default Action<Player> join(@Nonnull String name, @Nonnull ColorId colorId) {
     return this.join(Identity.random(), name, colorId);
+  }
+
+  @CheckReturnValue
+  default Action<Boolean> changeName(@Nonnull Identity identity, String newName) {
+    for (Player p : players()) {
+      if (p.identity().equals(identity)) {
+        p.setName(newName);
+        return new GenericAction<>(true);
+      }
+    }
+    return new GenericAction<>(false);
   }
 
   @Nonnull
