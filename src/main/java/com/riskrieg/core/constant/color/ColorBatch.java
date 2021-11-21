@@ -1,6 +1,7 @@
 package com.riskrieg.core.constant.color;
 
 import com.riskrieg.core.constant.Constants;
+import java.awt.Color;
 import java.util.Collections;
 import java.util.Set;
 import java.util.SortedSet;
@@ -31,6 +32,15 @@ public class ColorBatch {
 
   public PlayerColor last() {
     return colorSet.last();
+  }
+
+  public PlayerColor valueOf(Color color) {
+    for (PlayerColor pc : colorSet) {
+      if (pc.value().equals(color)) {
+        return pc;
+      }
+    }
+    return first();
   }
 
 }
