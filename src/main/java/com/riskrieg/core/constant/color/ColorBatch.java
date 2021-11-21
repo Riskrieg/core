@@ -40,7 +40,7 @@ public class ColorBatch {
         return pc;
       }
     }
-    return first();
+    return last();
   }
 
 }
