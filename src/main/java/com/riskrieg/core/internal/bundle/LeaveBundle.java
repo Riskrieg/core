@@ -1,4 +1,4 @@
-/**
+/*
  *     Riskrieg, an open-source conflict simulation game.
  *     Copyright (C) 2021  Aaron Yoder <aaronjyoder@gmail.com>
  *
