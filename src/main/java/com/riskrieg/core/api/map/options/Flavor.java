@@ -21,7 +21,8 @@ package com.riskrieg.core.api.map.options;
 public enum Flavor {
 
   OFFICIAL,
-  CUSTOM,
+  COMMUNITY,
+  @Deprecated CUSTOM,
   UNKNOWN
 
 }

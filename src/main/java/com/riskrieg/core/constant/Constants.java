@@ -25,7 +25,7 @@ import com.riskrieg.core.constant.color.PlayerColor;
 public final class Constants {
 
   public static final String NAME = "Riskrieg";
-  public static final String VERSION = "2111.21a";
+  public static final String VERSION = "2111.22a";
   public static final String SAVE_FILE_EXT = ".json";
 
   public static final int MIN_PLAYERS = 2;
@@ -37,6 +37,7 @@ public final class Constants {
   public static final int CAPITAL_ATTACK_ROLL_BOOST = 2;
   public static final int CAPITAL_DEFENSE_ROLL_BOOST = 1;
 
+  @Deprecated
   public static final ColorBatch DEFAULT_PLAYER_COLORS = new ColorBatch(
       new PlayerColor(ColorId.of(0), "Salmon", 255, 140, 150), new PlayerColor(ColorId.of(1), "Lavender", 155, 120, 190),
       new PlayerColor(ColorId.of(2), "Thistle", 215, 190, 240), new PlayerColor(ColorId.of(3), "Ice", 195, 230, 255),
