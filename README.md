@@ -6,7 +6,7 @@
 [![Donate](https://img.shields.io/badge/donate-PayPal-brightgreen.svg)](https://paypal.me/aaronjyoder)
 
 Riskrieg is a world-domination/simulation game that lets you play out scenarios on one of a wide variety of game maps. The standard mode, Conquest, plays similarly to traditional
-world-domination games, while Creative mode allows more D&D-style play.
+world-domination games.
 
 This is the core Riskrieg game that can be used as a library API in other programs. Game maps are also submitted to this repository.
 
