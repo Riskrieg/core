@@ -218,6 +218,7 @@ public final class ClassicMode implements GameMode {
   @Override
   public Action<ClaimBundle> claim(Identity identity, TerritoryId... territoryIds) {
     setLastUpdated();
+    // TODO: Apparently players.getFirst() can be empty here; shouldn't be possible.
     return new SimpleClaimAction(identity, Set.of(territoryIds), players.getFirst().identity(), gameState, gameMap, nations);
   }
 
