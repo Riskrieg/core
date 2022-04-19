@@ -12,7 +12,7 @@ This is the core Riskrieg game that can be used as a library API in other progra
 
 ## Download
 
-Latest release: https://github.com/Riskrieg/riskrieg-core/releases/latest
+Latest release: https://github.com/Riskrieg/core/releases/latest
 
 Make sure you replace **VERSION** with one of the versions from the releases.
 
