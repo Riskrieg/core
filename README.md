@@ -8,7 +8,7 @@
 Riskrieg is a world-domination/simulation game that lets you play out scenarios on one of a wide variety of game maps. The standard mode, Conquest, plays similarly to traditional
 world-domination games.
 
-This is the core Riskrieg game that can be used as a library API in other programs. Game maps are also submitted to this repository.
+This is the core Riskrieg game that can be used as a library API in other programs. Game maps are to be submitted to the [maps repository](https://github.com/Riskrieg/maps).
 
 ## Download
 
