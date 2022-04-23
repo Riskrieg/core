@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.riskrieg'
-version '2.3.3'
+version '2.3.4'
 
 publishing {
     publications {
@@ -26,7 +26,7 @@ java {
     withJavadocJar()
     withSourcesJar()
     toolchain {
-        languageVersion = JavaLanguageVersion.of(15)
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 

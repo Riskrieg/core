@@ -25,6 +25,7 @@ import com.riskrieg.core.api.order.TurnOrder;
 import com.riskrieg.core.api.player.Identity;
 import com.riskrieg.core.api.player.Player;
 import com.riskrieg.core.constant.color.ColorId;
+import com.riskrieg.core.constant.color.PlayerColor;
 import com.riskrieg.core.internal.action.Action;
 import com.riskrieg.core.internal.action.GenericAction;
 import com.riskrieg.core.internal.bundle.ClaimBundle;
@@ -38,6 +39,7 @@ import java.time.Instant;
 import java.util.Collection;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface GameMode {
 
@@ -59,6 +61,49 @@ public interface GameMode {
   void setGameState(@Nonnull GameState gameState);
 
   boolean isEnded();
+
+  @Nullable
+  default Player getPlayer(@Nonnull Identity identity) {
+    for (Player player : players()) {
+      if (player.identity().equals(identity)) {
+        return player;
+      }
+    }
+    return null;
+  }
+
+  @Nullable
+  default Player getPlayer(@Nonnull PlayerColor playerColor) {
+    for (Player player : players()) {
+      if (player.colorId().equals(playerColor.id())) {
+        return player;
+      }
+    }
+    return null;
+  }
+
+  @Nullable
+  default Nation getNation(@Nonnull Identity identity) {
+    for (Nation nation : nations()) {
+      if (nation.identity().equals(identity)) {
+        return nation;
+      }
+    }
+    return null;
+  }
+
+  @Nullable
+  default Nation getNation(@Nonnull PlayerColor playerColor) {
+    Player leader = getPlayer(playerColor);
+    if (leader != null) {
+      for (Nation nation : nations()) {
+        if (nation.identity().equals(leader.identity())) {
+          return nation;
+        }
+      }
+    }
+    return null;
+  }
 
   @Nonnull
   Collection<Player> players();

@@ -25,7 +25,7 @@ import com.riskrieg.core.constant.color.PlayerColor;
 public final class Constants {
 
   public static final String NAME = "Riskrieg";
-  public static final String VERSION = "2111.22a";
+  public static final String VERSION = "2204.22a";
   public static final String SAVE_FILE_EXT = ".json";
 
   public static final int MIN_PLAYERS = 2;
