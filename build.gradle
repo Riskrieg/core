@@ -1,11 +1,15 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'java-library'
     id 'maven-publish'
 }
 
 group 'com.riskrieg'
+<<<<<<< Updated upstream
 version '2.3.4'
+=======
+version '3.0.0'
+>>>>>>> Stashed changes
 
 publishing {
     publications {
@@ -44,11 +48,15 @@ repositories {
 }
 
 dependencies {
-    implementation('com.github.aaronjyoder:json-utilities:1.1.2')
+    api("com.google.code.findbugs:jsr305:3.0.2")
+
     implementation('com.riskrieg:rkm:1.0.8')
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation("com.squareup.moshi:moshi:1.13.0")
+    implementation("com.squareup.moshi:moshi-adapters:1.13.0")
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
 
 test {

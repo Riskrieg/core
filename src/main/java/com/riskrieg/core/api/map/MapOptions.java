@@ -18,12 +18,12 @@
 
 package com.riskrieg.core.api.map;
 
-import com.aaronjyoder.util.json.gson.GsonUtil;
 import com.riskrieg.core.api.map.options.Availability;
 import com.riskrieg.core.api.map.options.Flavor;
 import com.riskrieg.core.api.map.options.InterfaceAlignment;
 import com.riskrieg.core.api.map.options.alignment.HorizontalAlignment;
 import com.riskrieg.core.api.map.options.alignment.VerticalAlignment;
+import com.riskrieg.core.util.MoshiUtil;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
@@ -39,10 +39,10 @@ public final class MapOptions {
   @Nonnull
   public static Optional<MapOptions> load(@Nonnull Path optionsPath, boolean createIfUnavailable) {
     try {
-      MapOptions result = GsonUtil.read(optionsPath, MapOptions.class);
+      MapOptions result = MoshiUtil.read(optionsPath, MapOptions.class);
       if (result == null && createIfUnavailable) {
         result = new MapOptions();
-        GsonUtil.write(optionsPath, MapOptions.class, result);
+        MoshiUtil.write(optionsPath, MapOptions.class, result);
       }
       return Optional.ofNullable(result);
     } catch (Exception e) {

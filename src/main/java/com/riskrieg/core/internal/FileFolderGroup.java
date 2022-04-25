@@ -18,10 +18,8 @@
 
 package com.riskrieg.core.internal;
 
-import com.aaronjyoder.util.json.gson.GsonUtil;
 import com.riskrieg.core.api.Group;
 import com.riskrieg.core.api.Save;
-import com.riskrieg.core.api.gamemode.GameID;
 import com.riskrieg.core.api.gamemode.GameMode;
 import com.riskrieg.core.api.gamemode.brawl.BrawlMode;
 import com.riskrieg.core.api.gamemode.classic.ClassicMode;
@@ -31,6 +29,7 @@ import com.riskrieg.core.api.gamemode.regicide.RegicideMode;
 import com.riskrieg.core.constant.Constants;
 import com.riskrieg.core.internal.action.CompletableAction;
 import com.riskrieg.core.internal.action.GenericAction;
+import com.riskrieg.core.util.MoshiUtil;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -41,6 +40,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 
 public final class FileFolderGroup implements Group {
@@ -85,14 +85,14 @@ public final class FileFolderGroup implements Group {
     try {
       Path savePath = path.resolve(gameId + Constants.SAVE_FILE_EXT);
       if (Files.exists(savePath)) {
-        var save = GsonUtil.read(savePath, Save.class);
+        var save = MoshiUtil.read(savePath, Save.class);
         var existingGame = type.getDeclaredConstructor(Save.class).newInstance(save);
         if (!existingGame.isEnded()) {
           throw new FileAlreadyExistsException("An active game already exists");
         }
       }
       var newGame = type.getDeclaredConstructor().newInstance();
-      GsonUtil.write(savePath, Save.class, new Save(newGame));
+      MoshiUtil.write(savePath, Save.class, new Save(newGame));
       return new GenericAction<>(newGame);
     } catch (Exception e) {
       return new GenericAction<>(e);
@@ -107,7 +107,7 @@ public final class FileFolderGroup implements Group {
       if (!Files.exists(savePath)) {
         throw new FileNotFoundException("Save file does not exist");
       }
-      var save = GsonUtil.read(savePath, Save.class);
+      var save = MoshiUtil.read(savePath, Save.class);
       var game = type.getDeclaredConstructor(Save.class).newInstance(save);
       return new GenericAction<>(game);
     } catch (Exception e) {
@@ -123,7 +123,7 @@ public final class FileFolderGroup implements Group {
       if (!Files.exists(savePath)) {
         throw new FileNotFoundException("Save file does not exist");
       }
-      var save = GsonUtil.read(savePath, Save.class);
+      var save = MoshiUtil.read(savePath, Save.class);
       if (save == null) {
         throw new IllegalStateException("Unable to read save file");
       }
@@ -145,8 +145,9 @@ public final class FileFolderGroup implements Group {
   public Set<GameMode> retrieveGames() {
     Set<GameMode> result = new HashSet<>();
     Set<Path> saves;
-    try {
-      saves = Files.list(path).collect(Collectors.toSet());
+
+    try (Stream<Path> stream = Files.list(path)) {
+      saves = stream.collect(Collectors.toSet());
     } catch (IOException e) {
       saves = new HashSet<>();
     }
@@ -164,7 +165,7 @@ public final class FileFolderGroup implements Group {
   public <T extends GameMode> CompletableAction<T> saveGame(@Nonnull String gameId, T game) {
     try {
       Path savePath = path.resolve(gameId + Constants.SAVE_FILE_EXT);
-      GsonUtil.write(savePath, Save.class, new Save(game));
+      MoshiUtil.write(savePath, Save.class, new Save(game));
       return new GenericAction<>(game);
     } catch (Exception e) {
       return new GenericAction<>(e);
@@ -175,8 +176,10 @@ public final class FileFolderGroup implements Group {
   public boolean deleteGame(String gameId) { // TODO: Delete by GameID instead of String
     try {
       boolean deleted = Files.deleteIfExists(path.resolve(gameId + Constants.SAVE_FILE_EXT));
-      if (Files.list(path).findAny().isEmpty()) { // May or may not cause issues, locks files while counting.
-        Files.deleteIfExists(path);
+      try (Stream<Path> stream = Files.list(path)) { // May or may not cause issues, locks files while counting.
+        if (stream.findAny().isEmpty()) {
+          Files.deleteIfExists(path);
+        }
       }
       return deleted;
     } catch (IOException e) {
