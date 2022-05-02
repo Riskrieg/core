@@ -1,6 +1,7 @@
 package com.riskrieg.core.internal.game;
 
 import com.riskrieg.core.api.game.GameMode;
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 public enum StandardGameMode implements GameMode {
 
@@ -18,11 +19,13 @@ public enum StandardGameMode implements GameMode {
     this.description = description;
   }
 
+  @NonNull
   @Override
   public String displayName() {
     return displayName;
   }
 
+  @NonNull
   @Override
   public String description() {
     return description;
