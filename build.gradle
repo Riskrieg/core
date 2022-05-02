@@ -44,9 +44,12 @@ repositories {
 }
 
 dependencies {
-    api("com.google.code.findbugs:jsr305:3.0.2")
+    api("com.github.spotbugs:spotbugs-annotations:4.6.0") {
+        exclude group: 'com.google.code.findbugs', module: 'jsr305'
+    }
 
-    implementation('com.riskrieg:rkm:1.0.8')
+    implementation('org.jgrapht:jgrapht-core:1.5.1')
+    implementation("com.riskrieg:rkm:1.0.9")
 
     implementation("com.squareup.moshi:moshi:1.13.0")
     implementation("com.squareup.moshi:moshi-adapters:1.13.0")

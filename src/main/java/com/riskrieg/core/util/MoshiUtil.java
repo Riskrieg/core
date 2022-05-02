@@ -7,13 +7,13 @@ import com.riskrieg.core.util.adapter.UUIDAdapter;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class MoshiUtil {
 
@@ -40,7 +40,7 @@ public class MoshiUtil {
   // Read
 
   @Nullable
-  public static <T> T read(@Nonnull Path path, @Nonnull Class<T> type) throws IOException {
+  public static <T> T read(@NonNull Path path, @NonNull Class<T> type) throws IOException {
     if (Files.isRegularFile(path) && Files.isReadable(path)) {
       JsonAdapter<T> jsonAdapter = jsonAdapter().adapter(type);
       return jsonAdapter.fromJson(Files.readString(path));
@@ -49,7 +49,7 @@ public class MoshiUtil {
   }
 
   @Nullable
-  public static <T> T read(@Nonnull Path path, @Nonnull Type type) throws IOException {
+  public static <T> T read(@NonNull Path path, @NonNull Type type) throws IOException {
     if (Files.isRegularFile(path) && Files.isReadable(path)) {
       JsonAdapter<T> jsonAdapter = jsonAdapter().adapter(type);
       return jsonAdapter.fromJson(Files.readString(path));
@@ -59,12 +59,12 @@ public class MoshiUtil {
 
   // Write
 
-  public static <T> void write(@Nonnull Path path, @Nonnull Class<T> type, @Nonnull T object) throws IOException {
+  public static <T> void write(@NonNull Path path, @NonNull Class<T> type, @NonNull T object) throws IOException {
     Files.createDirectories(path.getParent());
     Files.writeString(path, jsonAdapter().adapter(type).indent("  ").toJson(object), StandardCharsets.UTF_8);
   }
 
-  public static <T> void write(@Nonnull Path path, @Nonnull Type type, @Nonnull T object) throws IOException {
+  public static <T> void write(@NonNull Path path, @NonNull Type type, @NonNull T object) throws IOException {
     Files.createDirectories(path.getParent());
     Files.writeString(path, jsonAdapter().adapter(type).indent("  ").toJson(object), StandardCharsets.UTF_8);
   }

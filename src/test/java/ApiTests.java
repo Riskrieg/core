@@ -2,27 +2,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.riskrieg.core.api.Riskrieg;
-import com.riskrieg.core.api.RiskriegBuilder;
-import com.riskrieg.core.api.gamemode.AlliableMode;
-import com.riskrieg.core.api.gamemode.GameState;
-import com.riskrieg.core.api.gamemode.classic.ClassicMode;
-import com.riskrieg.core.api.gamemode.conquest.ConquestMode;
-import com.riskrieg.core.api.map.MapOptions;
-import com.riskrieg.core.api.map.options.Availability;
-import com.riskrieg.core.api.map.options.Flavor;
-import com.riskrieg.core.api.map.options.InterfaceAlignment;
-import com.riskrieg.core.api.map.options.alignment.HorizontalAlignment;
-import com.riskrieg.core.api.map.options.alignment.VerticalAlignment;
-import com.riskrieg.core.api.order.FullRandomOrder;
-import com.riskrieg.core.api.order.StandardOrder;
-import com.riskrieg.core.api.player.Identity;
-import com.riskrieg.core.constant.Constants;
-import com.riskrieg.core.constant.color.ColorId;
+import com.riskrieg.core.old.api.Riskrieg;
+import com.riskrieg.core.old.api.RiskriegBuilder;
+import com.riskrieg.core.old.api.gamemode.AlliableMode;
+import com.riskrieg.core.old.api.gamemode.GameState;
+import com.riskrieg.core.old.api.gamemode.classic.ClassicMode;
+import com.riskrieg.core.old.api.gamemode.conquest.ConquestMode;
+import com.riskrieg.core.old.api.map.MapOptions;
+import com.riskrieg.core.old.api.map.options.Availability;
+import com.riskrieg.core.old.api.map.options.Flavor;
+import com.riskrieg.core.old.api.map.options.InterfaceAlignment;
+import com.riskrieg.core.old.api.map.options.alignment.HorizontalAlignment;
+import com.riskrieg.core.old.api.map.options.alignment.VerticalAlignment;
+import com.riskrieg.core.old.api.order.FullRandomOrder;
+import com.riskrieg.core.old.api.order.StandardOrder;
+import com.riskrieg.core.old.api.player.Identity;
+import com.riskrieg.core.old.constant.color.ColorId;
 import com.riskrieg.map.RkmMap;
 import com.riskrieg.map.territory.TerritoryId;
 import com.riskrieg.map.vertex.Territory;
-import java.awt.Color;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -70,8 +68,8 @@ public class ApiTests {
 
     try {
       game.selectMap(
-          RkmMap.load(new URL("https://github.com/Riskrieg/maps/raw/main/antarctica.rkm")).orElseThrow(),
-          new MapOptions(Flavor.OFFICIAL, Availability.AVAILABLE, new InterfaceAlignment(VerticalAlignment.BOTTOM, HorizontalAlignment.LEFT)))
+              RkmMap.load(new URL("https://github.com/Riskrieg/maps/raw/main/antarctica.rkm")).orElseThrow(),
+              new MapOptions(Flavor.OFFICIAL, Availability.AVAILABLE, new InterfaceAlignment(VerticalAlignment.BOTTOM, HorizontalAlignment.LEFT)))
           .submit();
     } catch (IOException e) {
       e.printStackTrace();
@@ -115,8 +113,8 @@ public class ApiTests {
 
     try {
       game.selectMap(
-          RkmMap.load(new URL("https://github.com/Riskrieg/maps/raw/main/antarctica.rkm")).orElseThrow(),
-          new MapOptions(Flavor.OFFICIAL, Availability.AVAILABLE, new InterfaceAlignment(VerticalAlignment.BOTTOM, HorizontalAlignment.LEFT)))
+              RkmMap.load(new URL("https://github.com/Riskrieg/maps/raw/main/antarctica.rkm")).orElseThrow(),
+              new MapOptions(Flavor.OFFICIAL, Availability.AVAILABLE, new InterfaceAlignment(VerticalAlignment.BOTTOM, HorizontalAlignment.LEFT)))
           .submit();
     } catch (IOException e) {
       e.printStackTrace();
