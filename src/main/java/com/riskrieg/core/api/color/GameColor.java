@@ -1,10 +1,9 @@
 package com.riskrieg.core.api.color;
 
-import com.riskrieg.core.api.identifier.ColorIdentifier;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.awt.Color;
 
-public record GameColor(int id, String name, int r, int g, int b) implements ColorIdentifier, Comparable<GameColor> {
+public record GameColor(int id, String name, int r, int g, int b) implements Comparable<GameColor> {
 
   public GameColor {
     if (name.isBlank()) {
@@ -21,7 +20,6 @@ public record GameColor(int id, String name, int r, int g, int b) implements Col
     }
   }
 
-  @Override
   public int id() {
     return id;
   }
