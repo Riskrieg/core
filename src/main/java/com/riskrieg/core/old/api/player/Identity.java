@@ -28,7 +28,7 @@ public final class Identity {
   private Identity(String id) {
     Objects.requireNonNull(id);
     if (id.isBlank()) {
-      throw new IllegalArgumentException("Field 'id' of type String cannot be blank");
+      throw new IllegalArgumentException("String 'id' cannot be blank");
     }
     this.id = id;
   }
