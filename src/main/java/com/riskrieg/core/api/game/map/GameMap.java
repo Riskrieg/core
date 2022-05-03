@@ -17,6 +17,31 @@ public record GameMap(String codename, String displayName, String author,
                       BufferedImage baseLayer, BufferedImage textLayer,
                       Options options) {
 
+  public static final String CODENAME_REGEX = "^(?!-)[a-z\\d-]+[^-]$";
+
+  public GameMap {
+    Objects.requireNonNull(codename);
+    Objects.requireNonNull(displayName);
+    Objects.requireNonNull(author);
+    Objects.requireNonNull(vertices);
+    Objects.requireNonNull(edges);
+    Objects.requireNonNull(baseLayer);
+    Objects.requireNonNull(textLayer);
+    Objects.requireNonNull(options);
+    if (codename.isBlank()) {
+      throw new IllegalArgumentException("String 'codename' cannot be blank");
+    }
+    if (!codename.matches(CODENAME_REGEX)) {
+      throw new IllegalArgumentException("String 'codename' must match the regex '" + CODENAME_REGEX + "'");
+    }
+    if (displayName.isBlank()) {
+      throw new IllegalArgumentException("String 'author' cannot be blank");
+    }
+    if (author.isBlank()) {
+      throw new IllegalArgumentException("String 'author' cannot be blank");
+    }
+  }
+
   @NonNull
   public static Optional<GameMap> load(Path path) {
     Objects.requireNonNull(path);
