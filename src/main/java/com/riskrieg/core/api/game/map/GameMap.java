@@ -14,7 +14,7 @@ import org.jgrapht.graph.SimpleGraph;
 
 public record GameMap(String codename, String displayName, String author,
                       Set<Territory> vertices, Set<Border> edges,
-                      BufferedImage baseLayer, BufferedImage textLayer) { // Two instances of GameMap won't report equal because BufferedImage equality is reference-based
+                      BufferedImage baseLayer, BufferedImage textLayer) { // Two instances of the same GameMap loaded from a file won't report equal because BufferedImage equality is reference-based
 
   public static final String CODENAME_REGEX = "^(?!-)[a-z\\d-]+[^-]$";
 
