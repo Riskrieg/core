@@ -14,8 +14,7 @@ import org.jgrapht.graph.SimpleGraph;
 
 public record GameMap(String codename, String displayName, String author,
                       Set<Territory> vertices, Set<Border> edges,
-                      BufferedImage baseLayer, BufferedImage textLayer,
-                      Options options) {
+                      BufferedImage baseLayer, BufferedImage textLayer) {
 
   public static final String CODENAME_REGEX = "^(?!-)[a-z\\d-]+[^-]$";
 
@@ -27,7 +26,6 @@ public record GameMap(String codename, String displayName, String author,
     Objects.requireNonNull(edges);
     Objects.requireNonNull(baseLayer);
     Objects.requireNonNull(textLayer);
-    Objects.requireNonNull(options);
     if (codename.isBlank()) {
       throw new IllegalArgumentException("String 'codename' cannot be blank");
     }
@@ -62,8 +60,8 @@ public record GameMap(String codename, String displayName, String author,
       graph.addVertex(territory);
     }
     for (Border border : edges) {
-      Territory source = vertices.stream().filter(t -> t.id().equals(border.source().id())).findAny().orElse(null);
-      Territory target = vertices.stream().filter(t -> t.id().equals(border.target().id())).findAny().orElse(null);
+      Territory source = vertices.stream().filter(t -> t.id().equals(border.sourceId())).findAny().orElse(null);
+      Territory target = vertices.stream().filter(t -> t.id().equals(border.targetId())).findAny().orElse(null);
       if (source != null && target != null) {
         graph.addEdge(source, target, border);
       }
