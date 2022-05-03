@@ -32,7 +32,7 @@ public final class Player {
     Objects.requireNonNull(colorId);
     Objects.requireNonNull(name);
     if (name.isBlank()) {
-      throw new IllegalArgumentException("name cannot be blank");
+      throw new IllegalArgumentException("String 'name' cannot be blank");
     }
     this.identity = identity;
     this.colorId = colorId;
