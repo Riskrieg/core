@@ -2,6 +2,7 @@ package com.riskrieg.core.api.game;
 
 import com.riskrieg.core.api.color.GameColor;
 import com.riskrieg.core.api.game.map.GameMap;
+import com.riskrieg.core.api.game.map.Options;
 import com.riskrieg.core.api.game.nation.Nation;
 import com.riskrieg.core.api.game.player.Player;
 import com.riskrieg.core.api.identifier.GameIdentifier;
@@ -75,7 +76,7 @@ public interface Game extends GameIdentifier {
 
   GameAction<GameMap> selectMap(String codename);
 
-  GameAction<GameMap> selectMap(GameMap map);
+  GameAction<GameMap> selectMap(GameMap map, Options options);
 
   GameAction<Nation> formNation(PlayerIdentifier identifier, GameColor color); // Select color and starting territory
 
