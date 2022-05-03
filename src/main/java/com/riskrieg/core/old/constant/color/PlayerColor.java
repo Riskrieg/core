@@ -31,7 +31,7 @@ public class PlayerColor implements Comparable<PlayerColor> {
 
   public PlayerColor(ColorId id, String name, int r, int g, int b) {
     if (name.isBlank()) {
-      throw new IllegalStateException("PlayerColor name cannot be blank");
+      throw new IllegalStateException("String 'name' cannot be blank");
     }
     if (r < 0 || r > 255) {
       throw new IllegalStateException("PlayerColor value for red must be between 0 and 255, inclusive on either end.");
