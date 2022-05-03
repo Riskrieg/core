@@ -38,6 +38,8 @@ public record GameMap(String codename, String displayName, String author,
     if (author.isBlank()) {
       throw new IllegalArgumentException("String 'author' cannot be blank");
     }
+    vertices = Set.copyOf(vertices);
+    edges = Set.copyOf(edges);
   }
 
   @NonNull
@@ -70,7 +72,7 @@ public record GameMap(String codename, String displayName, String author,
   }
 
   public boolean contains(TerritoryIdentifier identifier) {
-    return graph().vertexSet().stream().anyMatch(territory -> territory.id().equals(identifier.id()));
+    return vertices.stream().anyMatch(territory -> territory.id().equals(identifier.id()));
   }
 
   public Optional<Territory> get(TerritoryIdentifier identifier) {
