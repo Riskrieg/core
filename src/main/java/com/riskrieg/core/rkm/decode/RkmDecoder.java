@@ -92,7 +92,7 @@ public class RkmDecoder {
       }
 
     }
-
+    input.reset(); // Reset to the beginning so that it can be decoded again within the same instance.
     return builder.build();
   }
 
