@@ -5,21 +5,21 @@ import java.nio.charset.StandardCharsets;
 public enum RkmField {
 
   /**
-   * The code name of the map.
+   * The code name of the map. Must have only basic alphanumeric characters with no spaces.
    * Field name: MCNM
    * Usage: MCNM[length-in-bytes][string-as-bytes]
    */
   MAP_CODE_NAME("MCNM"),
 
   /**
-   * The display name of the map.
+   * The display name of the map. Can be any non-blank string.
    * Field name: MDNM
    * Usage: MDNM[length-in-bytes][string-as-bytes]
    */
   MAP_DISPLAY_NAME("MDNM"),
 
   /**
-   * The name of the author of the map.
+   * The name of the author of the map. Can be any non-blank string.
    * Field name: MATN
    * Usage: MATN[length-in-bytes][string-as-bytes]
    */
