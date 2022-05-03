@@ -6,8 +6,8 @@ import java.util.Set;
 
 public interface Nation {
 
-  Set<PlayerIdentifier> leaders();
-
   GameColor color();
+
+  Set<PlayerIdentifier> leaders();
 
 }
