@@ -1,9 +1,11 @@
 package com.riskrieg.core.rkm;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public enum RkmField {
 
+  UNKNOWN("UNKN"),
   /**
    * The code name of the map. Must have only lowercase alphanumeric characters with no spaces. Hyphens are allowed, but it cannot start and end with a hyphen, and cannot be only
    * hypens.
@@ -95,6 +97,15 @@ public enum RkmField {
 
   public byte[] fieldName() {
     return fieldName;
+  }
+
+  public static RkmField of(byte[] fieldNameByteArray) {
+    for (RkmField field : RkmField.values()) {
+      if (Arrays.equals(field.fieldName(), fieldNameByteArray)) {
+        return field;
+      }
+    }
+    return UNKNOWN;
   }
 
 }
