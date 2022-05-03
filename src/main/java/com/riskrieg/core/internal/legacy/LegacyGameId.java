@@ -8,7 +8,7 @@ public record LegacyGameId(String value) {
   public LegacyGameId {
     Objects.requireNonNull(value);
     if (value.isBlank()) {
-      throw new IllegalArgumentException("id value cannot be blank");
+      throw new IllegalArgumentException("String 'value' cannot be blank");
     }
   }
 
