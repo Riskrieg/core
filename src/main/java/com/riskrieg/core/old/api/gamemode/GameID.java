@@ -28,7 +28,7 @@ public final class GameID {
   private GameID(String value) {
     Objects.requireNonNull(value);
     if (value.isBlank()) {
-      throw new IllegalArgumentException("id value cannot be blank");
+      throw new IllegalArgumentException("String 'value' cannot be blank");
     }
     this.value = value;
   }
