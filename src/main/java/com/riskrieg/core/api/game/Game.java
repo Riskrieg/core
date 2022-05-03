@@ -74,8 +74,6 @@ public interface Game extends GameIdentifier {
 
   GameAction<?> removePlayer(PlayerIdentifier identifier);
 
-  GameAction<GameMap> selectMap(String codename);
-
   GameAction<GameMap> selectMap(GameMap map, Options options);
 
   GameAction<Nation> formNation(PlayerIdentifier identifier, GameColor color); // Select color and starting territory
