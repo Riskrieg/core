@@ -1,11 +1,11 @@
-package com.riskrieg.core.recoder;
+package com.riskrieg.core.decode;
 
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 
-public interface Decoder<T> {
+public sealed interface Decoder<T> permits RkmDecoder {
 
   T decode(Path path) throws IOException, NoSuchAlgorithmException;
 

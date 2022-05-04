@@ -1,10 +1,10 @@
-package com.riskrieg.core.recoder;
+package com.riskrieg.core.encode;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.security.NoSuchAlgorithmException;
 
-public interface Encoder<T> {
+public sealed interface Encoder<T> permits RkmEncoder {
 
   void encode(T object, OutputStream outputStream, boolean shouldCloseStream) throws IOException, NoSuchAlgorithmException;
 

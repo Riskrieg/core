@@ -1,10 +1,9 @@
-package com.riskrieg.core.rkm.recoder;
+package com.riskrieg.core.decode;
 
 import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.map.Territory;
 import com.riskrieg.core.api.game.map.territory.Border;
 import com.riskrieg.core.api.game.map.territory.Nucleus;
-import com.riskrieg.core.recoder.Decoder;
 import com.riskrieg.core.rkm.RkmField;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -23,7 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.imageio.ImageIO;
 
-public class RkmDecoder implements Decoder<GameMap> {
+public final class RkmDecoder implements Decoder<GameMap> {
 
   // 8B: File signature. HEX: 83 52 4B 4D 0D 0A 1A 0A -- \131 R K M \r \n \032 \n
   private final byte[] signature = new byte[]{(byte) 0x83, (byte) 0x52, (byte) 0x4B, (byte) 0x4D, (byte) 0x0D, (byte) 0x0A, (byte) 0x1A, (byte) 0x0A};
@@ -190,7 +189,7 @@ public class RkmDecoder implements Decoder<GameMap> {
 
 }
 
-class GameMapBuilder {
+final class GameMapBuilder {
 
   private String codename;
   private String displayName;
