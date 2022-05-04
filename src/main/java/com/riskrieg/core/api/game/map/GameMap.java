@@ -2,10 +2,7 @@ package com.riskrieg.core.api.game.map;
 
 import com.riskrieg.core.api.game.map.territory.Border;
 import com.riskrieg.core.api.identifier.TerritoryIdentifier;
-import edu.umd.cs.findbugs.annotations.NonNull;
 import java.awt.image.BufferedImage;
-import java.net.URL;
-import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -14,7 +11,8 @@ import org.jgrapht.graph.SimpleGraph;
 
 public record GameMap(String codename, String displayName, String author,
                       Set<Territory> vertices, Set<Border> edges,
-                      BufferedImage baseLayer, BufferedImage textLayer) { // Two instances of the same GameMap loaded from a file won't report equal because BufferedImage equality is reference-based
+                      BufferedImage baseLayer,
+                      BufferedImage textLayer) { // Two instances of the same GameMap loaded from a file won't report equal because BufferedImage equality is reference-based
 
   public static final String CODENAME_REGEX = "^(?!-)[a-z\\d-]+[^-]$";
 
@@ -40,20 +38,6 @@ public record GameMap(String codename, String displayName, String author,
     }
     vertices = Set.copyOf(vertices);
     edges = Set.copyOf(edges);
-  }
-
-  @NonNull
-  public static Optional<GameMap> load(Path path) {
-    Objects.requireNonNull(path);
-    // TODO: Implement
-    return null;
-  }
-
-  @NonNull
-  public static Optional<GameMap> load(URL url) {
-    Objects.requireNonNull(url);
-    // TODO: Implement
-    return null;
   }
 
   public Graph<Territory, Border> graph() {
