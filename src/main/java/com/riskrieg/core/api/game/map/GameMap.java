@@ -2,6 +2,7 @@ package com.riskrieg.core.api.game.map;
 
 import com.riskrieg.core.api.game.map.territory.Border;
 import com.riskrieg.core.api.identifier.TerritoryIdentifier;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 import java.util.Optional;
@@ -15,6 +16,15 @@ public record GameMap(String codename, String displayName, String author,
                       BufferedImage textLayer) { // Two instances of the same GameMap loaded from a file won't report equal because BufferedImage equality is reference-based
 
   public static final String CODENAME_REGEX = "^(?!-)[a-z\\d-]+[^-]$";
+
+  public static final Color BORDER_COLOR = new Color(116, 79, 40);
+  public static final Color TEXT_COLOR = new Color(116, 79, 40);
+
+  public static final Color TERRITORY_COLOR = new Color(224, 219, 227);
+  public static final Color LAND_COLOR = new Color(200, 183, 173);
+
+  public static final Color WATER_COLOR = new Color(192, 163, 146);
+  public static final Color CONNECTION_COLOR = new Color(148, 125, 111);
 
   public GameMap {
     Objects.requireNonNull(codename);
