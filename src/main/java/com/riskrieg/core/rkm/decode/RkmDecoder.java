@@ -9,6 +9,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -30,6 +32,14 @@ public class RkmDecoder {
   public RkmDecoder(Path path) throws IOException {
     this.input = new ByteArrayInputStream(Files.readAllBytes(path));
     this.lengthInBytes = path.toFile().length();
+  }
+
+  public RkmDecoder(URL url) throws IOException {
+    try (InputStream inputStream = url.openStream()) {
+      byte[] fileData = inputStream.readAllBytes();
+      this.input = new ByteArrayInputStream(fileData);
+      this.lengthInBytes = fileData.length;
+    }
   }
 
   public RkmDecoder(byte[] fileData) {
