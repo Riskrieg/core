@@ -25,7 +25,7 @@ public class RkmEncoder {
     this.map = map;
   }
 
-  public void encode(OutputStream outputStream) throws IOException, NoSuchAlgorithmException {
+  public void encode(OutputStream outputStream, boolean shouldCloseStream) throws IOException, NoSuchAlgorithmException {
     writeSignature(outputStream);
     writeField(RkmField.MAP_CODE_NAME, map.codename().getBytes(StandardCharsets.UTF_8), outputStream);
     writeField(RkmField.MAP_DISPLAY_NAME, map.displayName().getBytes(StandardCharsets.UTF_8), outputStream);
@@ -51,6 +51,13 @@ public class RkmEncoder {
     writeTextImageLayer(map.textLayer(), checksumBuilder);
 
     writeField(RkmField.CHECKSUM, MessageDigest.getInstance("SHA-512").digest(checksumBuilder.toByteArray()), outputStream);
+    if (shouldCloseStream) {
+      outputStream.close();
+    }
+  }
+
+  public void encode(OutputStream outputStream) throws IOException, NoSuchAlgorithmException {
+    encode(outputStream, true);
   }
 
   private void writeSignature(OutputStream outputStream) throws IOException {
