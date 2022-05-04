@@ -17,6 +17,7 @@ public record GameMap(String codename, String displayName, String author,
 
   public static final String CODENAME_REGEX = "^(?!-)[a-z\\d-]+[^-]$";
 
+  // TODO: Load these values from a file
   public static final Color BORDER_COLOR = new Color(116, 79, 40);
   public static final Color TEXT_COLOR = new Color(116, 79, 40);
 

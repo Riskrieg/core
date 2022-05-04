@@ -16,6 +16,7 @@ import java.util.Set;
 
 public interface Game extends GameIdentifier {
 
+  // TODO: Load these values from a file on start-up
   public static final int MIN_PLAYERS = 2;
   public static final int MAX_PLAYERS = 16;
   public static final double CLAIM_INCREASE_THRESHOLD = 5.0; // Threshold to gain another claim each turn
