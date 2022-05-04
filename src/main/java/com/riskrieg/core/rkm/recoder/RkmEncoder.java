@@ -1,9 +1,10 @@
-package com.riskrieg.core.rkm.encode;
+package com.riskrieg.core.rkm.recoder;
 
 import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.map.Territory;
 import com.riskrieg.core.api.game.map.territory.Border;
 import com.riskrieg.core.api.game.map.territory.Nucleus;
+import com.riskrieg.core.recoder.Encoder;
 import com.riskrieg.core.rkm.RkmField;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -15,17 +16,13 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.imageio.ImageIO;
 
-public class RkmEncoder {
+public class RkmEncoder implements Encoder<GameMap> {
 
   // 8B: File signature. HEX: 83 52 4B 4D 0D 0A 1A 0A -- \131 R K M \r \n \032 \n
   private final byte[] signature = new byte[]{(byte) 0x83, (byte) 0x52, (byte) 0x4B, (byte) 0x4D, (byte) 0x0D, (byte) 0x0A, (byte) 0x1A, (byte) 0x0A};
-  private final GameMap map;
 
-  public RkmEncoder(GameMap map) {
-    this.map = map;
-  }
-
-  public void encode(OutputStream outputStream, boolean shouldCloseStream) throws IOException, NoSuchAlgorithmException {
+  @Override
+  public void encode(GameMap map, OutputStream outputStream, boolean shouldCloseStream) throws IOException, NoSuchAlgorithmException {
     writeSignature(outputStream);
     writeField(RkmField.MAP_CODE_NAME, map.codename().getBytes(StandardCharsets.UTF_8), outputStream);
     writeField(RkmField.MAP_DISPLAY_NAME, map.displayName().getBytes(StandardCharsets.UTF_8), outputStream);
@@ -54,10 +51,6 @@ public class RkmEncoder {
     if (shouldCloseStream) {
       outputStream.close();
     }
-  }
-
-  public void encode(OutputStream outputStream) throws IOException, NoSuchAlgorithmException {
-    encode(outputStream, true);
   }
 
   private void writeSignature(OutputStream outputStream) throws IOException {

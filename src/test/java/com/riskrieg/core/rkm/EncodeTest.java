@@ -3,8 +3,10 @@ package com.riskrieg.core.rkm;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.riskrieg.core.api.game.map.GameMap;
-import com.riskrieg.core.rkm.decode.RkmDecoder;
-import com.riskrieg.core.rkm.encode.RkmEncoder;
+import com.riskrieg.core.recoder.Decoder;
+import com.riskrieg.core.recoder.Encoder;
+import com.riskrieg.core.rkm.recoder.RkmDecoder;
+import com.riskrieg.core.rkm.recoder.RkmEncoder;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,12 +21,13 @@ public class EncodeTest {
 
   @Test
   public void encodeLocal() throws IOException, NoSuchAlgorithmException {
-    RkmEncoder encoder = new RkmEncoder(loadLocal("antarctica"));
+    GameMap map = loadLocal("antarctica");
+    Encoder<GameMap> encoder = new RkmEncoder();
 
     Path testMapPath = testResourcePath.resolve(Path.of("maps", "test.rkm"));
     assertTrue(Files.notExists(testMapPath));
 
-    encoder.encode(new FileOutputStream(testMapPath.toFile()));
+    encoder.encode(map, new FileOutputStream(testMapPath.toFile()));
     assertTrue(Files.exists(testMapPath));
 
     Files.deleteIfExists(testMapPath);
@@ -32,8 +35,8 @@ public class EncodeTest {
   }
 
   private GameMap loadLocal(String codename) throws IOException, NoSuchAlgorithmException {
-    RkmDecoder decoder = new RkmDecoder(testResourcePath.resolve(Path.of("maps", codename + ".rkm")));
-    return decoder.decode();
+    Decoder<GameMap> decoder = new RkmDecoder();
+    return decoder.decode(testResourcePath.resolve(Path.of("maps", codename + ".rkm")));
   }
 
 }

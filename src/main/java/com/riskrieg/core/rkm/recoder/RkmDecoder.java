@@ -1,9 +1,10 @@
-package com.riskrieg.core.rkm.decode;
+package com.riskrieg.core.rkm.recoder;
 
 import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.map.Territory;
 import com.riskrieg.core.api.game.map.territory.Border;
 import com.riskrieg.core.api.game.map.territory.Nucleus;
+import com.riskrieg.core.recoder.Decoder;
 import com.riskrieg.core.rkm.RkmField;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -22,33 +23,43 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.imageio.ImageIO;
 
-public class RkmDecoder {
+public class RkmDecoder implements Decoder<GameMap> {
 
   // 8B: File signature. HEX: 83 52 4B 4D 0D 0A 1A 0A -- \131 R K M \r \n \032 \n
   private final byte[] signature = new byte[]{(byte) 0x83, (byte) 0x52, (byte) 0x4B, (byte) 0x4D, (byte) 0x0D, (byte) 0x0A, (byte) 0x1A, (byte) 0x0A};
-  private final ByteArrayInputStream input;
-  private final long lengthInBytes;
 
-  public RkmDecoder(Path path) throws IOException {
-    this.input = new ByteArrayInputStream(Files.readAllBytes(path));
-    this.lengthInBytes = path.toFile().length();
+  @Override
+  public GameMap decode(Path path) throws IOException, NoSuchAlgorithmException {
+    final ByteArrayInputStream input = new ByteArrayInputStream(Files.readAllBytes(path));
+    final long lengthInBytes = path.toFile().length();
+    GameMap result = decodeInternal(input, lengthInBytes);
+    input.close();
+    return result;
   }
 
-  public RkmDecoder(URL url) throws IOException {
+  @Override
+  public GameMap decode(URL url) throws IOException, NoSuchAlgorithmException {
     try (InputStream inputStream = url.openStream()) {
-      byte[] fileData = inputStream.readAllBytes();
-      this.input = new ByteArrayInputStream(fileData);
-      this.lengthInBytes = fileData.length;
+      final byte[] fileData = inputStream.readAllBytes();
+      final ByteArrayInputStream input = new ByteArrayInputStream(fileData);
+      final long lengthInBytes = fileData.length;
+      GameMap result = decodeInternal(input, lengthInBytes);
+      input.close();
+      return result;
     }
   }
 
-  public RkmDecoder(byte[] fileData) {
-    this.input = new ByteArrayInputStream(fileData);
-    this.lengthInBytes = fileData.length;
+  @Override
+  public GameMap decode(byte[] data) throws IOException, NoSuchAlgorithmException {
+    final ByteArrayInputStream input = new ByteArrayInputStream(data);
+    final long lengthInBytes = data.length;
+    GameMap result = decodeInternal(input, lengthInBytes);
+    input.close();
+    return result;
   }
 
-  public GameMap decode() throws IOException, NoSuchAlgorithmException {
-    if (lengthInBytes < signature.length + 4 + 4 + 64) { // Check length first before reading TODO: Add checksum
+  private GameMap decodeInternal(ByteArrayInputStream input, long lengthInBytes) throws IOException, NoSuchAlgorithmException {
+    if (lengthInBytes < signature.length + 4 + 4 + 64) { // Check length first before reading
       throw new IllegalStateException("file length is too short to be a valid .rkm file");
     }
     if (!checkSignature(input)) {
@@ -102,7 +113,7 @@ public class RkmDecoder {
       }
 
     }
-    input.reset(); // Reset to the beginning so that it can be decoded again within the same instance.
+    input.reset();
     return builder.build();
   }
 

@@ -1,10 +1,12 @@
 package com.riskrieg.core.rkm;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.riskrieg.core.api.game.map.GameMap;
-import com.riskrieg.core.rkm.decode.RkmDecoder;
+import com.riskrieg.core.recoder.Decoder;
+import com.riskrieg.core.rkm.recoder.RkmDecoder;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -18,8 +20,11 @@ public class DecodeTest {
 
   @Test
   public void decodeLocal() throws IOException, NoSuchAlgorithmException {
-    RkmDecoder decoder = new RkmDecoder(testResourcePath.resolve(Path.of("maps", "antarctica.rkm")));
-    GameMap map = decoder.decode();
+    Decoder<GameMap> decoder = new RkmDecoder();
+    GameMap map = decoder.decode(testResourcePath.resolve(Path.of("maps", "antarctica.rkm")));
+    assertDoesNotThrow(() -> {
+      GameMap map2 = decoder.decode(testResourcePath.resolve(Path.of("maps", "antarctica.rkm")));
+    });
 
     assertNotNull(map);
     assertNotNull(map.codename());
@@ -39,8 +44,8 @@ public class DecodeTest {
 
   @Test
   public void decodeRemote() throws IOException, NoSuchAlgorithmException {
-    RkmDecoder decoder = new RkmDecoder(new URL("https://github.com/Riskrieg/maps/raw/main/antarctica.rkm"));
-    GameMap map = decoder.decode();
+    RkmDecoder decoder = new RkmDecoder();
+    GameMap map = decoder.decode(new URL("https://github.com/Riskrieg/maps/raw/main/antarctica.rkm"));
 
     assertNotNull(map);
     assertNotNull(map.codename());
