@@ -99,8 +99,8 @@ public final class RkmEncoder implements Encoder<GameMap> {
   }
 
   private void writeVertex(Territory vertex, OutputStream outputStream) throws IOException {
-    outputStream.write(ByteBuffer.allocate(4).putInt(vertex.id().length()).array()); // 4 bytes
-    outputStream.write(vertex.id().getBytes(StandardCharsets.UTF_8));
+    outputStream.write(ByteBuffer.allocate(4).putInt(vertex.identifier().id().length()).array()); // 4 bytes
+    outputStream.write(vertex.identifier().id().getBytes(StandardCharsets.UTF_8));
     outputStream.write(ByteBuffer.allocate(4).putInt(vertex.nuclei().size()).array()); // 4 bytes
     for (Nucleus n : vertex.nuclei()) {
       outputStream.write(ByteBuffer.allocate(4).putInt(n.x()).array());

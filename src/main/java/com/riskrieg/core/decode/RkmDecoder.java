@@ -22,6 +22,7 @@ import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.map.Territory;
 import com.riskrieg.core.api.game.map.territory.Border;
 import com.riskrieg.core.api.game.map.territory.Nucleus;
+import com.riskrieg.core.api.identifier.TerritoryIdentifier;
 import com.riskrieg.core.rkm.RkmField;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -179,7 +180,7 @@ public final class RkmDecoder implements Decoder<GameMap> {
         int y = ByteBuffer.wrap(bis.readNBytes(4)).getInt();
         nuclei.add(new Nucleus(x, y));
       }
-      result.add(new Territory(id, nuclei));
+      result.add(new Territory(TerritoryIdentifier.of(id), nuclei));
     }
 
     return result;

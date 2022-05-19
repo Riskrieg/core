@@ -25,7 +25,7 @@ public record Save(String id, GameMode mode, Instant creationTime, Instant updat
   public static final String FILE_EXT = ".json";
 
   public Save(Game game) {
-    this(game.id(), game.mode(), game.creationTime(), game.updatedTime());
+    this(game.identifier().id(), game.mode(), game.creationTime(), game.updatedTime());
   }
 
 }
