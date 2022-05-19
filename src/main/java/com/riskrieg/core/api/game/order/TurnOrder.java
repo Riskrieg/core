@@ -16,18 +16,32 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.riskrieg.core.api.identifier;
+package com.riskrieg.core.api.game.order;
 
+import com.riskrieg.core.api.game.entity.nation.Nation;
+import com.riskrieg.core.api.game.entity.player.Player;
 import edu.umd.cs.findbugs.annotations.NonNull;
+import java.util.Collection;
+import java.util.Deque;
 
-/**
- * Marks an entity with an identifier. Entities with identifiers have an id that uniquely identifies them.
- *
- * @since 3.0
- */
-public sealed interface Identifier permits GameIdentifier, GroupIdentifier, PlayerIdentifier, TerritoryIdentifier {
+public interface TurnOrder {
 
   @NonNull
-  String id();
+  String displayName();
+
+  @NonNull
+  String description();
+
+  /**
+   * Takes in a collection of players and an associated collection of nations and returns a sorted deque of players.
+   * <p>
+   * The inputs are not modified in any way, and are assumed to be immutable collections.
+   *
+   * @param players The collection of players to sort.
+   * @param nations The associated collection of nations used to help sort by.
+   * @return the deque of players sorted according to the implementation.
+   */
+  @NonNull
+  Deque<Player> getSorted(@NonNull final Collection<Player> players, @NonNull final Collection<Nation> nations);
 
 }

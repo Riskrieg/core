@@ -16,26 +16,10 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.riskrieg.core.api.identifier;
+package com.riskrieg.core.api.game.entity.player;
 
-import java.util.Objects;
-import java.util.UUID;
+import com.riskrieg.core.api.identifier.PlayerIdentifier;
 
-public record GameIdentifier(String id) implements Identifier {
-
-  public GameIdentifier {
-    Objects.requireNonNull(id);
-    if (id.isBlank()) {
-      throw new IllegalStateException("String 'id' cannot be blank");
-    }
-  }
-
-  public static GameIdentifier of(String id) {
-    return new GameIdentifier(id);
-  }
-
-  public static GameIdentifier uuid() {
-    return new GameIdentifier(UUID.randomUUID().toString());
-  }
+public record Player(PlayerIdentifier id, String name) {
 
 }
