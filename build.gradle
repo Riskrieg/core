@@ -44,9 +44,7 @@ repositories {
 }
 
 dependencies {
-    api("com.github.spotbugs:spotbugs-annotations:4.6.0") {
-        exclude group: 'com.google.code.findbugs', module: 'jsr305'
-    }
+    api("com.github.spotbugs:spotbugs-annotations:4.6.0")
 
     implementation('org.jgrapht:jgrapht-core:1.5.1')
 
