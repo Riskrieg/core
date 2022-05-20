@@ -26,18 +26,18 @@ import java.util.Objects;
 
 public class RiskriegBuilder {
 
-  private Path path;
+  private final Path repository;
 
-  private RiskriegBuilder(Path path) {
-    Objects.requireNonNull(path);
-    if (!Files.isDirectory(path)) {
-      throw new IllegalStateException("The path provided must be a directory/folder.");
+  private RiskriegBuilder(Path repository) {
+    Objects.requireNonNull(repository);
+    if (!Files.isDirectory(repository)) {
+      throw new IllegalStateException("The repository repository provided must be a directory/folder.");
     }
-    this.path = path;
+    this.repository = repository;
   }
 
-  public static RiskriegBuilder createLocal(@NonNull Path path) {
-    return new RiskriegBuilder(path);
+  public static RiskriegBuilder createLocal(@NonNull Path repository) {
+    return new RiskriegBuilder(repository);
   }
 
   private static RiskriegBuilder createRemote() { // TODO: Implement support for remote repositories accessible via a REST API.
@@ -45,8 +45,8 @@ public class RiskriegBuilder {
   }
 
   public Riskrieg build() { // This is set up the way it is in preparation for allowing remote repositories.
-    if (path != null) {
-      return new LocalRiskrieg(path);
+    if (repository != null) {
+      return new LocalRiskrieg(repository);
     }
     return new LocalRiskrieg(null);
   }

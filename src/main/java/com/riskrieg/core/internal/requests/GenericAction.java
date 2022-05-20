@@ -21,10 +21,15 @@ package com.riskrieg.core.internal.requests;
 import com.riskrieg.core.api.requests.GameAction;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public record GenericAction<T>(T value, Throwable throwable) implements GameAction<T> {
+
+  public GenericAction {
+    Objects.requireNonNull(value);
+    Objects.requireNonNull(throwable);
+  }
 
   public GenericAction(T value) {
     this(value, null);
@@ -46,8 +51,8 @@ public record GenericAction<T>(T value, Throwable throwable) implements GameActi
 
   @NonNull
   @Override
-  public Optional<T> complete() {
-    return Optional.ofNullable(value);
+  public T complete() {
+    return value;
   }
 
 }

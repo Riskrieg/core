@@ -28,12 +28,12 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Objects;
 
-public record LocalRiskrieg(Path path) implements Riskrieg { // TODO: Implement
+public record LocalRiskrieg(Path repository) implements Riskrieg { // TODO: Implement
 
   public LocalRiskrieg {
-    Objects.requireNonNull(path);
-    if (!Files.isDirectory(path)) {
-      throw new IllegalStateException("The path provided must be a directory/folder.");
+    Objects.requireNonNull(repository);
+    if (!Files.isDirectory(repository)) {
+      throw new IllegalStateException("The repository repository provided must be a directory/folder.");
     }
   }
 

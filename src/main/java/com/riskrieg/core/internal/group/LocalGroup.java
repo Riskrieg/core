@@ -30,12 +30,12 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Objects;
 
-public record LocalGroup(Path path) implements Group { // TODO: Implement
+public record LocalGroup(Path repository) implements Group { // TODO: Implement
 
   public LocalGroup {
-    Objects.requireNonNull(path);
-    if (!Files.isDirectory(path)) {
-      throw new IllegalStateException("The path provided must be a directory/folder.");
+    Objects.requireNonNull(repository);
+    if (!Files.isDirectory(repository)) {
+      throw new IllegalStateException("The repository path provided must be a directory/folder.");
     }
   }
 
