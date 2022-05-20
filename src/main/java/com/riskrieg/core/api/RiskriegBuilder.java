@@ -31,7 +31,7 @@ public class RiskriegBuilder {
   private RiskriegBuilder(Path repository) {
     Objects.requireNonNull(repository);
     if (!Files.isDirectory(repository)) {
-      throw new IllegalStateException("The repository repository provided must be a directory/folder.");
+      throw new IllegalStateException("The repository path provided must be a directory/folder.");
     }
     this.repository = repository;
   }
