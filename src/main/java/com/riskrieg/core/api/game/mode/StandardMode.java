@@ -16,16 +16,33 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.riskrieg.core.api.game;
+package com.riskrieg.core.api.game.mode;
 
+import com.riskrieg.core.api.game.GameMode;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public interface GameMode {
+public enum StandardMode implements GameMode {
+
+  CONQUEST("Conquest", "The default game mode.");
+
+  private final String displayName;
+  private final String description;
+
+  StandardMode(String displayName, String description) {
+    this.displayName = displayName;
+    this.description = description;
+  }
 
   @NonNull
-  String displayName();
+  @Override
+  public String displayName() {
+    return displayName;
+  }
 
   @NonNull
-  String description();
+  @Override
+  public String description() {
+    return description;
+  }
 
 }
