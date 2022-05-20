@@ -20,17 +20,20 @@ package com.riskrieg.core.internal.group;
 
 import com.riskrieg.core.api.game.Game;
 import com.riskrieg.core.api.game.GameMode;
+import com.riskrieg.core.api.game.Save;
 import com.riskrieg.core.api.group.Group;
 import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.GroupIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
+import com.riskrieg.core.internal.requests.GenericAction;
 import edu.umd.cs.findbugs.annotations.NonNull;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Objects;
 
-public record LocalGroup(Path path) implements Group { // TODO: Implement
+public record LocalGroup(Path path) implements Group { // TODO: Implement saves in order to finish this class
 
   public LocalGroup {
     Objects.requireNonNull(path);
@@ -41,12 +44,13 @@ public record LocalGroup(Path path) implements Group { // TODO: Implement
 
   @Override
   public GroupIdentifier identifier() {
-    return null;
+    return GroupIdentifier.of(path.getName(path.getNameCount() - 1).toString());
   }
 
   @NonNull
   @Override
   public GameAction<Game> createGame(GameMode mode, GameIdentifier identifier) {
+    Path savePath = path.resolve(identifier.id() + Save.FILE_EXT);
     return null;
   }
 
@@ -71,7 +75,12 @@ public record LocalGroup(Path path) implements Group { // TODO: Implement
   @NonNull
   @Override
   public GameAction<Boolean> deleteGame(GameIdentifier identifier) {
-    return null;
+    Path savePath = path.resolve(identifier.id() + Save.FILE_EXT);
+    try {
+      return new GenericAction<>(Files.deleteIfExists(savePath));
+    } catch (IOException e) {
+      return new GenericAction<>(false, e);
+    }
   }
 
 }
