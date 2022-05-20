@@ -33,7 +33,7 @@ public record LocalRiskrieg(Path repository) implements Riskrieg { // TODO: Impl
   public LocalRiskrieg {
     Objects.requireNonNull(repository);
     if (!Files.isDirectory(repository)) {
-      throw new IllegalStateException("The repository repository provided must be a directory/folder.");
+      throw new IllegalStateException("The repository path provided must be a directory/folder.");
     }
   }
 
