@@ -27,8 +27,11 @@ import java.util.function.Consumer;
 public record GenericAction<T>(T value, Throwable throwable) implements GameAction<T> {
 
   public GenericAction {
-    Objects.requireNonNull(value);
-    Objects.requireNonNull(throwable);
+    if (value == null) {
+      Objects.requireNonNull(throwable);
+    } else if (throwable == null) {
+      Objects.requireNonNull(value);
+    }
   }
 
   public GenericAction(T value) {
