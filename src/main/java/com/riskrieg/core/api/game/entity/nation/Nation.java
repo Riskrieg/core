@@ -18,10 +18,11 @@
 
 package com.riskrieg.core.api.game.entity.nation;
 
-import com.riskrieg.core.api.color.GameColor;
+import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
 import java.util.Set;
 
-public record Nation(GameColor color, Set<PlayerIdentifier> players) {
+// TODO: Maybe shouldn't be a record I'm not sure, players needs to be immutable but also addable/removable
+public record Nation(NationIdentifier identifier, int colorId, Set<PlayerIdentifier> players) {
 
 }
