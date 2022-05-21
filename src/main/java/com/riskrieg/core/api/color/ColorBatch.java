@@ -32,6 +32,15 @@ public record ColorBatch(SortedSet<GameColor> set) {
     return set.last();
   }
 
+  public GameColor get(int index) {
+    if (index < 0) {
+      return first();
+    } else if (index >= set.size()) {
+      return last();
+    }
+    return set.toArray(GameColor[]::new)[index];
+  }
+
   public GameColor valueOf(Color color) {
     for (GameColor gameColor : set) {
       if (gameColor.toColor().equals(color)) {
