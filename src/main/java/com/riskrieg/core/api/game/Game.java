@@ -18,12 +18,14 @@
 
 package com.riskrieg.core.api.game;
 
+import com.riskrieg.core.api.color.ColorBatch;
 import com.riskrieg.core.api.color.GameColor;
 import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
 import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.map.Options;
 import com.riskrieg.core.api.identifier.GameIdentifier;
+import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
 import com.riskrieg.core.api.identifier.TerritoryIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
@@ -34,15 +36,11 @@ import java.util.Set;
 
 public interface Game {
 
-  // TODO: Load these values from a file on start-up
-  public static final int MIN_PLAYERS = 2;
-  public static final int MAX_PLAYERS = 16;
-  public static final double CLAIM_INCREASE_THRESHOLD = 5.0; // Threshold to gain another claim each turn
-  public static final int MINIMUM_CLAIM_AMOUNT = 1;
-  public static final int CAPITAL_ATTACK_ROLL_BOOST = 2;
-  public static final int CAPITAL_DEFENSE_ROLL_BOOST = 1;
-
   GameIdentifier identifier();
+
+  GameConstants constants();
+
+  ColorBatch colors();
 
   @NonNull
   GameMode mode();
@@ -63,30 +61,27 @@ public interface Game {
   GameMap map();
 
   default Optional<Player> getPlayer(PlayerIdentifier identifier) {
-    for (Player player : players()) {
-      if (player.id().equals(identifier)) {
-        return Optional.of(player);
-      }
-    }
-    return Optional.empty();
+    return players().stream()
+        .filter(p -> p.id().equals(identifier))
+        .findFirst();
   }
 
   default Optional<Nation> getNation(PlayerIdentifier identifier) {
-    for (Nation nation : nations()) {
-      if (nation.players().stream().anyMatch(pid -> pid.equals(identifier))) {
-        return Optional.of(nation);
-      }
-    }
-    return Optional.empty();
+    return nations().stream()
+        .filter(n -> n.players().stream().anyMatch(pid -> pid.equals(identifier)))
+        .findFirst();
+  }
+
+  default Optional<Nation> getNation(NationIdentifier identifier) {
+    return nations().stream()
+        .filter(n -> n.identifier().equals(identifier))
+        .findFirst();
   }
 
   default Optional<Nation> getNation(GameColor color) {
-    for (Nation nation : nations()) {
-      if (nation.color().equals(color)) {
-        return Optional.of(nation);
-      }
-    }
-    return Optional.empty();
+    return nations().stream()
+        .filter(n -> n.colorId() == color.id())
+        .findFirst();
   }
 
   GameAction<Boolean> setGameState(GameState gameState);
@@ -97,11 +92,13 @@ public interface Game {
 
   GameAction<GameMap> selectMap(GameMap map, Options options);
 
-  GameAction<Nation> formNation(GameColor color, PlayerIdentifier identifier); // Select color and starting territory
+  GameAction<Nation> createNation(GameColor color);
 
-  GameAction<?> addTerritory(Nation nation, TerritoryIdentifier territory, TerritoryIdentifier... territories); // TODO: Replace Nation with NationIdentifier?
+  GameAction<Nation> addToNation(NationIdentifier nation, PlayerIdentifier player, PlayerIdentifier... players);
 
-  GameAction<?> removeTerritory(Nation nation, TerritoryIdentifier territory, TerritoryIdentifier... territories); // TODO: Replace Nation with NationIdentifier?
+  GameAction<?> addTerritory(NationIdentifier nation, TerritoryIdentifier territory, TerritoryIdentifier... territories); // TODO: Replace <?>
+
+  GameAction<?> removeTerritory(NationIdentifier nation, TerritoryIdentifier territory, TerritoryIdentifier... territories); // TODO: Replace <?>
 
   GameAction<Player> start();
 
