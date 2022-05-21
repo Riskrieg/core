@@ -3,7 +3,7 @@ package com.riskrieg.core.api.color;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.awt.Color;
 
-public record GameColor(int id, String name, int r, int g, int b) implements Comparable<GameColor> {
+public record GameColor(int id, String name, int r, int g, int b) implements Comparable<GameColor> { // TODO: Should probably override equals() and hashcode()
 
   public GameColor {
     if (name.isBlank()) {
