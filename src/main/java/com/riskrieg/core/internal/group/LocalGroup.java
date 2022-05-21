@@ -18,7 +18,9 @@
 
 package com.riskrieg.core.internal.group;
 
+import com.riskrieg.core.api.color.ColorBatch;
 import com.riskrieg.core.api.game.Game;
+import com.riskrieg.core.api.game.GameConstants;
 import com.riskrieg.core.api.game.GameMode;
 import com.riskrieg.core.api.game.Save;
 import com.riskrieg.core.api.group.Group;
@@ -49,7 +51,7 @@ public record LocalGroup(Path path) implements Group { // TODO: Implement saves 
 
   @NonNull
   @Override
-  public GameAction<Game> createGame(GameMode mode, GameIdentifier identifier) {
+  public GameAction<Game> createGame(GameMode mode, GameConstants constants, ColorBatch batch, GameIdentifier identifier) {
     Path savePath = path.resolve(identifier.id() + Save.FILE_EXT);
     return null;
   }
