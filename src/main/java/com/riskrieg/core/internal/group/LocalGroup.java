@@ -45,7 +45,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public record LocalGroup(Path path) implements Group { // TODO: Implement saves in order to finish this class
+public record LocalGroup(Path path) implements Group {
 
   public LocalGroup {
     Objects.requireNonNull(path);
