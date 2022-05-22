@@ -37,13 +37,21 @@ public interface Group {
 
   @NonNull
   @CheckReturnValue
+  <T extends Game> GameAction<Game> createGame(GameConstants constants, ColorBatch batch, GameIdentifier identifier, Class<T> type);
+
+  @NonNull
+  @CheckReturnValue
   default <T extends Game> GameAction<Game> createGame(GameConstants constants, ColorBatch batch, Class<T> type) {
     return createGame(constants, batch, GameIdentifier.uuid(), type);
   }
 
-  @NonNull
-  @CheckReturnValue
-  <T extends Game> GameAction<Game> createGame(GameConstants constants, ColorBatch batch, GameIdentifier identifier, Class<T> type);
+  default <T extends Game> GameAction<Game> createGame(GameIdentifier identifier, Class<T> type) {
+    return createGame(GameConstants.standard(), ColorBatch.standard(), identifier, type);
+  }
+
+  default <T extends Game> GameAction<Game> createGame(Class<T> type) {
+    return createGame(GameIdentifier.uuid(), type);
+  }
 
   @NonNull
   @CheckReturnValue
