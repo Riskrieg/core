@@ -75,7 +75,7 @@ public record LocalGroup(Path path) implements Group { // TODO: Implement saves 
         }
       }
       var newGame = type.getDeclaredConstructor(GameIdentifier.class, GameConstants.class, ColorBatch.class).newInstance(identifier, constants, batch);
-      MoshiUtil.write(savePath, Save.class, new Save(newGame, newGame.getClass()));
+      MoshiUtil.write(savePath, Save.class, new Save(newGame, type));
       return new GenericAction<>(newGame);
     } catch (Exception e) {
       return new GenericAction<>(e);
