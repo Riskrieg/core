@@ -17,11 +17,12 @@ import com.riskrieg.core.api.requests.GameAction;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.time.Instant;
 import java.util.ArrayDeque;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Conquest implements Game {
+public final class Conquest implements Game {
 
   // Immutable
   private final GameIdentifier identifier;
@@ -35,7 +36,7 @@ public class Conquest implements Game {
   private Instant updatedTime;
 
   private GameState state;
-  private GameMap map;
+  private GameMap map; // Nullable
 
   public Conquest(Save save) {
     this.identifier = save.identifier();
@@ -62,16 +63,19 @@ public class Conquest implements Game {
     this.nations = new HashSet<>();
   }
 
+  @NonNull
   @Override
   public GameIdentifier identifier() {
     return identifier;
   }
 
+  @NonNull
   @Override
   public GameConstants constants() {
     return constants;
   }
 
+  @NonNull
   @Override
   public ColorBatch colors() {
     return colors;
@@ -97,14 +101,14 @@ public class Conquest implements Game {
 
   @NonNull
   @Override
-  public Set<Nation> nations() {
-    return null;
+  public Deque<Player> players() {
+    return (Deque<Player>) Collections.unmodifiableCollection(players); // TODO: Unsure if I should do this, come back to this
   }
 
   @NonNull
   @Override
-  public Deque<Player> players() {
-    return null;
+  public Set<Nation> nations() {
+    return Collections.unmodifiableSet(nations);
   }
 
   @Override
@@ -112,51 +116,61 @@ public class Conquest implements Game {
     return null;
   }
 
+  @NonNull
   @Override
   public GameAction<Boolean> setState(GameState state) {
     return null;
   }
 
+  @NonNull
   @Override
   public GameAction<GameMap> selectMap(GameMap map) {
     return null;
   }
 
+  @NonNull
   @Override
   public GameAction<Player> addPlayer(PlayerIdentifier identifier, String name) {
     return null;
   }
 
+  @NonNull
   @Override
   public GameAction<?> removePlayer(PlayerIdentifier identifier) {
     return null;
   }
 
+  @NonNull
   @Override
   public GameAction<Nation> createNation(GameColor color, PlayerIdentifier player) {
     return null;
   }
 
+  @NonNull
   @Override
   public GameAction<?> addTerritory(NationIdentifier nation, TerritoryIdentifier territory, TerritoryIdentifier... territories) {
     return null;
   }
 
+  @NonNull
   @Override
   public GameAction<?> removeTerritory(NationIdentifier nation, TerritoryIdentifier territory, TerritoryIdentifier... territories) {
     return null;
   }
 
+  @NonNull
   @Override
   public GameAction<Player> start() {
     return null;
   }
 
+  @NonNull
   @Override
   public GameAction<?> skip(PlayerIdentifier identifier) {
     return null;
   }
 
+  @NonNull
   @Override
   public GameAction<?> claim() {
     return null;

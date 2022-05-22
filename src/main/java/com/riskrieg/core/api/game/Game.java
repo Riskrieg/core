@@ -23,14 +23,14 @@ import com.riskrieg.core.api.color.GameColor;
 import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
 import com.riskrieg.core.api.game.map.GameMap;
-import com.riskrieg.core.api.game.map.Options;
-import com.riskrieg.core.api.game.map.options.Availability;
 import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
 import com.riskrieg.core.api.identifier.TerritoryIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
+import edu.umd.cs.findbugs.annotations.CheckReturnValue;
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.time.Instant;
 import java.util.Deque;
 import java.util.Optional;
@@ -38,10 +38,13 @@ import java.util.Set;
 
 public interface Game {
 
+  @NonNull
   GameIdentifier identifier();
 
+  @NonNull
   GameConstants constants();
 
+  @NonNull
   ColorBatch colors();
 
   @NonNull
@@ -53,56 +56,81 @@ public interface Game {
   @NonNull
   GameState state();
 
+  @Nullable
   GameMap map();
+
+  @NonNull
+  Deque<Player> players();
 
   @NonNull
   Set<Nation> nations();
 
   @NonNull
-  Deque<Player> players();
-
   default Optional<Player> getPlayer(PlayerIdentifier identifier) {
     return players().stream()
         .filter(p -> p.id().equals(identifier))
         .findFirst();
   }
 
+  @NonNull
   default Optional<Nation> getNation(PlayerIdentifier identifier) {
     return nations().stream()
         .filter(n -> n.leaderIdentifier().equals(identifier))
         .findFirst();
   }
 
+  @NonNull
   default Optional<Nation> getNation(NationIdentifier identifier) {
     return nations().stream()
         .filter(n -> n.identifier().equals(identifier))
         .findFirst();
   }
 
+  @NonNull
   default Optional<Nation> getNation(GameColor color) {
     return nations().stream()
         .filter(n -> n.colorId() == color.id())
         .findFirst();
   }
 
+  @NonNull
+  @CheckReturnValue
   GameAction<Boolean> setState(GameState state);
 
+  @NonNull
+  @CheckReturnValue
   GameAction<GameMap> selectMap(GameMap map);
 
+  @NonNull
+  @CheckReturnValue
   GameAction<Player> addPlayer(PlayerIdentifier identifier, String name);
 
+  @NonNull
+  @CheckReturnValue
   GameAction<?> removePlayer(PlayerIdentifier identifier);
 
+  @NonNull
+  @CheckReturnValue
   GameAction<Nation> createNation(GameColor color, PlayerIdentifier identifier);
 
+  @NonNull
+  @CheckReturnValue
   GameAction<?> addTerritory(NationIdentifier nation, TerritoryIdentifier territory, TerritoryIdentifier... territories); // TODO: Replace <?>
 
+  @NonNull
+  @CheckReturnValue
   GameAction<?> removeTerritory(NationIdentifier nation, TerritoryIdentifier territory, TerritoryIdentifier... territories); // TODO: Replace <?>
 
+  @NonNull
+  @CheckReturnValue
   GameAction<Player> start();
 
+  @NonNull
+  @CheckReturnValue
   GameAction<?> skip(PlayerIdentifier identifier);
 
+  @NonNull
+  @CheckReturnValue
   GameAction<?> claim();
 
 }
