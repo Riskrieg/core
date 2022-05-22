@@ -43,16 +43,13 @@ public interface Game {
   ColorBatch colors();
 
   @NonNull
-  GameMode mode();
-
-  @NonNull
   Instant creationTime();
 
   @NonNull
   Instant updatedTime();
 
   @NonNull
-  GameState gameState();
+  GameState state();
 
   Set<Nation> nations();
 
@@ -84,7 +81,7 @@ public interface Game {
         .findFirst();
   }
 
-  GameAction<Boolean> setGameState(GameState gameState);
+  GameAction<Boolean> setState(GameState state);
 
   GameAction<Player> addPlayer(PlayerIdentifier identifier, String name);
 
