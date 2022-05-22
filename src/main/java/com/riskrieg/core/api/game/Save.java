@@ -18,12 +18,23 @@
 
 package com.riskrieg.core.api.game;
 
+import com.riskrieg.core.api.color.ColorBatch;
+import com.riskrieg.core.api.game.entity.nation.Nation;
+import com.riskrieg.core.api.game.entity.player.Player;
 import com.riskrieg.core.api.identifier.GameIdentifier;
+import java.time.Instant;
+import java.util.Deque;
+import java.util.Set;
 
-public record Save(GameIdentifier identifier, Class<? extends Game> type) {
+public record Save(GameIdentifier identifier, GameConstants constants, ColorBatch colors,
+                   Instant creationTime, Instant updatedTime, GameState state, String mapCodename,
+                   Deque<Player> players, Set<Nation> nations, Class<? extends Game> type) {
 
   public Save(Game game, Class<? extends Game> type) {
-    this(game.identifier(), type);
+    this(game.identifier(), game.constants(), game.colors(),
+        game.creationTime(), game.updatedTime(), game.state(),
+        game.map() == null ? "" : game.map().codename(),
+        game.players(), game.nations(), type);
   }
 
   public static final String FILE_EXT = ".json";
