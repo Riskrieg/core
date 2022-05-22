@@ -24,6 +24,7 @@ import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
 import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.map.Options;
+import com.riskrieg.core.api.game.map.options.Availability;
 import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
@@ -31,6 +32,7 @@ import com.riskrieg.core.api.identifier.TerritoryIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.time.Instant;
+import java.util.Deque;
 import java.util.Optional;
 import java.util.Set;
 
@@ -51,11 +53,13 @@ public interface Game {
   @NonNull
   GameState state();
 
+  GameMap map();
+
+  @NonNull
   Set<Nation> nations();
 
-  Set<Player> players();
-
-  GameMap map();
+  @NonNull
+  Deque<Player> players();
 
   default Optional<Player> getPlayer(PlayerIdentifier identifier) {
     return players().stream()
@@ -65,7 +69,7 @@ public interface Game {
 
   default Optional<Nation> getNation(PlayerIdentifier identifier) {
     return nations().stream()
-        .filter(n -> n.players().stream().anyMatch(pid -> pid.equals(identifier)))
+        .filter(n -> n.leaderIdentifier().equals(identifier))
         .findFirst();
   }
 
@@ -83,15 +87,13 @@ public interface Game {
 
   GameAction<Boolean> setState(GameState state);
 
+  GameAction<GameMap> selectMap(GameMap map);
+
   GameAction<Player> addPlayer(PlayerIdentifier identifier, String name);
 
   GameAction<?> removePlayer(PlayerIdentifier identifier);
 
-  GameAction<GameMap> selectMap(GameMap map, Options options);
-
-  GameAction<Nation> createNation(GameColor color);
-
-  GameAction<Nation> addToNation(NationIdentifier nation, PlayerIdentifier player, PlayerIdentifier... players);
+  GameAction<Nation> createNation(GameColor color, PlayerIdentifier identifier);
 
   GameAction<?> addTerritory(NationIdentifier nation, TerritoryIdentifier territory, TerritoryIdentifier... territories); // TODO: Replace <?>
 
