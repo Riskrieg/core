@@ -18,14 +18,14 @@
 
 package com.riskrieg.core.api.game;
 
-import java.time.Instant;
+import com.riskrieg.core.api.identifier.GameIdentifier;
 
-public record Save(String id, GameMode mode, Instant creationTime, Instant updatedTime) {
+public record Save(GameIdentifier identifier, Class<? extends Game> type) {
+
+  public Save(Game game, Class<? extends Game> type) {
+    this(game.identifier(), type);
+  }
 
   public static final String FILE_EXT = ".json";
-
-  public Save(Game game) {
-    this(game.identifier().id(), game.mode(), game.creationTime(), game.updatedTime());
-  }
 
 }

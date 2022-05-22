@@ -21,7 +21,6 @@ package com.riskrieg.core.api.group;
 import com.riskrieg.core.api.color.ColorBatch;
 import com.riskrieg.core.api.game.Game;
 import com.riskrieg.core.api.game.GameConstants;
-import com.riskrieg.core.api.game.GameMode;
 import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.GroupIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
@@ -38,13 +37,13 @@ public interface Group {
 
   @NonNull
   @CheckReturnValue
-  default GameAction<Game> createGame(GameMode mode, GameConstants constants, ColorBatch batch) {
-    return createGame(mode, constants, batch, GameIdentifier.uuid());
+  default <T extends Game> GameAction<Game> createGame(GameConstants constants, ColorBatch batch, Class<T> type) {
+    return createGame(constants, batch, GameIdentifier.uuid(), type);
   }
 
   @NonNull
   @CheckReturnValue
-  GameAction<Game> createGame(GameMode mode, GameConstants constants, ColorBatch batch, GameIdentifier identifier);
+  <T extends Game> GameAction<Game> createGame(GameConstants constants, ColorBatch batch, GameIdentifier identifier, Class<T> type);
 
   @NonNull
   @CheckReturnValue
