@@ -8,11 +8,17 @@ import com.riskrieg.core.api.color.ColorBatch;
 import com.riskrieg.core.api.game.Game;
 import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.mode.Conquest;
+import com.riskrieg.core.api.game.territory.GameTerritory;
+import com.riskrieg.core.api.game.territory.TerritoryType;
 import com.riskrieg.core.api.group.Group;
 import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.GroupIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
+import com.riskrieg.core.api.identifier.TerritoryIdentifier;
+import com.riskrieg.core.decode.RkmDecoder;
+import java.io.IOException;
 import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +41,18 @@ public class TestApi { // TODO: Implement comprehensive tests
 
     game.addPlayer(PlayerIdentifier.of("1"), "One").complete();
     Nation nation = game.createNation(ColorBatch.standard().get(3), PlayerIdentifier.of("1")).complete();
+
+    RkmDecoder decoder = new RkmDecoder();
+
+    try {
+      game.selectMap(decoder.decode(Path.of("res/maps/antarctica.rkm"))).complete();
+    } catch (IOException | NoSuchAlgorithmException e) {
+      throw new RuntimeException(e);
+    }
+
+    game.addTerritory(nation.identifier(), GameTerritory.of(TerritoryIdentifier.of("1F"), TerritoryType.CAPITAL)).complete();
+
+    group.saveGame(game).complete();
 
     Game testGame = group.retrieveGame(GameIdentifier.of("123")).complete();
     assertNotNull(testGame);
