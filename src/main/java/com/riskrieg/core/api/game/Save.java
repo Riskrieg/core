@@ -25,6 +25,7 @@ import com.riskrieg.core.api.game.territory.GameTerritory;
 import com.riskrieg.core.api.identifier.GameIdentifier;
 import java.time.Instant;
 import java.util.Deque;
+import java.util.Objects;
 import java.util.Set;
 
 public record Save(GameIdentifier identifier, GameConstants constants, ColorBatch colors,
@@ -35,7 +36,7 @@ public record Save(GameIdentifier identifier, GameConstants constants, ColorBatc
   public Save(Game game, Class<? extends Game> type) {
     this(game.identifier(), game.constants(), game.colors(),
         game.creationTime(), game.updatedTime(), game.state(),
-        game.map() == null ? "" : game.map().codename(),
+        game.map() == null ? "" : Objects.requireNonNull(game.map()).codename(),
         game.players(), game.nations(), game.territories(),
         type);
   }
