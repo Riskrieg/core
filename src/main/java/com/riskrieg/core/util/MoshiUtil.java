@@ -18,10 +18,15 @@
 
 package com.riskrieg.core.util;
 
+import com.riskrieg.core.api.game.Game;
+import com.riskrieg.core.api.game.mode.Conquest;
 import com.riskrieg.core.util.adapter.ColorAdapter;
+import com.riskrieg.core.util.adapter.GameTypeAdapter;
 import com.riskrieg.core.util.adapter.InstantAdapter;
 import com.riskrieg.core.util.adapter.PointAdapter;
 import com.riskrieg.core.util.adapter.UUIDAdapter;
+import com.riskrieg.core.util.adapter.factory.DequeAdapterFactory;
+import com.riskrieg.core.util.adapter.factory.SortedSetAdapterFactory;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory;
@@ -42,7 +47,11 @@ public class MoshiUtil {
       .add(new InstantAdapter())
       .add(new UUIDAdapter())
       .add(new PointAdapter())
-      .add(new ColorAdapter());
+      .add(new ColorAdapter())
+      .add(new SortedSetAdapterFactory())
+      .add(new DequeAdapterFactory())
+      .add(new GameTypeAdapter())
+      .add(PolymorphicJsonAdapterFactory.of(Game.class, "game_type").withSubtype(Conquest.class, "conquest"));
 
   public static void register(PolymorphicJsonAdapterFactory<?> factory, PolymorphicJsonAdapterFactory<?>... factories) {
     jsonAdapterBuilder.add(factory);
