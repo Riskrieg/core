@@ -23,6 +23,8 @@ import com.riskrieg.core.api.color.GameColor;
 import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
 import com.riskrieg.core.api.game.map.GameMap;
+import com.riskrieg.core.api.game.order.TurnOrder;
+import com.riskrieg.core.api.game.territory.GameTerritory;
 import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
@@ -64,6 +66,9 @@ public interface Game {
 
   @NonNull
   Set<Nation> nations();
+
+  @NonNull
+  Set<GameTerritory> territories();
 
   @NonNull
   default Optional<Player> getPlayer(PlayerIdentifier identifier) {
@@ -123,7 +128,7 @@ public interface Game {
 
   @NonNull
   @CheckReturnValue
-  GameAction<Player> start();
+  GameAction<Player> start(TurnOrder order);
 
   @NonNull
   @CheckReturnValue
