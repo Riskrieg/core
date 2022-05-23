@@ -72,7 +72,7 @@ public record LocalGroup(Path path) implements Group {
           throw new IllegalStateException("Save is null");
         }
         Path repositoryRoot = savePath.getParent().getParent().getParent();
-        Path mapRepository = repositoryRoot.resolve("map/");
+        Path mapRepository = repositoryRoot.resolve("maps/");
         Game game = save.type().getDeclaredConstructor(Save.class, Path.class).newInstance(save, mapRepository);
         if (!game.phase().equals(GamePhase.ENDED)) {
           throw new FileAlreadyExistsException("An active game already exists");
@@ -100,7 +100,7 @@ public record LocalGroup(Path path) implements Group {
         throw new IllegalStateException("Save is null");
       }
       Path repositoryRoot = savePath.getParent().getParent().getParent();
-      Path mapRepository = repositoryRoot.resolve("map/");
+      Path mapRepository = repositoryRoot.resolve("maps/");
       Game game = save.type().getDeclaredConstructor(Save.class, Path.class).newInstance(save, mapRepository);
       return new GenericAction<>(game);
     } catch (Exception e) {
