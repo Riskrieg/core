@@ -134,7 +134,7 @@ public final class Conquest implements Game {
   @NonNull
   @Override
   public Deque<Player> players() {
-    return (Deque<Player>) Collections.unmodifiableCollection(players); // TODO: Unsure if I should do this, come back to this
+    return players; // TODO: Come back to this, should be unmodifiable
   }
 
   @NonNull
