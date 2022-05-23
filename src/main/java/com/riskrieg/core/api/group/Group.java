@@ -45,10 +45,14 @@ public interface Group {
     return createGame(constants, batch, GameIdentifier.uuid(), type);
   }
 
+  @NonNull
+  @CheckReturnValue
   default <T extends Game> GameAction<Game> createGame(GameIdentifier identifier, Class<T> type) {
     return createGame(GameConstants.standard(), ColorBatch.standard(), identifier, type);
   }
 
+  @NonNull
+  @CheckReturnValue
   default <T extends Game> GameAction<Game> createGame(Class<T> type) {
     return createGame(GameIdentifier.uuid(), type);
   }
