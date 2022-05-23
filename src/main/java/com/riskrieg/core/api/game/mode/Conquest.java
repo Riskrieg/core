@@ -34,8 +34,12 @@ import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
 import com.riskrieg.core.api.identifier.TerritoryIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
+import com.riskrieg.core.decode.RkmDecoder;
 import com.riskrieg.core.internal.requests.GenericAction;
 import edu.umd.cs.findbugs.annotations.NonNull;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.ArrayDeque;
 import java.util.Collections;
@@ -62,7 +66,7 @@ public final class Conquest implements Game {
   private GameState state;
   private GameMap map; // Nullable
 
-  public Conquest(Save save) {
+  public Conquest(Save save, Path mapRepository) {
     if (save.constants().maximumPlayers() != save.colors().size()) {
       throw new IllegalStateException("The maximum number of players must equal the amount of colors provided");
     }
@@ -73,7 +77,12 @@ public final class Conquest implements Game {
     this.updatedTime = save.updatedTime();
     this.state = save.state();
     if (!save.mapCodename().isBlank()) {
-      // TODO: Load map
+      RkmDecoder decoder = new RkmDecoder();
+      try {
+        decoder.decode(mapRepository.resolve(save.mapCodename() + ".rkm"));
+      } catch (IOException | NoSuchAlgorithmException e) {
+        throw new RuntimeException(e); // Panic, map can't be loaded.
+      }
     }
     this.players = save.players();
     this.nations = save.nations();
