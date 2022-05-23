@@ -156,16 +156,6 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<Boolean> setState(GameState state) {
-    if (this.state.equals(state)) {
-      return new GenericAction<>(false);
-    }
-    this.state = state;
-    return new GenericAction<>(true);
-  }
-
-  @NonNull
-  @Override
   public GameAction<GameMap> selectMap(GameMap map) {
     this.updatedTime = Instant.now();
     try {

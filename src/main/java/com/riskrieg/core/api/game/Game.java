@@ -100,10 +100,6 @@ public interface Game {
 
   @NonNull
   @CheckReturnValue
-  GameAction<Boolean> setState(GameState state);
-
-  @NonNull
-  @CheckReturnValue
   GameAction<GameMap> selectMap(GameMap map);
 
   @NonNull
