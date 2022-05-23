@@ -282,6 +282,7 @@ public final class Conquest implements Game {
           if (ownedTerritories.containsKey(identifier)) {
             throw new IllegalStateException("A capital can only be selected if you do not already have one");
           }
+          ownedTerritories.put(identifier, territory);
           yield new GenericAction<>(true);
         }
         case RUNNING -> {
