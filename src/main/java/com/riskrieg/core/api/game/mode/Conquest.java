@@ -160,7 +160,7 @@ public final class Conquest implements Game {
 
   @Override
   public GameMap map() {
-    return null;
+    return map;
   }
 
   @NonNull
