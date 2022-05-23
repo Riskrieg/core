@@ -21,25 +21,23 @@ package com.riskrieg.core.api.game;
 import com.riskrieg.core.api.color.ColorBatch;
 import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
-import com.riskrieg.core.api.game.territory.GameTerritory;
+import com.riskrieg.core.api.game.territory.Claim;
 import com.riskrieg.core.api.identifier.GameIdentifier;
-import com.riskrieg.core.api.identifier.NationIdentifier;
 import java.time.Instant;
 import java.util.Collection;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
 public record Save(GameIdentifier identifier, GameConstants constants, ColorBatch colors,
                    Instant creationTime, Instant updatedTime, GamePhase phase, String mapCodename,
-                   Collection<Player> players, Set<Nation> nations, Map<NationIdentifier, Set<GameTerritory>> ownedTerritories,
+                   Collection<Player> players, Set<Nation> nations, Set<Claim> claims,
                    Class<? extends Game> type) {
 
   public Save(Game game, Class<? extends Game> type) {
     this(game.identifier(), game.constants(), game.colors(),
         game.creationTime(), game.updatedTime(), game.phase(),
         game.map() == null ? "" : Objects.requireNonNull(game.map()).codename(),
-        game.players(), game.nations(), game.ownedTerritories(),
+        game.players(), game.nations(), game.claims(),
         type);
   }
 

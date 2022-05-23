@@ -24,6 +24,7 @@ import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
 import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.order.TurnOrder;
+import com.riskrieg.core.api.game.territory.Claim;
 import com.riskrieg.core.api.game.territory.GameTerritory;
 import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.NationIdentifier;
@@ -34,7 +35,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import java.time.Instant;
 import java.util.Collection;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -68,7 +68,7 @@ public interface Game {
   Set<Nation> nations();
 
   @NonNull
-  Map<NationIdentifier, Set<GameTerritory>> ownedTerritories();
+  Set<Claim> claims();
 
   @NonNull
   default Optional<Player> getPlayer(PlayerIdentifier identifier) {

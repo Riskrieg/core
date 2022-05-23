@@ -28,6 +28,7 @@ import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
 import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.order.TurnOrder;
+import com.riskrieg.core.api.game.territory.Claim;
 import com.riskrieg.core.api.game.territory.GameTerritory;
 import com.riskrieg.core.api.game.territory.TerritoryType;
 import com.riskrieg.core.api.identifier.GameIdentifier;
@@ -45,10 +46,7 @@ import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
@@ -59,7 +57,7 @@ public final class Conquest implements Game {
   private final GameConstants constants;
   private final Instant creationTime;
   private final Set<Nation> nations;
-  private final Map<NationIdentifier, Set<GameTerritory>> ownedTerritories;
+  private final Set<Claim> claims;
 
   // Mutable
   private ColorBatch colors;
@@ -90,7 +88,7 @@ public final class Conquest implements Game {
     }
     this.players = new ArrayDeque<>(save.players());
     this.nations = save.nations();
-    this.ownedTerritories = save.ownedTerritories();
+    this.claims = save.claims();
   }
 
   public Conquest(GameIdentifier identifier, GameConstants constants, ColorBatch colors) {
@@ -105,7 +103,7 @@ public final class Conquest implements Game {
     this.phase = GamePhase.SETUP;
     this.players = new ArrayDeque<>();
     this.nations = new HashSet<>();
-    this.ownedTerritories = new HashMap<>();
+    this.claims = new HashSet<>();
   }
 
   @NonNull
@@ -163,12 +161,8 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public Map<NationIdentifier, Set<GameTerritory>> ownedTerritories() {
-    Map<NationIdentifier, Set<GameTerritory>> immutable = new HashMap<>();
-    for (Entry<NationIdentifier, Set<GameTerritory>> entry : ownedTerritories.entrySet()) {
-      immutable.put(entry.getKey(), Collections.unmodifiableSet(entry.getValue()));
-    }
-    return Collections.unmodifiableMap(immutable);
+  public Set<Claim> claims() {
+    return Collections.unmodifiableSet(claims);
   }
 
   @NonNull
@@ -182,8 +176,7 @@ public final class Conquest implements Game {
         case SETUP -> {
           Objects.requireNonNull(map);
           this.map = map;
-          ownedTerritories.clear();
-          nations.clear();
+          claims.clear();
           yield new GenericAction<>(map);
         }
       };
@@ -250,6 +243,7 @@ public final class Conquest implements Game {
           if (nations.stream().anyMatch(n -> n.colorId() == color.id())) {
             throw new IllegalStateException("A nation with that color is already in the game");
           }
+          nations.add(nation);
           yield new GenericAction<>(nation);
         }
       };
@@ -281,13 +275,13 @@ public final class Conquest implements Game {
           if (!territory.type().equals(TerritoryType.CAPITAL)) {
             throw new IllegalStateException("The territory type provided must be a capital during the setup phase");
           }
-          if (ownedTerritories.containsKey(identifier)) {
+          if (claims.stream().anyMatch(c -> c.identifier().equals(identifier))) {
             throw new IllegalStateException("A capital can only be selected if you do not already have one");
           }
-          if (ownedTerritories.keySet().stream().anyMatch(key -> ownedTerritories.getOrDefault(key, Collections.emptySet()).contains(territory))) {
+          if (claims.stream().anyMatch(c -> c.territory().equals(territory))) {
             throw new IllegalStateException("That territory is already taken by someone else");
           }
-          ownedTerritories.computeIfAbsent(identifier, k -> new HashSet<>()).add(territory);
+          claims.add(new Claim(identifier, territory));
           yield new GenericAction<>(true);
         }
         case RUNNING -> { // claim
