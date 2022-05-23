@@ -18,20 +18,43 @@
 
 package com.riskrieg.core.api.game.territory;
 
-import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.TerritoryIdentifier;
 import java.util.Objects;
 
-public record GameTerritory(NationIdentifier nationIdentifier, TerritoryIdentifier identifier, TerritoryType type) {
+public record GameTerritory(TerritoryIdentifier identifier, TerritoryType type) {
+
+  public static GameTerritory of(TerritoryIdentifier identifier, TerritoryType type) {
+    return new GameTerritory(identifier, type);
+  }
+
+  public static GameTerritory of(TerritoryIdentifier identifier) {
+    return new GameTerritory(identifier, TerritoryType.PLAIN);
+  }
 
   public GameTerritory {
-    Objects.requireNonNull(nationIdentifier);
     Objects.requireNonNull(identifier);
     Objects.requireNonNull(type);
   }
 
-  public GameTerritory(NationIdentifier nationIdentifier, TerritoryIdentifier identifier) {
-    this(nationIdentifier, identifier, TerritoryType.PLAIN);
+  public GameTerritory(TerritoryIdentifier identifier) {
+    this(identifier, TerritoryType.PLAIN);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    GameTerritory that = (GameTerritory) o;
+    return identifier.equals(that.identifier);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(identifier);
   }
 
 }

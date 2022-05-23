@@ -28,13 +28,13 @@ import com.riskrieg.core.api.game.territory.GameTerritory;
 import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
-import com.riskrieg.core.api.identifier.TerritoryIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
 import edu.umd.cs.findbugs.annotations.CheckReturnValue;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -68,7 +68,7 @@ public interface Game {
   Set<Nation> nations();
 
   @NonNull
-  Set<GameTerritory> territories();
+  Map<NationIdentifier, GameTerritory> ownedTerritories();
 
   @NonNull
   default Optional<Player> getPlayer(PlayerIdentifier identifier) {
@@ -116,11 +116,11 @@ public interface Game {
 
   @NonNull
   @CheckReturnValue
-  GameAction<?> addTerritory(NationIdentifier nation, TerritoryIdentifier territory, TerritoryIdentifier... territories); // TODO: Replace <?>
+  GameAction<Boolean> addTerritory(NationIdentifier identifier, GameTerritory territory, GameTerritory... territories);
 
   @NonNull
   @CheckReturnValue
-  GameAction<?> removeTerritory(NationIdentifier nation, TerritoryIdentifier territory, TerritoryIdentifier... territories); // TODO: Replace <?>
+  GameAction<Boolean> removeTerritory(NationIdentifier identifier, GameTerritory territory, GameTerritory... territories);
 
   @NonNull
   @CheckReturnValue

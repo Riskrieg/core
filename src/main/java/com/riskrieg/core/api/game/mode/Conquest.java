@@ -29,10 +29,10 @@ import com.riskrieg.core.api.game.entity.player.Player;
 import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.order.TurnOrder;
 import com.riskrieg.core.api.game.territory.GameTerritory;
+import com.riskrieg.core.api.game.territory.TerritoryType;
 import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
-import com.riskrieg.core.api.identifier.TerritoryIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
 import com.riskrieg.core.decode.RkmDecoder;
 import com.riskrieg.core.internal.requests.GenericAction;
@@ -45,7 +45,9 @@ import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -56,7 +58,7 @@ public final class Conquest implements Game {
   private final GameConstants constants;
   private final Instant creationTime;
   private final Set<Nation> nations;
-  private final Set<GameTerritory> territories;
+  private final Map<NationIdentifier, GameTerritory> ownedTerritories;
 
   // Mutable
   private ColorBatch colors;
@@ -87,7 +89,7 @@ public final class Conquest implements Game {
     }
     this.players = new ArrayDeque<>(save.players());
     this.nations = save.nations();
-    this.territories = save.territories();
+    this.ownedTerritories = save.ownedTerritories();
   }
 
   public Conquest(GameIdentifier identifier, GameConstants constants, ColorBatch colors) {
@@ -102,7 +104,7 @@ public final class Conquest implements Game {
     this.phase = GamePhase.SETUP;
     this.players = new ArrayDeque<>();
     this.nations = new HashSet<>();
-    this.territories = new HashSet<>();
+    this.ownedTerritories = new HashMap<>();
   }
 
   @NonNull
@@ -160,8 +162,8 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public Set<GameTerritory> territories() {
-    return Collections.unmodifiableSet(territories);
+  public Map<NationIdentifier, GameTerritory> ownedTerritories() {
+    return Collections.unmodifiableMap(ownedTerritories);
   }
 
   @NonNull
@@ -175,7 +177,7 @@ public final class Conquest implements Game {
         case SETUP -> {
           Objects.requireNonNull(map);
           this.map = map;
-          territories.clear();
+          ownedTerritories.clear();
           nations.clear();
           yield new GenericAction<>(map);
         }
@@ -253,14 +255,47 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<?> addTerritory(NationIdentifier nation, TerritoryIdentifier territory, TerritoryIdentifier... territories) {
+  public GameAction<Boolean> addTerritory(NationIdentifier identifier, GameTerritory territory, GameTerritory... territories) {
     this.updatedTime = Instant.now();
-    return null;
+    try {
+      return switch (phase) {
+        case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
+        case SETUP -> {
+          if (territories.length > 0) {
+            throw new IllegalStateException("Only one territory can be selected during the setup phase");
+          }
+          if (nations.stream().noneMatch(n -> n.identifier().equals(identifier))) {
+            throw new IllegalStateException("That nation does not exist");
+          }
+          if (map == null) {
+            throw new IllegalStateException("A valid map must be selected before adding territories to nations");
+          }
+          if (map.vertices().stream().noneMatch(t -> t.identifier().equals(territory.identifier()))) {
+            throw new IllegalStateException("That territory does not exist on the current map");
+          }
+          if (!territory.type().equals(TerritoryType.CAPITAL)) {
+            throw new IllegalStateException("The territory type provided must be a capital during the setup phase");
+          }
+          if (ownedTerritories.containsValue(territory)) {
+            throw new IllegalStateException("That territory is already taken by someone else");
+          }
+          if (ownedTerritories.containsKey(identifier)) {
+            throw new IllegalStateException("A capital can only be selected if you do not already have one");
+          }
+          yield new GenericAction<>(true);
+        }
+        case RUNNING -> {
+          yield new GenericAction<>(false); // TODO: Implement
+        }
+      };
+    } catch (Exception e) {
+      return new GenericAction<>(false, e);
+    }
   }
 
   @NonNull
   @Override
-  public GameAction<?> removeTerritory(NationIdentifier nation, TerritoryIdentifier territory, TerritoryIdentifier... territories) {
+  public GameAction<Boolean> removeTerritory(NationIdentifier identifier, GameTerritory territory, GameTerritory... territories) {
     this.updatedTime = Instant.now();
     return null;
   }
