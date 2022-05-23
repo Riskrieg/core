@@ -20,8 +20,9 @@ package com.riskrieg.core.api.color;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.awt.Color;
+import java.util.Objects;
 
-public record GameColor(int id, String name, int r, int g, int b) implements Comparable<GameColor> { // TODO: Should probably override equals() and hashcode()
+public record GameColor(int id, String name, int r, int g, int b) implements Comparable<GameColor> {
 
   public GameColor {
     if (name.isBlank()) {
@@ -49,6 +50,23 @@ public record GameColor(int id, String name, int r, int g, int b) implements Com
   @Override
   public int compareTo(@NonNull GameColor o) {
     return Integer.compare(this.id(), o.id());
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    GameColor gameColor = (GameColor) o;
+    return id == gameColor.id;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
   }
 
 }

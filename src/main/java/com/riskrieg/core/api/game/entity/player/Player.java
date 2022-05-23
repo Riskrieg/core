@@ -19,7 +19,37 @@
 package com.riskrieg.core.api.game.entity.player;
 
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
+import java.util.Objects;
 
 public record Player(PlayerIdentifier id, String name) {
+
+  public Player {
+    Objects.requireNonNull(id);
+    Objects.requireNonNull(name);
+    if (name.isBlank()) {
+      throw new IllegalStateException("String 'name' cannot be blank");
+    }
+  }
+
+  public Player withName(String name) {
+    return new Player(id, name);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Player player = (Player) o;
+    return id.equals(player.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
 
 }
