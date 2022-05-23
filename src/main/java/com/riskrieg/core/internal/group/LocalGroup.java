@@ -96,7 +96,9 @@ public record LocalGroup(Path path) implements Group {
       if (save == null) {
         throw new IllegalStateException("Save is null");
       }
-      Game game = save.type().getDeclaredConstructor(Save.class).newInstance(save);
+      Path repositoryRoot = savePath.getParent().getParent().getParent();
+      Path mapRepository = repositoryRoot.resolve("map/");
+      Game game = save.type().getDeclaredConstructor(Save.class, Path.class).newInstance(save, mapRepository);
       return new GenericAction<>(game);
     } catch (Exception e) {
       return new GenericAction<>(e);
