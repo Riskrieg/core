@@ -22,7 +22,7 @@ import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
 import java.util.Objects;
 
-public record Nation(NationIdentifier identifier, int colorId, PlayerIdentifier leaderIdentifier) {
+public record Nation(NationIdentifier identifier, int colorId, PlayerIdentifier leaderIdentifier) { // TODO: Override equals() and hashcode()
 
   public Nation {
     Objects.requireNonNull(identifier);
