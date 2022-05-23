@@ -116,11 +116,11 @@ public interface Game {
 
   @NonNull
   @CheckReturnValue
-  GameAction<Boolean> addTerritory(NationIdentifier identifier, GameTerritory territory, GameTerritory... territories);
+  GameAction<Boolean> claim(NationIdentifier identifier, GameTerritory territory, GameTerritory... territories);
 
   @NonNull
   @CheckReturnValue
-  GameAction<Boolean> removeTerritory(NationIdentifier identifier, GameTerritory territory, GameTerritory... territories);
+  GameAction<Boolean> unclaim(NationIdentifier identifier, GameTerritory territory, GameTerritory... territories);
 
   @NonNull
   @CheckReturnValue

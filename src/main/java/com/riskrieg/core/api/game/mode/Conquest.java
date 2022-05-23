@@ -254,7 +254,7 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<Boolean> addTerritory(NationIdentifier identifier, GameTerritory territory, GameTerritory... territories) {
+  public GameAction<Boolean> claim(NationIdentifier identifier, GameTerritory territory, GameTerritory... territories) {
     this.updatedTime = Instant.now();
     try {
       return switch (phase) {
@@ -295,7 +295,7 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<Boolean> removeTerritory(NationIdentifier identifier, GameTerritory territory, GameTerritory... territories) {
+  public GameAction<Boolean> unclaim(NationIdentifier identifier, GameTerritory territory, GameTerritory... territories) {
     this.updatedTime = Instant.now();
     return null;
   }
