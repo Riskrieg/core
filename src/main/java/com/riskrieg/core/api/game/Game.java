@@ -34,7 +34,7 @@ import edu.umd.cs.findbugs.annotations.CheckReturnValue;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import java.time.Instant;
-import java.util.Deque;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
@@ -62,7 +62,7 @@ public interface Game {
   GameMap map();
 
   @NonNull
-  Deque<Player> players();
+  Collection<Player> players();
 
   @NonNull
   Set<Nation> nations();

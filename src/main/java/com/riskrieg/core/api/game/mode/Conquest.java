@@ -42,6 +42,7 @@ import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
@@ -140,10 +141,15 @@ public final class Conquest implements Game {
     return state;
   }
 
+  @Override
+  public GameMap map() {
+    return map;
+  }
+
   @NonNull
   @Override
-  public Deque<Player> players() {
-    return players; // TODO: Come back to this, should be unmodifiable
+  public Collection<Player> players() {
+    return Collections.unmodifiableCollection(players);
   }
 
   @NonNull
@@ -156,11 +162,6 @@ public final class Conquest implements Game {
   @Override
   public Set<GameTerritory> territories() {
     return Collections.unmodifiableSet(territories);
-  }
-
-  @Override
-  public GameMap map() {
-    return map;
   }
 
   @NonNull
