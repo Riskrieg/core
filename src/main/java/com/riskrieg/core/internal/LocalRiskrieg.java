@@ -46,7 +46,7 @@ public record LocalRiskrieg(Path repository) implements Riskrieg {
   @NonNull
   @Override
   public GameAction<Group> createGroup(GroupIdentifier identifier) {
-    Path groupPath = repository.resolve(identifier.id());
+    Path groupPath = repository.resolve("saves/").resolve(identifier.id());
     try {
       Files.createDirectories(groupPath);
       return new GenericAction<>(new LocalGroup(groupPath));
@@ -58,7 +58,7 @@ public record LocalRiskrieg(Path repository) implements Riskrieg {
   @NonNull
   @Override
   public GameAction<Group> retrieveGroup(GroupIdentifier identifier) {
-    Path groupPath = repository.resolve(identifier.id());
+    Path groupPath = repository.resolve("saves/").resolve(identifier.id());
     if (Files.exists(groupPath)) {
       return new GenericAction<>(new LocalGroup(groupPath));
     }
@@ -68,7 +68,7 @@ public record LocalRiskrieg(Path repository) implements Riskrieg {
   @NonNull
   @Override
   public GameAction<Collection<Group>> retrieveAllGroups() {
-    try (var elements = Files.list(repository)) {
+    try (var elements = Files.list(repository.resolve("saves/"))) {
       List<Group> result = elements.filter(Files::isDirectory)
           .map(LocalGroup::new)
           .map(Group.class::cast)
@@ -82,7 +82,7 @@ public record LocalRiskrieg(Path repository) implements Riskrieg {
   @NonNull
   @Override
   public GameAction<Boolean> deleteGroup(GroupIdentifier identifier) {
-    Path groupPath = repository.resolve(identifier.id());
+    Path groupPath = repository.resolve("saves/").resolve(identifier.id());
     try (var paths = Files.walk(groupPath)) { // Delete everything within the group first.
       final List<Path> pathsToDelete = paths.sorted(Comparator.reverseOrder()).toList();
       for (Path path : pathsToDelete) { // Doing it this way in order to catch the exception more easily.
