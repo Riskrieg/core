@@ -29,6 +29,7 @@ import com.riskrieg.core.api.identifier.GroupIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
 import com.riskrieg.core.internal.requests.GenericAction;
 import com.riskrieg.core.util.MoshiUtil;
+import edu.umd.cs.findbugs.annotations.CheckReturnValue;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -61,6 +62,7 @@ public record LocalGroup(Path path) implements Group {
 
   @NonNull
   @Override
+  @CheckReturnValue
   public <T extends Game> GameAction<Game> createGame(GameConstants constants, ColorBatch batch, GameIdentifier identifier, Class<T> type) {
     Path savePath = path.resolve(identifier.id() + Save.FILE_EXT);
     try {
@@ -86,6 +88,7 @@ public record LocalGroup(Path path) implements Group {
 
   @NonNull
   @Override
+  @CheckReturnValue
   public GameAction<Game> retrieveGame(GameIdentifier identifier) {
     Path savePath = path.resolve(identifier.id() + Save.FILE_EXT);
     try {
@@ -107,6 +110,7 @@ public record LocalGroup(Path path) implements Group {
 
   @NonNull
   @Override
+  @CheckReturnValue
   public GameAction<Collection<Game>> retrieveAllGames() {
     List<Game> result = new ArrayList<>();
     Set<Path> savePaths;
@@ -127,6 +131,7 @@ public record LocalGroup(Path path) implements Group {
 
   @NonNull
   @Override
+  @CheckReturnValue
   public GameAction<Boolean> saveGame(Game game) {
     Path savePath = path.resolve(game.identifier().id() + Save.FILE_EXT);
     try {
@@ -139,6 +144,7 @@ public record LocalGroup(Path path) implements Group {
 
   @NonNull
   @Override
+  @CheckReturnValue
   public GameAction<Boolean> deleteGame(GameIdentifier identifier) {
     Path savePath = path.resolve(identifier.id() + Save.FILE_EXT);
     try {

@@ -24,6 +24,7 @@ import com.riskrieg.core.api.identifier.GroupIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
 import com.riskrieg.core.internal.group.LocalGroup;
 import com.riskrieg.core.internal.requests.GenericAction;
+import edu.umd.cs.findbugs.annotations.CheckReturnValue;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -45,6 +46,7 @@ public record LocalRiskrieg(Path repository) implements Riskrieg {
 
   @NonNull
   @Override
+  @CheckReturnValue
   public GameAction<Group> createGroup(GroupIdentifier identifier) {
     Path groupPath = repository.resolve("saves/").resolve(identifier.id());
     try {
@@ -57,6 +59,7 @@ public record LocalRiskrieg(Path repository) implements Riskrieg {
 
   @NonNull
   @Override
+  @CheckReturnValue
   public GameAction<Group> retrieveGroup(GroupIdentifier identifier) {
     Path groupPath = repository.resolve("saves/").resolve(identifier.id());
     if (Files.exists(groupPath)) {
@@ -67,6 +70,7 @@ public record LocalRiskrieg(Path repository) implements Riskrieg {
 
   @NonNull
   @Override
+  @CheckReturnValue
   public GameAction<Collection<Group>> retrieveAllGroups() {
     try (var elements = Files.list(repository.resolve("saves/"))) {
       List<Group> result = elements.filter(Files::isDirectory)
@@ -81,6 +85,7 @@ public record LocalRiskrieg(Path repository) implements Riskrieg {
 
   @NonNull
   @Override
+  @CheckReturnValue
   public GameAction<Boolean> deleteGroup(GroupIdentifier identifier) {
     Path groupPath = repository.resolve("saves/").resolve(identifier.id());
     try (var paths = Files.walk(groupPath)) { // Delete everything within the group first.
