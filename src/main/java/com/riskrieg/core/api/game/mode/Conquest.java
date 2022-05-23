@@ -85,7 +85,7 @@ public final class Conquest implements Game {
         throw new RuntimeException(e); // Panic, map can't be loaded.
       }
     }
-    this.players = save.players();
+    this.players = new ArrayDeque<>(save.players());
     this.nations = save.nations();
     this.territories = save.territories();
   }
