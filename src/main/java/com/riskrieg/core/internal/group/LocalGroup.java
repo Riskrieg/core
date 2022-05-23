@@ -21,7 +21,7 @@ package com.riskrieg.core.internal.group;
 import com.riskrieg.core.api.color.ColorBatch;
 import com.riskrieg.core.api.game.Game;
 import com.riskrieg.core.api.game.GameConstants;
-import com.riskrieg.core.api.game.GameState;
+import com.riskrieg.core.api.game.GamePhase;
 import com.riskrieg.core.api.game.Save;
 import com.riskrieg.core.api.group.Group;
 import com.riskrieg.core.api.identifier.GameIdentifier;
@@ -74,7 +74,7 @@ public record LocalGroup(Path path) implements Group {
         Path repositoryRoot = savePath.getParent().getParent().getParent();
         Path mapRepository = repositoryRoot.resolve("map/");
         Game game = save.type().getDeclaredConstructor(Save.class, Path.class).newInstance(save, mapRepository);
-        if (!game.state().equals(GameState.ENDED)) {
+        if (!game.phase().equals(GamePhase.ENDED)) {
           throw new FileAlreadyExistsException("An active game already exists");
         }
       }

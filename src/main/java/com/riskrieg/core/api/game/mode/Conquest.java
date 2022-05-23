@@ -22,7 +22,7 @@ import com.riskrieg.core.api.color.ColorBatch;
 import com.riskrieg.core.api.color.GameColor;
 import com.riskrieg.core.api.game.Game;
 import com.riskrieg.core.api.game.GameConstants;
-import com.riskrieg.core.api.game.GameState;
+import com.riskrieg.core.api.game.GamePhase;
 import com.riskrieg.core.api.game.Save;
 import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
@@ -64,7 +64,7 @@ public final class Conquest implements Game {
 
   private Deque<Player> players;
 
-  private GameState state;
+  private GamePhase phase;
   private GameMap map; // Nullable
 
   public Conquest(Save save, Path mapRepository) {
@@ -76,7 +76,7 @@ public final class Conquest implements Game {
     this.colors = save.colors();
     this.creationTime = save.creationTime();
     this.updatedTime = save.updatedTime();
-    this.state = save.state();
+    this.phase = save.phase();
     if (!save.mapCodename().isBlank()) {
       RkmDecoder decoder = new RkmDecoder();
       try {
@@ -99,7 +99,7 @@ public final class Conquest implements Game {
     this.colors = colors;
     this.creationTime = Instant.now();
     this.updatedTime = Instant.now();
-    this.state = GameState.SETUP;
+    this.phase = GamePhase.SETUP;
     this.players = new ArrayDeque<>();
     this.nations = new HashSet<>();
     this.territories = new HashSet<>();
@@ -137,8 +137,8 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameState state() {
-    return state;
+  public GamePhase phase() {
+    return phase;
   }
 
   @Override
@@ -169,13 +169,13 @@ public final class Conquest implements Game {
   public GameAction<GameMap> selectMap(GameMap map) {
     this.updatedTime = Instant.now();
     try {
-      return switch (state) {
+      return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case RUNNING -> throw new IllegalStateException("The map can only be set during the setup phase");
         case SETUP -> {
           Objects.requireNonNull(map);
           this.map = map;
-          // TODO: Clear territories
+          territories.clear();
           nations.clear();
           yield new GenericAction<>(map);
         }
@@ -190,7 +190,7 @@ public final class Conquest implements Game {
   public GameAction<Player> addPlayer(PlayerIdentifier identifier, String name) {
     this.updatedTime = Instant.now();
     try {
-      return switch (state) {
+      return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case RUNNING -> throw new IllegalStateException("Players can only be added during the setup phase");
         case SETUP -> {
@@ -217,6 +217,7 @@ public final class Conquest implements Game {
   @Override
   public GameAction<?> removePlayer(PlayerIdentifier identifier) {
     this.updatedTime = Instant.now();
+    // TODO: Remove player, remove player's nation, remove player's territories
     return null;
   }
 
@@ -225,7 +226,7 @@ public final class Conquest implements Game {
   public GameAction<Nation> createNation(GameColor color, PlayerIdentifier identifier) {
     this.updatedTime = Instant.now();
     try {
-      return switch (state) {
+      return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case RUNNING -> throw new IllegalStateException("Nations can only be created in the setup phase");
         case SETUP -> {
@@ -269,7 +270,7 @@ public final class Conquest implements Game {
   public GameAction<Player> start(TurnOrder order) {
     this.updatedTime = Instant.now();
     try {
-      return switch (state) {
+      return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case RUNNING -> throw new IllegalStateException("A game can only be started in the setup phase");
         case SETUP -> {
@@ -287,7 +288,7 @@ public final class Conquest implements Game {
           }
           // TODO: Check to make sure all nations have 1 territory
           this.players = order.getSorted(players, nations);
-          this.state = GameState.RUNNING;
+          this.phase = GamePhase.RUNNING;
           yield new GenericAction<>(players.getFirst());
         }
       };

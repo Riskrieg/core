@@ -56,7 +56,7 @@ public interface Game {
   Instant updatedTime();
 
   @NonNull
-  GameState state();
+  GamePhase phase();
 
   @Nullable
   GameMap map();

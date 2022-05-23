@@ -18,7 +18,7 @@
 
 package com.riskrieg.core.api.game;
 
-public enum GameState {
+public enum GamePhase {
 
   SETUP,
   RUNNING,
