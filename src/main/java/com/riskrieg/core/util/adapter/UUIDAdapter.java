@@ -22,7 +22,7 @@ import com.squareup.moshi.FromJson;
 import com.squareup.moshi.ToJson;
 import java.util.UUID;
 
-public class UUIDAdapter {
+public final class UUIDAdapter {
 
   @ToJson
   String toJson(UUID uuid) {

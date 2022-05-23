@@ -22,7 +22,7 @@ import com.squareup.moshi.FromJson;
 import com.squareup.moshi.ToJson;
 import java.awt.Point;
 
-public class PointAdapter {
+public final class PointAdapter {
 
   @ToJson
   PointJson toJson(Point point) {

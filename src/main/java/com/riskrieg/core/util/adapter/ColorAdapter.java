@@ -22,7 +22,7 @@ import com.squareup.moshi.FromJson;
 import com.squareup.moshi.ToJson;
 import java.awt.Color;
 
-public class ColorAdapter {
+public final class ColorAdapter {
 
 
   @ToJson
