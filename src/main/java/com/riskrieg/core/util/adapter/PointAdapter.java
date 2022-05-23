@@ -18,6 +18,7 @@
 
 package com.riskrieg.core.util.adapter;
 
+import com.riskrieg.core.util.adapter.json.PointJson;
 import com.squareup.moshi.FromJson;
 import com.squareup.moshi.ToJson;
 import java.awt.Point;
@@ -33,9 +34,5 @@ public final class PointAdapter {
   Point fromJson(PointJson pointJson) {
     return new Point(pointJson.x(), pointJson.y());
   }
-
-}
-
-record PointJson(int x, int y) {
 
 }
