@@ -32,7 +32,7 @@ import java.util.Set;
 
 public record Save(GameIdentifier identifier, GameConstants constants, ColorBatch colors,
                    Instant creationTime, Instant updatedTime, GamePhase phase, String mapCodename,
-                   Collection<Player> players, Set<Nation> nations, Map<NationIdentifier, GameTerritory> ownedTerritories,
+                   Collection<Player> players, Set<Nation> nations, Map<NationIdentifier, Set<GameTerritory>> ownedTerritories,
                    Class<? extends Game> type) {
 
   public Save(Game game, Class<? extends Game> type) {

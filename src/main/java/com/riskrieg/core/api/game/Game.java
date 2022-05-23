@@ -68,7 +68,7 @@ public interface Game {
   Set<Nation> nations();
 
   @NonNull
-  Map<NationIdentifier, GameTerritory> ownedTerritories();
+  Map<NationIdentifier, Set<GameTerritory>> ownedTerritories();
 
   @NonNull
   default Optional<Player> getPlayer(PlayerIdentifier identifier) {
@@ -128,10 +128,5 @@ public interface Game {
 
   @NonNull
   @CheckReturnValue
-  GameAction<?> skip(PlayerIdentifier identifier);
-
-  @NonNull
-  @CheckReturnValue
-  GameAction<?> claim();
-
+  GameAction<Boolean> skip(PlayerIdentifier identifier); // TODO: Possibly replace with advanceTurn method?
 }

@@ -48,6 +48,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
@@ -58,7 +59,7 @@ public final class Conquest implements Game {
   private final GameConstants constants;
   private final Instant creationTime;
   private final Set<Nation> nations;
-  private final Map<NationIdentifier, GameTerritory> ownedTerritories;
+  private final Map<NationIdentifier, Set<GameTerritory>> ownedTerritories;
 
   // Mutable
   private ColorBatch colors;
@@ -162,8 +163,12 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public Map<NationIdentifier, GameTerritory> ownedTerritories() {
-    return Collections.unmodifiableMap(ownedTerritories);
+  public Map<NationIdentifier, Set<GameTerritory>> ownedTerritories() {
+    Map<NationIdentifier, Set<GameTerritory>> immutable = new HashMap<>();
+    for (Entry<NationIdentifier, Set<GameTerritory>> entry : ownedTerritories.entrySet()) {
+      immutable.put(entry.getKey(), Collections.unmodifiableSet(entry.getValue()));
+    }
+    return Collections.unmodifiableMap(immutable);
   }
 
   @NonNull
@@ -276,16 +281,16 @@ public final class Conquest implements Game {
           if (!territory.type().equals(TerritoryType.CAPITAL)) {
             throw new IllegalStateException("The territory type provided must be a capital during the setup phase");
           }
-          if (ownedTerritories.containsValue(territory)) {
-            throw new IllegalStateException("That territory is already taken by someone else");
-          }
           if (ownedTerritories.containsKey(identifier)) {
             throw new IllegalStateException("A capital can only be selected if you do not already have one");
           }
-          ownedTerritories.put(identifier, territory);
+          if (ownedTerritories.keySet().stream().anyMatch(key -> ownedTerritories.getOrDefault(key, Collections.emptySet()).contains(territory))) {
+            throw new IllegalStateException("That territory is already taken by someone else");
+          }
+          ownedTerritories.computeIfAbsent(identifier, k -> new HashSet<>()).add(territory);
           yield new GenericAction<>(true);
         }
-        case RUNNING -> {
+        case RUNNING -> { // claim
           yield new GenericAction<>(false); // TODO: Implement
         }
       };
@@ -335,16 +340,15 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<?> skip(PlayerIdentifier identifier) {
+  public GameAction<Boolean> skip(PlayerIdentifier identifier) { // TODO: Unimplemented
     this.updatedTime = Instant.now();
-    return null;
+    return new GenericAction<>(false);
   }
 
-  @NonNull
-  @Override
-  public GameAction<?> claim() {
-    this.updatedTime = Instant.now();
-    return null;
+  // Private methods
+
+  private void addOwnedTerritory(NationIdentifier identifier, GameTerritory territory) {
+
   }
 
 }
