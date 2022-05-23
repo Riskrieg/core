@@ -16,7 +16,7 @@ public class GameTypeAdapter {
     try {
       return Class.forName(typeName).asSubclass(Game.class);
     } catch (ClassNotFoundException | ClassCastException e) {
-      return null; // TODO: Return some other default type if casting fails
+      throw new RuntimeException("Invalid class cast with game type class loaded from save file");
     }
   }
 
