@@ -298,11 +298,11 @@ public final class Conquest implements Game {
           if (!territory.type().equals(TerritoryType.CAPITAL)) {
             throw new IllegalStateException("The territory type provided must be a capital during the setup phase");
           }
-          if (GameUtil.nationHasAnyClaim(identifier, claims, TerritoryType.CAPITAL)) {
-            throw new IllegalStateException("A capital can only be selected if you do not already have one");
-          }
           if (GameUtil.territoryIsClaimed(territory.identifier(), claims)) {
             throw new IllegalStateException("That territory is already claimed by someone else");
+          }
+          if (GameUtil.nationHasAnyClaim(identifier, claims, TerritoryType.CAPITAL)) { // TODO: If someone selects a different territory, change it instead of disallowing
+            throw new IllegalStateException("A capital can only be selected if you do not already have one");
           }
           claims.add(new Claim(identifier, territory));
           yield new GenericAction<>(true);
@@ -358,6 +358,7 @@ public final class Conquest implements Game {
   @Override
   public GameAction<Boolean> advanceTurn() { // TODO: Unimplemented
     this.updatedTime = Instant.now();
+    players.addLast(players.removeFirst());
     return new GenericAction<>(false);
   }
 
