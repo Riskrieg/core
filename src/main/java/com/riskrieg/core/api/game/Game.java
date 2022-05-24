@@ -108,7 +108,7 @@ public interface Game {
 
   @NonNull
   @CheckReturnValue
-  GameAction<Player> removePlayer(PlayerIdentifier identifier);
+  GameAction<Boolean> removePlayer(PlayerIdentifier identifier);
 
   @NonNull
   @CheckReturnValue

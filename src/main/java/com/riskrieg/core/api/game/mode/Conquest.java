@@ -216,10 +216,29 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<Player> removePlayer(PlayerIdentifier identifier) {
+  public GameAction<Boolean> removePlayer(PlayerIdentifier identifier) {
     this.updatedTime = Instant.now();
-    // TODO: Remove player, remove player's nation, remove player's territories
-    return null;
+    try {
+      return switch (phase) {
+        case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
+        case SETUP, RUNNING -> {
+          if (players.stream().noneMatch(player -> player.id().equals(identifier))) {
+            throw new IllegalStateException("That player cannot be removed because they are not in the game");
+          }
+
+          nations.stream().filter(nation -> nation.leaderIdentifier().equals(identifier))
+              .forEach(nation -> claims.removeIf(claim -> claim.identifier().equals(nation.identifier())));
+          nations.removeIf(nation -> nation.leaderIdentifier().equals(identifier));
+          players.removeIf(player -> player.id().equals(identifier));
+
+          // TODO: Potentially end game when appropriate, maybe do in advanceTurn
+
+          yield new GenericAction<>(true);
+        }
+      };
+    } catch (Exception e) {
+      return new GenericAction<>(false, e);
+    }
   }
 
   @NonNull
@@ -260,6 +279,9 @@ public final class Conquest implements Game {
     try {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
+        case RUNNING -> { // claim
+          yield new GenericAction<>(false); // TODO: Implement
+        }
         case SETUP -> {
           if (territories.length > 0) {
             throw new IllegalStateException("Only one territory can be selected during the setup phase");
@@ -284,9 +306,6 @@ public final class Conquest implements Game {
           }
           claims.add(new Claim(identifier, territory));
           yield new GenericAction<>(true);
-        }
-        case RUNNING -> { // claim
-          yield new GenericAction<>(false); // TODO: Implement
         }
       };
     } catch (Exception e) {
