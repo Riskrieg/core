@@ -316,7 +316,7 @@ public final class Conquest implements Game {
   @NonNull
   @Override
   public GameAction<Boolean> unclaim(NationIdentifier identifier, GameTerritory territory, GameTerritory... territories) {
-    this.updatedTime = Instant.now();
+    this.updatedTime = Instant.now(); // TODO: Implement
     return null;
   }
 
