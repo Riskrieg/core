@@ -108,7 +108,7 @@ public interface Game {
 
   @NonNull
   @CheckReturnValue
-  GameAction<?> removePlayer(PlayerIdentifier identifier);
+  GameAction<Player> removePlayer(PlayerIdentifier identifier);
 
   @NonNull
   @CheckReturnValue
@@ -128,5 +128,6 @@ public interface Game {
 
   @NonNull
   @CheckReturnValue
-  GameAction<Boolean> skip(PlayerIdentifier identifier); // TODO: Possibly replace with advanceTurn method?
+  GameAction<Boolean> advanceTurn();
+
 }

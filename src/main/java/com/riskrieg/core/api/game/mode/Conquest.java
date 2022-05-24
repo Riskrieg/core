@@ -215,7 +215,7 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<?> removePlayer(PlayerIdentifier identifier) {
+  public GameAction<Player> removePlayer(PlayerIdentifier identifier) {
     this.updatedTime = Instant.now();
     // TODO: Remove player, remove player's nation, remove player's territories
     return null;
@@ -334,15 +334,9 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<Boolean> skip(PlayerIdentifier identifier) { // TODO: Unimplemented
+  public GameAction<Boolean> advanceTurn() { // TODO: Unimplemented
     this.updatedTime = Instant.now();
     return new GenericAction<>(false);
-  }
-
-  // Private methods
-
-  private void addOwnedTerritory(NationIdentifier identifier, GameTerritory territory) {
-
   }
 
 }
