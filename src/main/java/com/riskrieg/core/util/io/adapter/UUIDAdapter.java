@@ -16,23 +16,22 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.riskrieg.core.util.adapter;
+package com.riskrieg.core.util.io.adapter;
 
-import com.riskrieg.core.util.adapter.json.InstantJson;
 import com.squareup.moshi.FromJson;
 import com.squareup.moshi.ToJson;
-import java.time.Instant;
+import java.util.UUID;
 
-public final class InstantAdapter {
+public final class UUIDAdapter {
 
   @ToJson
-  InstantJson toJson(Instant instant) {
-    return new InstantJson(instant.getEpochSecond(), instant.getNano());
+  String toJson(UUID uuid) {
+    return uuid.toString();
   }
 
   @FromJson
-  Instant fromJson(InstantJson instantJson) {
-    return Instant.ofEpochSecond(instantJson.seconds(), instantJson.nanos());
+  UUID fromJson(String uuid) {
+    return UUID.fromString(uuid);
   }
 
 }

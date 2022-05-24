@@ -23,7 +23,7 @@ import com.riskrieg.core.api.game.map.options.Flavor;
 import com.riskrieg.core.api.game.map.options.HorizontalAlignment;
 import com.riskrieg.core.api.game.map.options.InterfaceAlignment;
 import com.riskrieg.core.api.game.map.options.VerticalAlignment;
-import com.riskrieg.core.util.MoshiUtil;
+import com.riskrieg.core.util.io.MoshiUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.nio.file.Path;
 import java.util.Objects;

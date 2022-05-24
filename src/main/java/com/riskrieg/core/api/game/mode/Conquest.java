@@ -37,6 +37,7 @@ import com.riskrieg.core.api.identifier.PlayerIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
 import com.riskrieg.core.decode.RkmDecoder;
 import com.riskrieg.core.internal.requests.GenericAction;
+import com.riskrieg.core.util.game.GameUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -269,17 +270,17 @@ public final class Conquest implements Game {
           if (map == null) {
             throw new IllegalStateException("A valid map must be selected before adding territories to nations");
           }
-          if (map.vertices().stream().noneMatch(t -> t.identifier().equals(territory.identifier()))) {
+          if (GameUtil.territoryNotExists(territory.identifier(), map)) {
             throw new IllegalStateException("That territory does not exist on the current map");
           }
           if (!territory.type().equals(TerritoryType.CAPITAL)) {
             throw new IllegalStateException("The territory type provided must be a capital during the setup phase");
           }
-          if (claims.stream().anyMatch(c -> c.identifier().equals(identifier))) {
+          if (GameUtil.nationHasAnyClaim(identifier, claims, TerritoryType.CAPITAL)) {
             throw new IllegalStateException("A capital can only be selected if you do not already have one");
           }
-          if (claims.stream().anyMatch(c -> c.territory().equals(territory))) {
-            throw new IllegalStateException("That territory is already taken by someone else");
+          if (GameUtil.territoryIsClaimed(territory.identifier(), claims)) {
+            throw new IllegalStateException("That territory is already claimed by someone else");
           }
           claims.add(new Claim(identifier, territory));
           yield new GenericAction<>(true);
@@ -321,7 +322,9 @@ public final class Conquest implements Game {
           if (nations.size() > players.size()) {
             throw new IllegalStateException("Critical error: Too many nations for the amount of players. Please report this as a bug");
           }
-          // TODO: Check to make sure all nations have 1 territory
+          if (!nations.stream().allMatch(nation -> GameUtil.getClaimCount(nation.identifier(), claims) == 1)) {
+            throw new IllegalStateException("All nations must claim exactly one territory.");
+          }
           this.players = order.getSorted(players, nations);
           this.phase = GamePhase.RUNNING;
           yield new GenericAction<>(players.getFirst());

@@ -1,4 +1,4 @@
-package com.riskrieg.core.util.adapter;
+package com.riskrieg.core.util.io.adapter;
 
 import com.riskrieg.core.api.game.Game;
 import com.squareup.moshi.FromJson;

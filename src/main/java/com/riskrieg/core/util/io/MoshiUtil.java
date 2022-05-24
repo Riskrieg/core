@@ -16,17 +16,17 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.riskrieg.core.util;
+package com.riskrieg.core.util.io;
 
 import com.riskrieg.core.api.game.Game;
 import com.riskrieg.core.api.game.mode.Conquest;
-import com.riskrieg.core.util.adapter.ColorAdapter;
-import com.riskrieg.core.util.adapter.GameTypeAdapter;
-import com.riskrieg.core.util.adapter.InstantAdapter;
-import com.riskrieg.core.util.adapter.PointAdapter;
-import com.riskrieg.core.util.adapter.UUIDAdapter;
-import com.riskrieg.core.util.adapter.factory.DequeAdapterFactory;
-import com.riskrieg.core.util.adapter.factory.SortedSetAdapterFactory;
+import com.riskrieg.core.util.io.adapter.ColorAdapter;
+import com.riskrieg.core.util.io.adapter.GameTypeAdapter;
+import com.riskrieg.core.util.io.adapter.InstantAdapter;
+import com.riskrieg.core.util.io.adapter.PointAdapter;
+import com.riskrieg.core.util.io.adapter.UUIDAdapter;
+import com.riskrieg.core.util.io.adapter.factory.DequeAdapterFactory;
+import com.riskrieg.core.util.io.adapter.factory.SortedSetAdapterFactory;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory;

@@ -1,4 +1,4 @@
-package com.riskrieg.core.util.adapter;
+package com.riskrieg.core.util.io.adapter;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;

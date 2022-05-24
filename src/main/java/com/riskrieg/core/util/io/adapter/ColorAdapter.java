@@ -16,23 +16,23 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.riskrieg.core.util.adapter;
+package com.riskrieg.core.util.io.adapter;
 
-import com.riskrieg.core.util.adapter.json.PointJson;
 import com.squareup.moshi.FromJson;
 import com.squareup.moshi.ToJson;
-import java.awt.Point;
+import java.awt.Color;
 
-public final class PointAdapter {
+public final class ColorAdapter {
+
 
   @ToJson
-  PointJson toJson(Point point) {
-    return new PointJson(point.x, point.y);
+  Integer toJson(Color rgb) {
+    return rgb.getRGB();
   }
 
   @FromJson
-  Point fromJson(PointJson pointJson) {
-    return new Point(pointJson.x(), pointJson.y());
+  Color fromJson(Integer rgb) {
+    return new Color(rgb);
   }
 
 }

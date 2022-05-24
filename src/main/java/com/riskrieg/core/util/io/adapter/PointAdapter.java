@@ -16,22 +16,23 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.riskrieg.core.util.adapter;
+package com.riskrieg.core.util.io.adapter;
 
+import com.riskrieg.core.util.io.adapter.json.PointJson;
 import com.squareup.moshi.FromJson;
 import com.squareup.moshi.ToJson;
-import java.util.UUID;
+import java.awt.Point;
 
-public final class UUIDAdapter {
+public final class PointAdapter {
 
   @ToJson
-  String toJson(UUID uuid) {
-    return uuid.toString();
+  PointJson toJson(Point point) {
+    return new PointJson(point.x, point.y);
   }
 
   @FromJson
-  UUID fromJson(String uuid) {
-    return UUID.fromString(uuid);
+  Point fromJson(PointJson pointJson) {
+    return new Point(pointJson.x(), pointJson.y());
   }
 
 }

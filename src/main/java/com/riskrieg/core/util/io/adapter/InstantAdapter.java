@@ -16,23 +16,23 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.riskrieg.core.util.adapter;
+package com.riskrieg.core.util.io.adapter;
 
+import com.riskrieg.core.util.io.adapter.json.InstantJson;
 import com.squareup.moshi.FromJson;
 import com.squareup.moshi.ToJson;
-import java.awt.Color;
+import java.time.Instant;
 
-public final class ColorAdapter {
-
+public final class InstantAdapter {
 
   @ToJson
-  Integer toJson(Color rgb) {
-    return rgb.getRGB();
+  InstantJson toJson(Instant instant) {
+    return new InstantJson(instant.getEpochSecond(), instant.getNano());
   }
 
   @FromJson
-  Color fromJson(Integer rgb) {
-    return new Color(rgb);
+  Instant fromJson(InstantJson instantJson) {
+    return Instant.ofEpochSecond(instantJson.seconds(), instantJson.nanos());
   }
 
 }

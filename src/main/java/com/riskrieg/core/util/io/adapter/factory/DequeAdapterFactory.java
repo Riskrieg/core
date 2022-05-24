@@ -1,6 +1,6 @@
-package com.riskrieg.core.util.adapter.factory;
+package com.riskrieg.core.util.io.adapter.factory;
 
-import com.riskrieg.core.util.adapter.DequeAdapter;
+import com.riskrieg.core.util.io.adapter.DequeAdapter;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import java.lang.annotation.Annotation;

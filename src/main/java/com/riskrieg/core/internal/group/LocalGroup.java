@@ -28,7 +28,7 @@ import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.GroupIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
 import com.riskrieg.core.internal.requests.GenericAction;
-import com.riskrieg.core.util.MoshiUtil;
+import com.riskrieg.core.util.io.MoshiUtil;
 import edu.umd.cs.findbugs.annotations.CheckReturnValue;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.FileNotFoundException;
