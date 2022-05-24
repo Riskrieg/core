@@ -301,8 +301,8 @@ public final class Conquest implements Game {
           if (GameUtil.territoryIsClaimed(territory.identifier(), claims)) {
             throw new IllegalStateException("That territory is already claimed by someone else");
           }
-          if (GameUtil.nationHasAnyClaim(identifier, claims, TerritoryType.CAPITAL)) { // TODO: If someone selects a different territory, change it instead of disallowing
-            throw new IllegalStateException("A capital can only be selected if you do not already have one");
+          if (GameUtil.nationHasAnyClaim(identifier, claims, TerritoryType.CAPITAL)) {
+            claims.removeIf(claim -> claim.identifier().equals(identifier) && claim.territory().type().equals(TerritoryType.CAPITAL));
           }
           claims.add(new Claim(identifier, territory));
           yield new GenericAction<>(true);
