@@ -116,7 +116,7 @@ public interface Game {
 
   @NonNull
   @CheckReturnValue
-  GameAction<Boolean> claim(NationIdentifier identifier, GameTerritory territory, GameTerritory... territories);
+  GameAction<Boolean> claim(Attack attack, NationIdentifier identifier, GameTerritory territory, GameTerritory... territories);
 
   @NonNull
   @CheckReturnValue
