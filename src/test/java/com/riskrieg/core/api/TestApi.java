@@ -49,37 +49,42 @@ public class TestApi { // TODO: Implement comprehensive tests
 
     RkmDecoder decoder = new RkmDecoder();
 
-    Attack setup = (attacker, defender, territory) -> true;
+    Attack setup = (attacker, defender, territory, map, claims, constants) -> true;
 
-    Attack attack = (attacker, defender, territory) -> {
+    Attack attack = (attacker, defender, territory, map, claims, constants) -> {
       if (attacker == null) {
         return false;
       }
       if (defender == null) {
         return true;
       }
+      if (attacker.equals(defender)) {
+        return false;
+      }
+      if (!GameUtil.nationClaimsTerritory(defender, territory.identifier(), claims)) {
+        return false;
+      }
       int attackRolls = 1;
       int defenseRolls = 1;
       int attackSides = 8;
       int defenseSides = 6;
-      var neighbors = game.map().neighborsAsIdentifiers(territory.identifier());
+      var neighbors = map.neighborsAsIdentifiers(territory.identifier());
       for (TerritoryIdentifier neighbor : neighbors) {
-        var attackerTerritories = GameUtil.getClaimSet(attacker, game.claims()).stream().map(Claim::territory).map(GameTerritory::identifier).collect(Collectors.toSet());
-        var defenderTerritories = GameUtil.getClaimSet(defender, game.claims()).stream().map(Claim::territory).map(GameTerritory::identifier).collect(Collectors.toSet());
+        var attackerTerritories = GameUtil.getClaimSet(attacker, claims).stream().map(Claim::territory).map(GameTerritory::identifier).collect(Collectors.toSet());
+        var defenderTerritories = GameUtil.getClaimSet(defender, claims).stream().map(Claim::territory).map(GameTerritory::identifier).collect(Collectors.toSet());
         if (attackerTerritories.contains(neighbor)) {
-          if (GameUtil.territoryIsOfType(neighbor, TerritoryType.CAPITAL, game.claims())) {
-            attackRolls += 1 + game.constants().capitalAttackBonus();
+          if (GameUtil.territoryIsOfType(neighbor, TerritoryType.CAPITAL, claims)) {
+            attackRolls += 1 + constants.capitalAttackBonus();
           } else {
             attackRolls++;
           }
         } else if (defenderTerritories.contains(neighbor)) {
           defenseRolls++;
-          if (GameUtil.territoryIsOfType(territory.identifier(), TerritoryType.CAPITAL, game.claims())) {
-            defenseSides += 1 + game.constants().capitalDefenseBonus();
+          if (GameUtil.territoryIsOfType(territory.identifier(), TerritoryType.CAPITAL, claims)) {
+            defenseSides += 1 + constants.capitalDefenseBonus();
           }
         }
       }
-      // TODO: Configure not connected to capital debuff
       Dice attackDice = new Dice(attackSides, attackRolls);
       Dice defenseDice = new Dice(defenseSides, defenseRolls);
       int attackerMax = Arrays.stream(attackDice.roll()).summaryStatistics().getMax();
