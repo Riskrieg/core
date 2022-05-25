@@ -93,7 +93,7 @@ public class TestApi { // TODO: Implement comprehensive tests
       throw new RuntimeException(e);
     }
 
-    game.claim(nation.identifier(), GameTerritory.of(TerritoryIdentifier.of("1F"), TerritoryType.CAPITAL)).complete();
+    game.claim(attack, nation.identifier(), GameTerritory.of(TerritoryIdentifier.of("1F"), TerritoryType.CAPITAL)).complete();
 
     group.saveGame(game).complete();
 
