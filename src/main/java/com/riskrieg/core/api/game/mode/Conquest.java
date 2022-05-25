@@ -280,6 +280,24 @@ public final class Conquest implements Game {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case RUNNING -> { // claim
+          var nation = getNation(identifier);
+          if (nation.isEmpty()) {
+            throw new IllegalStateException("That nation does not exist");
+          }
+          if (!players.getFirst().identifier().equals(nation.get().leaderIdentifier())) {
+            throw new IllegalStateException("It is not that player's turn");
+          }
+          if (map == null) {
+            throw new IllegalStateException("A valid map must be selected before claiming territories");
+          }
+          // TODO: Implement new claim functionality
+          Set<GameTerritory> territoriesToClaim = new HashSet<>(Set.of(territories));
+          territoriesToClaim.add(territory);
+          long allowedClaimsPerTurn = GameUtil.getAllowedClaimsPerTurn(identifier, claims, constants, map);
+          if (territoriesToClaim.size() != allowedClaimsPerTurn) {
+            throw new IllegalStateException(
+                "You must claim exactly " + allowedClaimsPerTurn + " territories, but are trying to claim " + territoriesToClaim.size() + " territories.");
+          }
 
           yield new GenericAction<>(false); // TODO: Implement
         }
@@ -287,7 +305,7 @@ public final class Conquest implements Game {
           if (territories.length > 0) {
             throw new IllegalStateException("Only one territory can be claimed during the setup phase");
           }
-          if (nations.stream().noneMatch(n -> n.identifier().equals(identifier))) {
+          if (nations.stream().noneMatch(nation -> nation.identifier().equals(identifier))) {
             throw new IllegalStateException("That nation does not exist");
           }
           if (map == null) {
@@ -302,7 +320,7 @@ public final class Conquest implements Game {
           if (GameUtil.territoryIsClaimed(territory.identifier(), claims)) {
             throw new IllegalStateException("That territory is already claimed by someone else");
           }
-          if (GameUtil.nationHasAnyClaim(identifier, claims, TerritoryType.CAPITAL)) {
+          if (GameUtil.nationClaimsAnyTerritory(identifier, claims, TerritoryType.CAPITAL)) {
             claims.removeIf(claim -> claim.identifier().equals(identifier) && claim.territory().type().equals(TerritoryType.CAPITAL));
           }
           claims.add(new Claim(identifier, territory));
@@ -342,7 +360,7 @@ public final class Conquest implements Game {
           if (nations.size() > players.size()) {
             throw new IllegalStateException("Critical error: Too many nations for the amount of players. Please report this as a bug");
           }
-          if (!nations.stream().allMatch(nation -> GameUtil.getClaimCount(nation.identifier(), claims) == 1)) {
+          if (!nations.stream().allMatch(nation -> GameUtil.getTerritorialClaimCount(nation.identifier(), claims) == 1)) {
             throw new IllegalStateException("All nations must claim exactly one territory.");
           }
           this.players = order.getSorted(players, nations);
