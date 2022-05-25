@@ -222,14 +222,14 @@ public final class Conquest implements Game {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case SETUP, RUNNING -> {
-          if (players.stream().noneMatch(player -> player.id().equals(identifier))) {
+          if (players.stream().noneMatch(player -> player.identifier().equals(identifier))) {
             throw new IllegalStateException("That player cannot be removed because they are not in the game");
           }
 
           nations.stream().filter(nation -> nation.leaderIdentifier().equals(identifier))
               .forEach(nation -> claims.removeIf(claim -> claim.identifier().equals(nation.identifier())));
           nations.removeIf(nation -> nation.leaderIdentifier().equals(identifier));
-          players.removeIf(player -> player.id().equals(identifier));
+          players.removeIf(player -> player.identifier().equals(identifier));
 
           // TODO: Potentially end game when appropriate, maybe do in advanceTurn
 
@@ -251,7 +251,7 @@ public final class Conquest implements Game {
         case RUNNING -> throw new IllegalStateException("Nations can only be created in the setup phase");
         case SETUP -> {
           Nation nation = new Nation(NationIdentifier.uuid(), color.id(), identifier);
-          if (players.stream().noneMatch(p -> p.id().equals(identifier))) {
+          if (players.stream().noneMatch(p -> p.identifier().equals(identifier))) {
             throw new IllegalStateException("A player must join the game before creating a nation");
           }
           if (nations.size() >= colors.size()) {

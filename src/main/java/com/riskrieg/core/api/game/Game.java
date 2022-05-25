@@ -73,7 +73,7 @@ public interface Game {
   @NonNull
   default Optional<Player> getPlayer(PlayerIdentifier identifier) {
     return players().stream()
-        .filter(p -> p.id().equals(identifier))
+        .filter(p -> p.identifier().equals(identifier))
         .findFirst();
   }
 
