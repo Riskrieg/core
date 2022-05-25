@@ -5,9 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.riskrieg.core.api.color.ColorBatch;
+import com.riskrieg.core.api.game.Attack;
 import com.riskrieg.core.api.game.Game;
 import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.mode.Conquest;
+import com.riskrieg.core.api.game.territory.Claim;
 import com.riskrieg.core.api.game.territory.GameTerritory;
 import com.riskrieg.core.api.game.territory.TerritoryType;
 import com.riskrieg.core.api.group.Group;
@@ -16,10 +18,13 @@ import com.riskrieg.core.api.identifier.GroupIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
 import com.riskrieg.core.api.identifier.TerritoryIdentifier;
 import com.riskrieg.core.decode.RkmDecoder;
+import com.riskrieg.core.util.game.GameUtil;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 public class TestApi { // TODO: Implement comprehensive tests
@@ -43,6 +48,44 @@ public class TestApi { // TODO: Implement comprehensive tests
     Nation nation = game.createNation(ColorBatch.standard().get(3), PlayerIdentifier.of("1")).complete();
 
     RkmDecoder decoder = new RkmDecoder();
+
+    Attack setup = (attacker, defender, territory) -> true;
+
+    Attack attack = (attacker, defender, territory) -> {
+      if (attacker == null) {
+        return false;
+      }
+      if (defender == null) {
+        return true;
+      }
+      int attackRolls = 1;
+      int defenseRolls = 1;
+      int attackSides = 8;
+      int defenseSides = 6;
+      var neighbors = game.map().neighborsAsIdentifiers(territory.identifier());
+      for (TerritoryIdentifier neighbor : neighbors) {
+        var attackerTerritories = GameUtil.getClaimSet(attacker, game.claims()).stream().map(Claim::territory).map(GameTerritory::identifier).collect(Collectors.toSet());
+        var defenderTerritories = GameUtil.getClaimSet(defender, game.claims()).stream().map(Claim::territory).map(GameTerritory::identifier).collect(Collectors.toSet());
+        if (attackerTerritories.contains(neighbor)) {
+          if (GameUtil.territoryIsOfType(neighbor, TerritoryType.CAPITAL, game.claims())) {
+            attackRolls += 1 + game.constants().capitalAttackBonus();
+          } else {
+            attackRolls++;
+          }
+        } else if (defenderTerritories.contains(neighbor)) {
+          defenseRolls++;
+          if (GameUtil.territoryIsOfType(territory.identifier(), TerritoryType.CAPITAL, game.claims())) {
+            defenseSides += 1 + game.constants().capitalDefenseBonus();
+          }
+        }
+      }
+      // TODO: Configure not connected to capital debuff
+      Dice attackDice = new Dice(attackSides, attackRolls);
+      Dice defenseDice = new Dice(defenseSides, defenseRolls);
+      int attackerMax = Arrays.stream(attackDice.roll()).summaryStatistics().getMax();
+      int defenderMax = Arrays.stream(defenseDice.roll()).summaryStatistics().getMax();
+      return attackerMax > defenderMax;
+    };
 
     try {
       game.selectMap(decoder.decode(Path.of("res/maps/antarctica.rkm"))).complete();
