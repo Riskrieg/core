@@ -22,10 +22,13 @@ import com.riskrieg.core.api.game.map.territory.Border;
 import com.riskrieg.core.api.identifier.TerritoryIdentifier;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
 import org.jgrapht.graph.SimpleGraph;
 
 public record GameMap(String codename, String displayName, String author,
@@ -89,12 +92,25 @@ public record GameMap(String codename, String displayName, String author,
   }
 
   public Optional<Territory> get(TerritoryIdentifier identifier) {
-    for (Territory territory : vertices) {
-      if (territory.identifier().id().equals(identifier.id())) {
-        return Optional.of(territory);
-      }
+    return vertices.stream().filter(territory -> territory.identifier().equals(identifier)).findFirst();
+  }
+
+  public Set<Territory> neighbors(TerritoryIdentifier identifier) {
+    var territory = get(identifier);
+    if (territory.isPresent()) {
+      var graph = graph();
+      return Graphs.neighborSetOf(graph, territory.get());
     }
-    return Optional.empty();
+    return new HashSet<>();
+  }
+
+  public Set<TerritoryIdentifier> neighborsAsIdentifiers(TerritoryIdentifier identifier) {
+    var territory = get(identifier);
+    if (territory.isPresent()) {
+      var graph = graph();
+      return Graphs.neighborSetOf(graph, territory.get()).stream().map(Territory::identifier).collect(Collectors.toSet());
+    }
+    return new HashSet<>();
   }
 
 }
