@@ -20,6 +20,7 @@ package com.riskrieg.core.api.game.mode;
 
 import com.riskrieg.core.api.color.ColorBatch;
 import com.riskrieg.core.api.color.GameColor;
+import com.riskrieg.core.api.game.Attack;
 import com.riskrieg.core.api.game.Game;
 import com.riskrieg.core.api.game.GameConstants;
 import com.riskrieg.core.api.game.GamePhase;
@@ -274,7 +275,7 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<Boolean> claim(NationIdentifier identifier, GameTerritory territory, GameTerritory... territories) {
+  public GameAction<Boolean> claim(Attack attack, NationIdentifier identifier, GameTerritory territory, GameTerritory... territories) {
     this.updatedTime = Instant.now();
     try {
       return switch (phase) {
