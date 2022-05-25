@@ -12,6 +12,6 @@ public interface Attack {
    * @param territory The territory owned by the defender
    * @return {@code true} if the attacker wins the engagement, otherwise {@code false}
    */
-  boolean compute(NationIdentifier attacker, NationIdentifier defender, GameTerritory territory);
+  boolean success(NationIdentifier attacker, NationIdentifier defender, GameTerritory territory);
 
 }
