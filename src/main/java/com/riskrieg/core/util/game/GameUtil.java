@@ -1,11 +1,16 @@
 package com.riskrieg.core.util.game;
 
+import com.riskrieg.core.api.game.GameConstants;
 import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.territory.Claim;
+import com.riskrieg.core.api.game.territory.GameTerritory;
 import com.riskrieg.core.api.game.territory.TerritoryType;
 import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.TerritoryIdentifier;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class GameUtil {
 
@@ -34,6 +39,30 @@ public class GameUtil {
 
   public static long getClaimCount(NationIdentifier identifier, Set<Claim> allClaims) {
     return allClaims.stream().filter(claim -> claim.identifier().equals(identifier)).count();
+  }
+
+  public static Set<Claim> getClaimsOf(NationIdentifier identifier, Set<Claim> allClaims) {
+    return allClaims.stream().filter(claim -> claim.identifier().equals(identifier)).collect(Collectors.toUnmodifiableSet());
+  }
+
+  public static Set<TerritoryIdentifier> getAllNeighbors(NationIdentifier identifier, Set<Claim> allClaims, GameMap map) {
+    Set<TerritoryIdentifier> neighbors = new HashSet<>();
+    Set<TerritoryIdentifier> myTerritories = getClaimsOf(identifier, allClaims).stream().map(Claim::territory).map(GameTerritory::identifier).collect(Collectors.toSet());
+    for (TerritoryIdentifier id : myTerritories) {
+      neighbors.addAll(map.neighborsAsIdentifiers(id));
+    }
+    neighbors.removeAll(myTerritories);
+    return Collections.unmodifiableSet(neighbors);
+  }
+
+  public static Set<TerritoryIdentifier> getClaimableTerritories(NationIdentifier identifier, Set<Claim> allClaims, GameMap map) {
+    Set<TerritoryIdentifier> neighbors = new HashSet<>(getAllNeighbors(identifier, allClaims, map));
+    return Collections.unmodifiableSet(neighbors);
+  }
+
+  public static long getAllowedClaimsPerTurn(NationIdentifier identifier, Set<Claim> allClaims, GameConstants constants, GameMap map) {
+    long allowedClaims = constants.initialClaimAmount() + (long) (Math.floor(getClaimsOf(identifier, allClaims).size() / (double) constants.claimIncreaseThreshold()));
+    return Math.min(getClaimableTerritories(identifier, allClaims, map).size(), allowedClaims);
   }
 
 }

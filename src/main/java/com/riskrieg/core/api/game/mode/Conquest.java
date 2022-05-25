@@ -280,17 +280,18 @@ public final class Conquest implements Game {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case RUNNING -> { // claim
+
           yield new GenericAction<>(false); // TODO: Implement
         }
         case SETUP -> {
           if (territories.length > 0) {
-            throw new IllegalStateException("Only one territory can be selected during the setup phase");
+            throw new IllegalStateException("Only one territory can be claimed during the setup phase");
           }
           if (nations.stream().noneMatch(n -> n.identifier().equals(identifier))) {
             throw new IllegalStateException("That nation does not exist");
           }
           if (map == null) {
-            throw new IllegalStateException("A valid map must be selected before adding territories to nations");
+            throw new IllegalStateException("A valid map must be selected before claiming territories");
           }
           if (GameUtil.territoryNotExists(territory.identifier(), map)) {
             throw new IllegalStateException("That territory does not exist on the current map");
