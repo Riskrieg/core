@@ -24,13 +24,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.Collection;
 import java.util.Deque;
 
+@FunctionalInterface
 public interface TurnOrder {
-
-  @NonNull
-  String displayName();
-
-  @NonNull
-  String description();
 
   /**
    * Takes in a collection of players and an associated collection of nations and returns a sorted deque of players.
