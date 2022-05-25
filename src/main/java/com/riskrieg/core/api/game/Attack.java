@@ -14,7 +14,7 @@ public interface Attack {
    * @param defender  The nation who owns the given territory, defending from the attacker
    * @param territory The territory owned by the defender
    * @param map       The map the attack takes place on
-   * @param claims    The set of all claims made by all nations
+   * @param claims    The immutable set of all claims made by all nations
    * @param constants The set of game constants to use for attack purposes
    * @return {@code true} if the attacker wins the engagement, otherwise {@code false}
    */
