@@ -118,6 +118,10 @@ public class TestApi { // TODO: Implement comprehensive tests
 
   }
 
+  public void turnOrderTest() {
+
+  }
+
   public void createLocalGroup() {
     Riskrieg api = RiskriegBuilder.createLocal(Path.of("res/saves/")).build();
     Group group = api.createGroup(GroupIdentifier.of("12345")).complete();
