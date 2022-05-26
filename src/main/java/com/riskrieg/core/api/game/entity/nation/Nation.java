@@ -29,4 +29,8 @@ public record Nation(NationIdentifier identifier, int colorId, PlayerIdentifier 
     Objects.requireNonNull(leaderIdentifier);
   }
 
+  public Nation withLeader(PlayerIdentifier leaderIdentifier) {
+    return new Nation(identifier, colorId, leaderIdentifier);
+  }
+
 }
