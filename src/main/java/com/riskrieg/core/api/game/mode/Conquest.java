@@ -18,7 +18,7 @@
 
 package com.riskrieg.core.api.game.mode;
 
-import com.riskrieg.core.api.color.ColorBatch;
+import com.riskrieg.core.api.color.ColorPalette;
 import com.riskrieg.core.api.color.GameColor;
 import com.riskrieg.core.api.game.Attack;
 import com.riskrieg.core.api.game.Game;
@@ -62,7 +62,7 @@ public final class Conquest implements Game {
   private final Set<Claim> claims;
 
   // Mutable
-  private ColorBatch colors;
+  private ColorPalette colors;
   private Instant updatedTime;
 
   private Deque<Player> players;
@@ -93,7 +93,7 @@ public final class Conquest implements Game {
     this.claims = save.claims();
   }
 
-  public Conquest(GameIdentifier identifier, GameConstants constants, ColorBatch colors) {
+  public Conquest(GameIdentifier identifier, GameConstants constants, ColorPalette colors) {
     if (constants.maximumPlayers() != colors.size()) {
       throw new IllegalStateException("The maximum number of players must equal the amount of colors provided");
     }
@@ -122,7 +122,7 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public ColorBatch colors() {
+  public ColorPalette colors() {
     return colors;
   }
 

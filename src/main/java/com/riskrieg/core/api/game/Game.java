@@ -18,7 +18,7 @@
 
 package com.riskrieg.core.api.game;
 
-import com.riskrieg.core.api.color.ColorBatch;
+import com.riskrieg.core.api.color.ColorPalette;
 import com.riskrieg.core.api.color.GameColor;
 import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
@@ -47,7 +47,7 @@ public interface Game {
   GameConstants constants();
 
   @NonNull
-  ColorBatch colors();
+  ColorPalette colors();
 
   @NonNull
   Instant creationTime();

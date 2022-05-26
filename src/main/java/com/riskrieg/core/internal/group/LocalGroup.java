@@ -18,7 +18,7 @@
 
 package com.riskrieg.core.internal.group;
 
-import com.riskrieg.core.api.color.ColorBatch;
+import com.riskrieg.core.api.color.ColorPalette;
 import com.riskrieg.core.api.game.Game;
 import com.riskrieg.core.api.game.GameConstants;
 import com.riskrieg.core.api.game.GamePhase;
@@ -63,7 +63,7 @@ public record LocalGroup(Path path) implements Group {
   @NonNull
   @Override
   @CheckReturnValue
-  public <T extends Game> GameAction<Game> createGame(GameConstants constants, ColorBatch batch, GameIdentifier identifier, Class<T> type) {
+  public <T extends Game> GameAction<Game> createGame(GameConstants constants, ColorPalette batch, GameIdentifier identifier, Class<T> type) {
     Path savePath = path.resolve(identifier.id() + Save.FILE_EXT);
     try {
       if (Files.exists(savePath)) {
@@ -78,7 +78,7 @@ public record LocalGroup(Path path) implements Group {
           throw new FileAlreadyExistsException("An active game already exists");
         }
       }
-      var newGame = type.getDeclaredConstructor(GameIdentifier.class, GameConstants.class, ColorBatch.class).newInstance(identifier, constants, batch);
+      var newGame = type.getDeclaredConstructor(GameIdentifier.class, GameConstants.class, ColorPalette.class).newInstance(identifier, constants, batch);
       MoshiUtil.write(savePath, Save.class, new Save(newGame, type));
       return new GenericAction<>(newGame);
     } catch (Exception e) {

@@ -18,7 +18,7 @@
 
 package com.riskrieg.core.api.game;
 
-import com.riskrieg.core.api.color.ColorBatch;
+import com.riskrieg.core.api.color.ColorPalette;
 import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
 import com.riskrieg.core.api.game.territory.Claim;
@@ -28,7 +28,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 
-public record Save(GameIdentifier identifier, GameConstants constants, ColorBatch colors,
+public record Save(GameIdentifier identifier, GameConstants constants, ColorPalette colors,
                    Instant creationTime, Instant updatedTime, GamePhase phase, String mapCodename,
                    Collection<Player> players, Set<Nation> nations, Set<Claim> claims,
                    Class<? extends Game> type) {

@@ -39,6 +39,10 @@ public record GameColor(int id, String name, int r, int g, int b) implements Com
     }
   }
 
+  public GameColor(int id, String name, String hex) {
+    this(id, name, Color.decode(hex).getRed(), Color.decode(hex).getGreen(), Color.decode(hex).getBlue());
+  }
+
   public int id() {
     return id;
   }

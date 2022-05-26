@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.riskrieg.core.api.color.ColorBatch;
+import com.riskrieg.core.api.color.ColorPalette;
 import com.riskrieg.core.api.game.Attack;
 import com.riskrieg.core.api.game.Game;
 import com.riskrieg.core.api.game.entity.nation.Nation;
@@ -37,15 +37,15 @@ public class TestApi { // TODO: Implement comprehensive tests
     Group group = api.createGroup(GroupIdentifier.of("12345")).complete();
     Game game = group.createGame(GameIdentifier.of("123"), Conquest.class).complete();
 
-    var batch = ColorBatch.standard();
+    var batch = ColorPalette.standard();
     for (int i = 0; i < batch.set().size(); i++) {
       assertEquals(i, batch.get(i).id());
     }
-    assertEquals(0, ColorBatch.standard().get(-1).id());
-    assertEquals(15, ColorBatch.standard().get(16).id());
+    assertEquals(0, ColorPalette.standard().get(-1).id());
+    assertEquals(15, ColorPalette.standard().get(16).id());
 
     game.addPlayer(PlayerIdentifier.of("1"), "One").complete();
-    Nation nation = game.createNation(ColorBatch.standard().get(3), PlayerIdentifier.of("1")).complete();
+    Nation nation = game.createNation(ColorPalette.standard().get(3), PlayerIdentifier.of("1")).complete();
 
     RkmDecoder decoder = new RkmDecoder();
 
