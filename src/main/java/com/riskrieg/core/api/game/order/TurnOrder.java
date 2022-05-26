@@ -21,8 +21,13 @@ package com.riskrieg.core.api.game.order;
 import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
 import edu.umd.cs.findbugs.annotations.NonNull;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
+import java.util.List;
+import java.util.Random;
 
 @FunctionalInterface
 public interface TurnOrder {
@@ -38,5 +43,33 @@ public interface TurnOrder {
    */
   @NonNull
   Deque<Player> getSorted(@NonNull final Collection<Player> players, @NonNull final Collection<Nation> nations);
+
+  /**
+   * Adds the provided Collection into a Deque, and then cycles through the Deque a random number of times. This preserves the overall order of the collection, but changes the
+   * starting position.
+   *
+   * @param players The Collection of players to randomly cycle through
+   * @return The Deque of players that has been cycled through a random number of times
+   */
+  static Deque<Player> randomizeStart(Collection<Player> players) {
+    int start = new Random().nextInt(players.size());
+    Deque<Player> result = new ArrayDeque<>(players);
+    for (int i = 0; i < start; i++) {
+      result.addLast(result.removeFirst());
+    }
+    return result;
+  }
+
+  /**
+   * Reverses the order of the provided collection and returns it as a Deque.
+   *
+   * @param players The Collection of players to reverse
+   * @return The reversed collection of players as a Deque
+   */
+  static Deque<Player> reverse(Collection<Player> players) {
+    List<Player> list = new ArrayList<>(players);
+    Collections.reverse(list);
+    return new ArrayDeque<>(list);
+  }
 
 }
