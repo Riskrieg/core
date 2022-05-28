@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.riskrieg.core.api.color.ColorPalette;
+import com.riskrieg.core.api.color.GameColor;
 import com.riskrieg.core.api.game.Attack;
 import com.riskrieg.core.api.game.Game;
 import com.riskrieg.core.api.game.GameConstants;
@@ -23,6 +24,7 @@ import com.riskrieg.core.api.game.territory.TerritoryType;
 import com.riskrieg.core.api.group.Group;
 import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.GroupIdentifier;
+import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
 import com.riskrieg.core.api.identifier.TerritoryIdentifier;
 import com.riskrieg.core.decode.RkmDecoder;
@@ -35,6 +37,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
@@ -175,11 +178,40 @@ public class TestApi { // TODO: Implement comprehensive tests
 
   @Test
   public void testGameNullThrows() {
-    // TODO: Write tests
+    // Arrange
+    Group group = createLocalTestGroup("test-group");
+    Game game = createLocalTestGame(group, "test-game", Mock.class);
+
+    // Act & Assert
+    assertEquals(Optional.empty(), game.getPlayer(null));
+    assertEquals(Optional.empty(), game.getNation((PlayerIdentifier) null));
+    assertEquals(Optional.empty(), game.getNation((NationIdentifier) null));
+    assertEquals(Optional.empty(), game.getNation((GameColor) null));
+
+    assertThrowsExactly(NullPointerException.class, () -> game.setPalette(null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> game.setPalette(null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> game.addPlayer(null, null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> game.addPlayer(null, null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> game.removePlayer(null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> game.removePlayer(null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> game.createNation(null, null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> game.createNation(null, null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> game.claim(null, null, null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> game.claim(null, null, null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> game.claim(null, null, null, (GameTerritory) null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> game.claim(null, null, null, (GameTerritory) null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> game.unclaim(null, null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> game.unclaim(null, null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> game.unclaim(null, null, (GameTerritory) null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> game.unclaim(null, null, (GameTerritory) null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> game.start(null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> game.start(null).queue());
+
+    assertTrue(cleanup(group, game));
   }
 
   @Test
-  public void testCreateLocalGroup() {
+  public void testRiskriegCreateLocalGroup() {
     // Arrange
     Riskrieg api = RiskriegBuilder.createLocal(Path.of("res/")).build();
 
@@ -195,7 +227,7 @@ public class TestApi { // TODO: Implement comprehensive tests
   }
 
   @Test
-  public void testCreateLocalGame() {
+  public void testGroupCreateLocalGame() {
     // Arrange
     Riskrieg api = RiskriegBuilder.createLocal(Path.of("res/")).build();
     Group group = api.createGroup(GroupIdentifier.of("test-group")).complete();
@@ -227,7 +259,7 @@ public class TestApi { // TODO: Implement comprehensive tests
   }
 
   @Test
-  public void testSavingGame() throws IOException {
+  public void testGroupSaveGame() throws IOException {
     // Arrange
     Group group = createLocalTestGroup("test-group");
     Game game = createLocalTestGame(group, "test-game", Mock.class);
@@ -245,7 +277,7 @@ public class TestApi { // TODO: Implement comprehensive tests
   }
 
   @Test
-  public void testRetrieveSave() {
+  public void testGroupRetrieveGame() {
     // Arrange
     Group group = createLocalTestGroup("test-group");
     createLocalTestGame(group, "test-game", Mock.class);
