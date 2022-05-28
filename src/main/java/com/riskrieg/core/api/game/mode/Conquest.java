@@ -175,6 +175,7 @@ public final class Conquest implements Game {
   @NonNull
   @Override
   public GameAction<Boolean> setPalette(ColorPalette palette) {
+    Objects.requireNonNull(palette);
     try {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
@@ -202,13 +203,13 @@ public final class Conquest implements Game {
   @NonNull
   @Override
   public GameAction<GameMap> selectMap(GameMap map) {
+    Objects.requireNonNull(map);
     this.updatedTime = Instant.now();
     try {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case RUNNING -> throw new IllegalStateException("The map can only be set during the setup phase");
         case SETUP -> {
-          Objects.requireNonNull(map);
           this.map = map;
           claims.clear();
           yield new GenericAction<>(map);
@@ -222,6 +223,8 @@ public final class Conquest implements Game {
   @NonNull
   @Override
   public GameAction<Player> addPlayer(PlayerIdentifier identifier, String name) {
+    Objects.requireNonNull(identifier);
+    Objects.requireNonNull(name);
     this.updatedTime = Instant.now();
     try {
       return switch (phase) {
@@ -250,6 +253,7 @@ public final class Conquest implements Game {
   @NonNull
   @Override
   public GameAction<Boolean> removePlayer(PlayerIdentifier identifier) {
+    Objects.requireNonNull(identifier);
     this.updatedTime = Instant.now();
     try {
       return switch (phase) {
@@ -277,6 +281,8 @@ public final class Conquest implements Game {
   @NonNull
   @Override
   public GameAction<Nation> createNation(GameColor color, PlayerIdentifier identifier) {
+    Objects.requireNonNull(color);
+    Objects.requireNonNull(identifier);
     this.updatedTime = Instant.now();
     try {
       return switch (phase) {
@@ -308,6 +314,10 @@ public final class Conquest implements Game {
   @NonNull
   @Override
   public GameAction<Boolean> claim(Attack attack, NationIdentifier identifier, GameTerritory territory, GameTerritory... territories) {
+    Objects.requireNonNull(attack);
+    Objects.requireNonNull(identifier);
+    Objects.requireNonNull(territory);
+    Objects.requireNonNull(territories);
     this.updatedTime = Instant.now();
     try {
       return switch (phase) {
@@ -368,6 +378,9 @@ public final class Conquest implements Game {
   @NonNull
   @Override
   public GameAction<Boolean> unclaim(NationIdentifier identifier, GameTerritory territory, GameTerritory... territories) {
+    Objects.requireNonNull(identifier);
+    Objects.requireNonNull(territory);
+    Objects.requireNonNull(territories);
     this.updatedTime = Instant.now(); // TODO: Implement
     return null;
   }
@@ -375,6 +388,7 @@ public final class Conquest implements Game {
   @NonNull
   @Override
   public GameAction<Player> start(TurnOrder order) {
+    Objects.requireNonNull(order);
     this.updatedTime = Instant.now();
     try {
       return switch (phase) {
