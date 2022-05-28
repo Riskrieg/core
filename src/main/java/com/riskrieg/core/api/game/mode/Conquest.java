@@ -62,7 +62,7 @@ public final class Conquest implements Game {
   private final Set<Claim> claims;
 
   // Mutable
-  private ColorPalette colors;
+  private ColorPalette palette;
   private Instant updatedTime;
 
   private Deque<Player> players;
@@ -71,12 +71,12 @@ public final class Conquest implements Game {
   private GameMap map; // Nullable
 
   public Conquest(Save save, Path mapRepository) {
-    if (save.constants().maximumPlayers() != save.colors().size()) {
+    if (save.palette().size() != save.constants().maximumPlayers()) {
       throw new IllegalStateException("The maximum number of players must equal the amount of colors provided");
     }
     this.identifier = save.identifier();
     this.constants = save.constants();
-    this.colors = save.colors();
+    this.palette = save.palette();
     this.creationTime = save.creationTime();
     this.updatedTime = save.updatedTime();
     this.phase = save.phase();
@@ -93,13 +93,18 @@ public final class Conquest implements Game {
     this.claims = save.claims();
   }
 
-  public Conquest(GameIdentifier identifier, GameConstants constants, ColorPalette colors) {
-    if (constants.maximumPlayers() != colors.size()) {
-      throw new IllegalStateException("The maximum number of players must equal the amount of colors provided");
+  public Conquest(GameIdentifier identifier, GameConstants constants, ColorPalette palette) {
+    if (palette.size() < constants.maximumPlayers()) {
+      throw new IllegalStateException("The provided palette only supports up to " + palette.size()
+          + " colors, but the provided constants allows a maximum amount of " + constants.maximumPlayers() + " players.");
+    }
+    if (palette.size() > constants.maximumPlayers()) {
+      throw new IllegalStateException("The provided palette supports up to " + palette.size()
+          + " colors, but the provided constants only allows a maximum amount of " + constants.maximumPlayers() + " players.");
     }
     this.identifier = identifier;
     this.constants = constants;
-    this.colors = colors;
+    this.palette = palette;
     this.creationTime = Instant.now();
     this.updatedTime = Instant.now();
     this.phase = GamePhase.SETUP;
@@ -122,8 +127,8 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public ColorPalette colorPalette() {
-    return colors;
+  public ColorPalette palette() {
+    return palette;
   }
 
   @NonNull
@@ -165,6 +170,33 @@ public final class Conquest implements Game {
   @Override
   public Set<Claim> claims() {
     return Collections.unmodifiableSet(claims);
+  }
+
+  @NonNull
+  @Override
+  public GameAction<Boolean> setPalette(ColorPalette palette) {
+    try {
+      return switch (phase) {
+        case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
+        case SETUP, RUNNING -> {
+          if (palette.size() < constants.maximumPlayers()) {
+            throw new IllegalStateException("The provided palette only supports up to " + palette.size()
+                + " colors, but the provided constants allows a maximum amount of " + constants.maximumPlayers() + " players.");
+          }
+          if (palette.size() > constants.maximumPlayers()) {
+            throw new IllegalStateException("The provided palette supports up to " + palette.size()
+                + " colors, but the provided constants only allows a maximum amount of " + constants.maximumPlayers() + " players.");
+          }
+          if (palette.size() != this.palette.size()) {
+            throw new IllegalStateException("The provided palette must have the same number of colors defined as the current palette, which is " + this.palette.size() + ".");
+          }
+          this.palette = palette;
+          yield new GenericAction<>(true);
+        }
+      };
+    } catch (Exception e) {
+      return new GenericAction<>(false, e);
+    }
   }
 
   @NonNull
@@ -255,7 +287,7 @@ public final class Conquest implements Game {
           if (players.stream().noneMatch(p -> p.identifier().equals(identifier))) {
             throw new IllegalStateException("A player must join the game before creating a nation");
           }
-          if (nations.size() >= colors.size()) {
+          if (nations.size() >= palette.size()) {
             throw new IllegalStateException("The nation could not be formed because the maximum number of nations has already been reached");
           }
           if (nations.stream().anyMatch(n -> n.leaderIdentifier().equals(identifier))) {

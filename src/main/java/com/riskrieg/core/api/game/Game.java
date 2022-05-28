@@ -47,7 +47,7 @@ public interface Game {
   GameConstants constants();
 
   @NonNull
-  ColorPalette colorPalette();
+  ColorPalette palette();
 
   @NonNull
   Instant creationTime();
@@ -97,6 +97,10 @@ public interface Game {
         .filter(n -> n.colorId() == color.id())
         .findFirst();
   }
+
+  @NonNull
+  @CheckReturnValue
+  GameAction<Boolean> setPalette(ColorPalette palette);
 
   @NonNull
   @CheckReturnValue

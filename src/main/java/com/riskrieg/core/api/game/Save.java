@@ -28,13 +28,13 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 
-public record Save(GameIdentifier identifier, GameConstants constants, ColorPalette colors,
+public record Save(GameIdentifier identifier, GameConstants constants, ColorPalette palette,
                    Instant creationTime, Instant updatedTime, GamePhase phase, String mapCodename,
                    Collection<Player> players, Set<Nation> nations, Set<Claim> claims,
                    Class<? extends Game> type) {
 
   public Save(Game game, Class<? extends Game> type) {
-    this(game.identifier(), game.constants(), game.colorPalette(),
+    this(game.identifier(), game.constants(), game.palette(),
         game.creationTime(), game.updatedTime(), game.phase(),
         game.map() == null ? "" : Objects.requireNonNull(game.map()).codename(),
         game.players(), game.nations(), game.claims(),
