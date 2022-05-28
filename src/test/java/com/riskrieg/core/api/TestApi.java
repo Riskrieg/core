@@ -190,6 +190,8 @@ public class TestApi { // TODO: Implement comprehensive tests
 
     assertThrowsExactly(NullPointerException.class, () -> game.setPalette(null).complete());
     assertThrowsExactly(NullPointerException.class, () -> game.setPalette(null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> game.selectMap(null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> game.selectMap(null).queue());
     assertThrowsExactly(NullPointerException.class, () -> game.addPlayer(null, null).complete());
     assertThrowsExactly(NullPointerException.class, () -> game.addPlayer(null, null).queue());
     assertThrowsExactly(NullPointerException.class, () -> game.removePlayer(null).complete());
