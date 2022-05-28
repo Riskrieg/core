@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -39,7 +40,7 @@ import org.junit.jupiter.api.Test;
 
 public class TestApi { // TODO: Implement comprehensive tests
 
-  @Test
+
   public void testRepositoryOperations() { // TODO: Eliminate this test
     Riskrieg api = RiskriegBuilder.createLocal(Path.of("res/")).build();
     Collection<Group> groups = api.retrieveAllGroups().complete();
@@ -200,7 +201,7 @@ public class TestApi { // TODO: Implement comprehensive tests
     Group group = api.createGroup(GroupIdentifier.of("test-group")).complete();
 
     // Act
-    Game game = group.createGame(GameIdentifier.of("test-game"), Conquest.class).complete();
+    Game game = group.createGame(GameIdentifier.of("test-game"), Mock.class).complete();
 
     // Assert
     assertTrue(Files.exists(Path.of("res/saves/test-group/test-game.json")));
@@ -287,7 +288,7 @@ public class TestApi { // TODO: Implement comprehensive tests
     GameMap map = new RkmDecoder().decode(new URL("https://github.com/Riskrieg/maps/raw/main/antarctica.rkm"));
 
     // Act
-    assertThrowsExactly(NullPointerException.class, () -> game.selectMap(null).complete());
+    assertThrows(RuntimeException.class, () -> game.selectMap(null).complete());
     assertDoesNotThrow(() -> game.selectMap(map).complete());
 
     // Assert
@@ -309,8 +310,8 @@ public class TestApi { // TODO: Implement comprehensive tests
   }
 
   private boolean cleanup(Group group, Game game) {
-    Path testGroup = Path.of("res/" + group.identifier().id() + "/");
-    Path testGame = Path.of("res/" + group.identifier().id() + "/" + game.identifier().id() + ".json");
+    Path testGroup = Path.of("res/saves/" + group.identifier().id() + "/").toAbsolutePath();
+    Path testGame = Path.of("res/saves/" + group.identifier().id() + "/" + game.identifier().id() + ".json").toAbsolutePath();
     try {
       Files.deleteIfExists(testGame);
       Files.deleteIfExists(testGroup);
@@ -321,7 +322,7 @@ public class TestApi { // TODO: Implement comprehensive tests
   }
 
   private boolean cleanup(Group group) {
-    Path testGroup = Path.of("res/" + group.identifier().id() + "/");
+    Path testGroup = Path.of("res/" + group.identifier().id() + "/").toAbsolutePath();
     try {
       Files.deleteIfExists(testGroup);
       return true;
