@@ -322,7 +322,7 @@ public class TestApi { // TODO: Implement comprehensive tests
   }
 
   private boolean cleanup(Group group) {
-    Path testGroup = Path.of("res/" + group.identifier().id() + "/").toAbsolutePath();
+    Path testGroup = Path.of("res/saves/" + group.identifier().id() + "/").toAbsolutePath();
     try {
       Files.deleteIfExists(testGroup);
       return true;
