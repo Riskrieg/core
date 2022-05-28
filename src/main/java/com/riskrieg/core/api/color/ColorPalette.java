@@ -20,6 +20,7 @@ package com.riskrieg.core.api.color;
 
 import java.awt.Color;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -30,6 +31,7 @@ public record ColorPalette(SortedSet<GameColor> set) {
   public static final int MAXIMUM_SIZE = 16;
 
   public ColorPalette {
+    Objects.requireNonNull(set);
     if (set.size() < MINIMUM_SIZE) {
       throw new IllegalStateException("Your color set cannot have fewer than " + MINIMUM_SIZE + " colors defined. You have " + set.size() + " unique items in your set.");
     } else if (set.size() > MAXIMUM_SIZE) {
@@ -60,6 +62,7 @@ public record ColorPalette(SortedSet<GameColor> set) {
   }
 
   public GameColor valueOf(Color color) {
+    Objects.requireNonNull(color);
     for (GameColor gameColor : set) {
       if (gameColor.toColor().equals(color)) {
         return gameColor;

@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.List;
+import java.util.Objects;
 
 public class ColorOrder implements DetailedTurnOrder {
 
@@ -27,6 +28,9 @@ public class ColorOrder implements DetailedTurnOrder {
   @NonNull
   @Override
   public Deque<Player> getSorted(@NonNull Collection<Player> players, @NonNull Collection<Nation> nations) {
+    Objects.requireNonNull(players);
+    Objects.requireNonNull(nations);
+
     List<Player> playerList = new ArrayList<>(players);
     List<Nation> nationList = new ArrayList<>(nations);
     nationList.sort(Comparator.comparingInt(Nation::colorId));

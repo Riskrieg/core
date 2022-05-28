@@ -25,6 +25,7 @@ import java.util.Objects;
 public record GameColor(int id, String name, int r, int g, int b) implements Comparable<GameColor> {
 
   public GameColor {
+    Objects.requireNonNull(name);
     if (name.isBlank()) {
       throw new IllegalStateException("String 'name' cannot be blank");
     }

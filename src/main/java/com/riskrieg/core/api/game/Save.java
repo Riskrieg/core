@@ -33,6 +33,20 @@ public record Save(GameIdentifier identifier, GameConstants constants, ColorPale
                    Collection<Player> players, Set<Nation> nations, Set<Claim> claims,
                    Class<? extends Game> type) {
 
+  public Save {
+    Objects.requireNonNull(identifier);
+    Objects.requireNonNull(constants);
+    Objects.requireNonNull(palette);
+    Objects.requireNonNull(creationTime);
+    Objects.requireNonNull(updatedTime);
+    Objects.requireNonNull(phase);
+    Objects.requireNonNull(mapCodename);
+    Objects.requireNonNull(players);
+    Objects.requireNonNull(nations);
+    Objects.requireNonNull(claims);
+    Objects.requireNonNull(type);
+  }
+
   public Save(Game game, Class<? extends Game> type) {
     this(game.identifier(), game.constants(), game.palette(),
         game.creationTime(), game.updatedTime(), game.phase(),
