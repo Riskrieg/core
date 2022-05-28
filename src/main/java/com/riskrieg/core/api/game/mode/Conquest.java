@@ -313,6 +313,12 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
+  public GameAction<Nation> dissolveNation(GameColor color, PlayerIdentifier identifier) {
+    return null; // TODO: Implement
+  }
+
+  @NonNull
+  @Override
   public GameAction<Boolean> claim(Attack attack, NationIdentifier identifier, GameTerritory territory, GameTerritory... territories) {
     Objects.requireNonNull(attack);
     Objects.requireNonNull(identifier);

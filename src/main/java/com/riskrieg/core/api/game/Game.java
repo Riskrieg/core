@@ -120,6 +120,10 @@ public interface Game {
 
   @NonNull
   @CheckReturnValue
+  GameAction<Nation> dissolveNation(GameColor color, PlayerIdentifier identifier);
+
+  @NonNull
+  @CheckReturnValue
   GameAction<Boolean> claim(Attack attack, NationIdentifier identifier, GameTerritory territory, GameTerritory... territories);
 
   @NonNull
