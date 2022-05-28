@@ -19,7 +19,7 @@ public class DecodeTest {
   private final Path testResourcePath = Paths.get("src", "test", "resources").toAbsolutePath();
 
   @Test
-  public void decodeLocal() throws IOException, NoSuchAlgorithmException {
+  public void testDecodeLocal() throws IOException, NoSuchAlgorithmException {
     Decoder<GameMap> decoder = new RkmDecoder();
     GameMap map = decoder.decode(testResourcePath.resolve(Path.of("maps", "antarctica.rkm")));
     assertDoesNotThrow(() -> {
@@ -43,7 +43,7 @@ public class DecodeTest {
   }
 
   @Test
-  public void decodeRemote() throws IOException, NoSuchAlgorithmException {
+  public void testDecodeRemote() throws IOException, NoSuchAlgorithmException {
     RkmDecoder decoder = new RkmDecoder();
     GameMap map = decoder.decode(new URL("https://github.com/Riskrieg/maps/raw/main/antarctica.rkm"));
 

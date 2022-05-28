@@ -1,14 +1,21 @@
 package com.riskrieg.core.api;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.riskrieg.core.api.color.ColorPalette;
 import com.riskrieg.core.api.game.Attack;
 import com.riskrieg.core.api.game.Game;
+import com.riskrieg.core.api.game.GameConstants;
+import com.riskrieg.core.api.game.GamePhase;
 import com.riskrieg.core.api.game.entity.nation.Nation;
+import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.mode.Conquest;
+import com.riskrieg.core.api.game.mode.Mock;
 import com.riskrieg.core.api.game.territory.Claim;
 import com.riskrieg.core.api.game.territory.GameTerritory;
 import com.riskrieg.core.api.game.territory.TerritoryType;
@@ -20,17 +27,20 @@ import com.riskrieg.core.api.identifier.TerritoryIdentifier;
 import com.riskrieg.core.decode.RkmDecoder;
 import com.riskrieg.core.util.game.GameUtil;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 public class TestApi { // TODO: Implement comprehensive tests
 
   @Test
-  public void testRepositoryOperations() {
+  public void testRepositoryOperations() { // TODO: Eliminate this test
     Riskrieg api = RiskriegBuilder.createLocal(Path.of("res/")).build();
     Collection<Group> groups = api.retrieveAllGroups().complete();
 
@@ -105,7 +115,7 @@ public class TestApi { // TODO: Implement comprehensive tests
     Game testGame = group.retrieveGame(GameIdentifier.of("123")).complete();
     assertNotNull(testGame);
     assertEquals("123", testGame.identifier().id());
-    assertEquals(16, testGame.colors().size());
+    assertEquals(16, testGame.palette().size());
     assertTrue(testGame instanceof Conquest);
 
     group.deleteGame(GameIdentifier.of("123")).complete();
@@ -118,20 +128,206 @@ public class TestApi { // TODO: Implement comprehensive tests
 
   }
 
-  public void turnOrderTest() {
+  @Test
+  public void testRiskriegNullThrows() {
+    // Arrange
+    Riskrieg api = RiskriegBuilder.createLocal(Path.of("res/")).build();
 
+    // Act & Assert
+    assertThrowsExactly(NullPointerException.class, () -> api.createGroup(null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> api.createGroup(null).queue());
+
+    assertThrowsExactly(NullPointerException.class, () -> api.retrieveGroup(null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> api.retrieveGroup(null).queue());
+
+    assertThrowsExactly(NullPointerException.class, () -> api.deleteGroup(null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> api.deleteGroup(null).queue());
   }
 
-  public void createLocalGroup() {
-    Riskrieg api = RiskriegBuilder.createLocal(Path.of("res/saves/")).build();
-    Group group = api.createGroup(GroupIdentifier.of("12345")).complete();
+  @Test
+  public void testGroupNullThrows() {
+    // Arrange
+    Riskrieg api = RiskriegBuilder.createLocal(Path.of("res/")).build();
+    Group group = api.createGroup(GroupIdentifier.of("test-group")).complete();
+
+    // Act & Assert
+    assertThrowsExactly(NullPointerException.class, () -> group.createGame(null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> group.createGame(null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> group.createGame(null, null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> group.createGame(null, null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> group.createGame(null, null, null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> group.createGame(null, null, null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> group.createGame(null, null, null, null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> group.createGame(null, null, null, null).queue());
+
+    assertThrowsExactly(NullPointerException.class, () -> group.retrieveGame(null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> group.retrieveGame(null).queue());
+
+    assertThrowsExactly(NullPointerException.class, () -> group.saveGame(null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> group.saveGame(null).queue());
+
+    assertThrowsExactly(NullPointerException.class, () -> group.deleteGame(null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> group.deleteGame(null).queue());
+
+    cleanup(group);
   }
 
-  public void createLocalGame() {
-    Riskrieg api = RiskriegBuilder.createLocal(Path.of("res/saves/")).build();
-    Group group = api.createGroup(GroupIdentifier.of("12345")).complete();
+  @Test
+  public void testGameNullThrows() {
+    // TODO: Write tests
+  }
 
-    Game game = group.createGame(GameIdentifier.of("123"), Conquest.class).complete();
+  @Test
+  public void testCreateLocalGroup() {
+    // Arrange
+    Riskrieg api = RiskriegBuilder.createLocal(Path.of("res/")).build();
+
+    // Act
+    Group group = api.createGroup(GroupIdentifier.of("test-group")).complete();
+
+    // Assert
+    assertTrue(Files.exists(Path.of("res/saves/test-group/")));
+    assertNotNull(group);
+    assertEquals(GroupIdentifier.of("test-group"), group.identifier());
+
+    assertTrue(cleanup(group));
+  }
+
+  @Test
+  public void testCreateLocalGame() {
+    // Arrange
+    Riskrieg api = RiskriegBuilder.createLocal(Path.of("res/")).build();
+    Group group = api.createGroup(GroupIdentifier.of("test-group")).complete();
+
+    // Act
+    Game game = group.createGame(GameIdentifier.of("test-game"), Conquest.class).complete();
+
+    // Assert
+    assertTrue(Files.exists(Path.of("res/saves/test-group/test-game.json")));
+
+    assertEquals(GameIdentifier.of("test-game"), game.identifier());
+    assertEquals(GameConstants.standard(), game.constants());
+    assertEquals(ColorPalette.standard(), game.palette());
+    assertEquals(GamePhase.SETUP, game.phase());
+
+    assertNotNull(game.creationTime());
+    assertNotNull(game.updatedTime());
+    assertNotNull(game.players());
+    assertNotNull(game.nations());
+    assertNotNull(game.claims());
+
+    assertNull(game.map());
+
+    assertEquals(0, game.players().size());
+    assertEquals(0, game.nations().size());
+    assertEquals(0, game.claims().size());
+
+    assertTrue(cleanup(group, game));
+  }
+
+  @Test
+  public void testSavingGame() throws IOException {
+    // Arrange
+    Group group = createLocalTestGroup("test-group");
+    Game game = createLocalTestGame(group, "test-game", Mock.class);
+
+    Path saveGamePath = Path.of("res/saves/test-group/test-game.json");
+    Files.deleteIfExists(saveGamePath); // Delete the file, so we can test saving independently of creation
+
+    // Act
+    group.saveGame(game).complete();
+
+    // Assert
+    assertTrue(Files.exists(saveGamePath));
+
+    assertTrue(cleanup(group, game));
+  }
+
+  @Test
+  public void testRetrieveSave() {
+    // Arrange
+    Group group = createLocalTestGroup("test-group");
+    createLocalTestGame(group, "test-game", Mock.class);
+
+    // Act
+    Game game = group.retrieveGame(GameIdentifier.of("test-game")).complete();
+
+    // Assert
+    assertNotNull(game);
+    assertEquals(GameIdentifier.of("test-game"), game.identifier());
+
+    assertTrue(cleanup(group, game));
+  }
+
+  @Test
+  public void testSetPalette() {
+    // Arrange
+    Group group = createLocalTestGroup("test-group");
+    Game game = createLocalTestGame(group, "test-game", Mock.class);
+    assertEquals(ColorPalette.standard(), game.palette());
+
+    // Act
+    assertThrowsExactly(NullPointerException.class, () -> game.setPalette(null).complete());
+    assertDoesNotThrow(() -> game.setPalette(ColorPalette.original()).complete());
+
+    // Assert
+    assertEquals(ColorPalette.original(), game.palette());
+
+    assertTrue(cleanup(group, game));
+  }
+
+  @Test
+  public void testSelectMap() throws IOException, NoSuchAlgorithmException {
+    // Arrange
+    Group group = createLocalTestGroup("test-group");
+    Game game = createLocalTestGame(group, "test-game", Mock.class);
+    assertNull(game.map());
+    assertEquals(GamePhase.SETUP, game.phase());
+
+    GameMap map = new RkmDecoder().decode(new URL("https://github.com/Riskrieg/maps/raw/main/antarctica.rkm"));
+
+    // Act
+    assertThrowsExactly(NullPointerException.class, () -> game.selectMap(null).complete());
+    assertDoesNotThrow(() -> game.selectMap(map).complete());
+
+    // Assert
+    assertNotNull(game.map());
+    assertEquals("antarctica", Objects.requireNonNull(game.map()).codename());
+
+    assertTrue(cleanup(group, game));
+  }
+
+  // Private helper methods
+
+  private Group createLocalTestGroup(String groupId) {
+    Riskrieg api = RiskriegBuilder.createLocal(Path.of("res/")).build();
+    return api.createGroup(GroupIdentifier.of(groupId)).complete();
+  }
+
+  private Game createLocalTestGame(Group group, String gameId, Class<? extends Game> type) {
+    return group.createGame(GameIdentifier.of(gameId), type).complete();
+  }
+
+  private boolean cleanup(Group group, Game game) {
+    Path testGroup = Path.of("res/" + group.identifier().id() + "/");
+    Path testGame = Path.of("res/" + group.identifier().id() + "/" + game.identifier().id() + ".json");
+    try {
+      Files.deleteIfExists(testGame);
+      Files.deleteIfExists(testGroup);
+      return true;
+    } catch (IOException e) {
+      return false;
+    }
+  }
+
+  private boolean cleanup(Group group) {
+    Path testGroup = Path.of("res/" + group.identifier().id() + "/");
+    try {
+      Files.deleteIfExists(testGroup);
+      return true;
+    } catch (IOException e) {
+      return false;
+    }
   }
 
 }
