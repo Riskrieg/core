@@ -169,7 +169,7 @@ public class TestApi { // TODO: Implement comprehensive tests
     assertThrowsExactly(NullPointerException.class, () -> group.deleteGame(null).complete());
     assertThrowsExactly(NullPointerException.class, () -> group.deleteGame(null).queue());
 
-    cleanup(group);
+    assertTrue(cleanup(group));
   }
 
   @Test
