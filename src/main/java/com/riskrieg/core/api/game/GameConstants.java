@@ -25,13 +25,16 @@ public record GameConstants(int minimumPlayers,
                             int capitalAttackBonus,
                             int capitalDefenseBonus) { // TODO: Load these values from a file on start-up
 
+  public static final int MINIMUM_PLAYERS = 2;
+  public static final int MAXIMUM_PLAYERS = 16;
+
   public GameConstants {
-    if (minimumPlayers < 2) {
+    if (minimumPlayers < MINIMUM_PLAYERS) {
       throw new IllegalArgumentException("The minimum number of players cannot be less than 2.");
     } else if (minimumPlayers > maximumPlayers) {
       throw new IllegalArgumentException("The minimum number of players cannot be greater than the maximum number of players.");
     }
-    if (maximumPlayers > 16) {
+    if (maximumPlayers > MAXIMUM_PLAYERS) {
       throw new IllegalArgumentException("The maximum number of players cannot be greater than 16.");
     }
     if (initialClaimAmount < 0) {
