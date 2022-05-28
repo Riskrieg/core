@@ -235,7 +235,7 @@ public class TestApi { // TODO: Implement comprehensive tests
     Files.deleteIfExists(saveGamePath); // Delete the file, so we can test saving independently of creation
 
     // Act
-    group.saveGame(game).complete();
+    assertDoesNotThrow(() -> group.saveGame(game).complete());
 
     // Assert
     assertTrue(Files.exists(saveGamePath));
@@ -250,7 +250,7 @@ public class TestApi { // TODO: Implement comprehensive tests
     createLocalTestGame(group, "test-game", Mock.class);
 
     // Act
-    Game game = group.retrieveGame(GameIdentifier.of("test-game")).complete();
+    Game game = assertDoesNotThrow(() -> group.retrieveGame(GameIdentifier.of("test-game")).complete());
 
     // Assert
     assertNotNull(game);
