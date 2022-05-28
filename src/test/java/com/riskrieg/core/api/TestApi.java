@@ -198,6 +198,8 @@ public class TestApi { // TODO: Implement comprehensive tests
     assertThrowsExactly(NullPointerException.class, () -> game.removePlayer(null).queue());
     assertThrowsExactly(NullPointerException.class, () -> game.createNation(null, null).complete());
     assertThrowsExactly(NullPointerException.class, () -> game.createNation(null, null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> game.dissolveNation(null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> game.dissolveNation(null).queue());
     assertThrowsExactly(NullPointerException.class, () -> game.claim(null, null, null).complete());
     assertThrowsExactly(NullPointerException.class, () -> game.claim(null, null, null).queue());
     assertThrowsExactly(NullPointerException.class, () -> game.claim(null, null, null, (GameTerritory) null).complete());
@@ -295,7 +297,7 @@ public class TestApi { // TODO: Implement comprehensive tests
   }
 
   @Test
-  public void testSetPalette() {
+  public void testGameSetPalette() {
     // Arrange
     Group group = createLocalTestGroup("test-group");
     Game game = createLocalTestGame(group, "test-game", Mock.class);
@@ -312,7 +314,7 @@ public class TestApi { // TODO: Implement comprehensive tests
   }
 
   @Test
-  public void testSelectMap() throws IOException, NoSuchAlgorithmException {
+  public void testGameSelectMap() throws IOException, NoSuchAlgorithmException {
     // Arrange
     Group group = createLocalTestGroup("test-group");
     Game game = createLocalTestGame(group, "test-game", Mock.class);
@@ -330,6 +332,41 @@ public class TestApi { // TODO: Implement comprehensive tests
     assertEquals("antarctica", Objects.requireNonNull(game.map()).codename());
 
     assertTrue(cleanup(group, game));
+  }
+
+  @Test
+  public void testGameAddPlayer() {
+
+  }
+
+  @Test
+  public void testGameRemovePlayer() {
+
+  }
+
+  @Test
+  public void testGameCreateNation() {
+
+  }
+
+  @Test
+  public void testGameDissolveNation() {
+
+  }
+
+  @Test
+  public void testGameClaim() {
+
+  }
+
+  @Test
+  public void testGameUnclaim() {
+
+  }
+
+  @Test
+  public void testGameAdvanceTurn() {
+
   }
 
   // Private helper methods
