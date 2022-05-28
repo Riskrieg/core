@@ -120,7 +120,7 @@ public interface Game {
 
   @NonNull
   @CheckReturnValue
-  GameAction<Nation> dissolveNation(GameColor color, PlayerIdentifier identifier);
+  GameAction<Nation> dissolveNation(GameColor color);
 
   @NonNull
   @CheckReturnValue

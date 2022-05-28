@@ -313,7 +313,7 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<Nation> dissolveNation(GameColor color, PlayerIdentifier identifier) {
+  public GameAction<Nation> dissolveNation(GameColor color) {
     return null; // TODO: Implement
   }
 
