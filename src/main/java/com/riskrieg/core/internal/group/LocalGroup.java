@@ -63,7 +63,11 @@ public record LocalGroup(Path path) implements Group {
   @NonNull
   @Override
   @CheckReturnValue
-  public <T extends Game> GameAction<Game> createGame(GameConstants constants, ColorPalette batch, GameIdentifier identifier, Class<T> type) {
+  public <T extends Game> GameAction<Game> createGame(GameConstants constants, ColorPalette palette, GameIdentifier identifier, Class<T> type) {
+    Objects.requireNonNull(constants);
+    Objects.requireNonNull(palette);
+    Objects.requireNonNull(identifier);
+    Objects.requireNonNull(type);
     Path savePath = path.resolve(identifier.id() + Save.FILE_EXT);
     try {
       if (Files.exists(savePath)) {
@@ -78,7 +82,7 @@ public record LocalGroup(Path path) implements Group {
           throw new FileAlreadyExistsException("An active game already exists");
         }
       }
-      var newGame = type.getDeclaredConstructor(GameIdentifier.class, GameConstants.class, ColorPalette.class).newInstance(identifier, constants, batch);
+      var newGame = type.getDeclaredConstructor(GameIdentifier.class, GameConstants.class, ColorPalette.class).newInstance(identifier, constants, palette);
       MoshiUtil.write(savePath, Save.class, new Save(newGame, type));
       return new GenericAction<>(newGame);
     } catch (Exception e) {
@@ -90,6 +94,7 @@ public record LocalGroup(Path path) implements Group {
   @Override
   @CheckReturnValue
   public GameAction<Game> retrieveGame(GameIdentifier identifier) {
+    Objects.requireNonNull(identifier);
     Path savePath = path.resolve(identifier.id() + Save.FILE_EXT);
     try {
       if (Files.notExists(savePath)) {
@@ -133,6 +138,7 @@ public record LocalGroup(Path path) implements Group {
   @Override
   @CheckReturnValue
   public GameAction<Boolean> saveGame(Game game) {
+    Objects.requireNonNull(game);
     Path savePath = path.resolve(game.identifier().id() + Save.FILE_EXT);
     try {
       MoshiUtil.write(savePath, Save.class, new Save(game, game.getClass()));
@@ -146,6 +152,7 @@ public record LocalGroup(Path path) implements Group {
   @Override
   @CheckReturnValue
   public GameAction<Boolean> deleteGame(GameIdentifier identifier) {
+    Objects.requireNonNull(identifier);
     Path savePath = path.resolve(identifier.id() + Save.FILE_EXT);
     try {
       return new GenericAction<>(Files.deleteIfExists(savePath));

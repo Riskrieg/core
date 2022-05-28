@@ -31,6 +31,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 import javax.imageio.ImageIO;
 
 public final class RkmEncoder implements Encoder<GameMap> {
@@ -40,6 +41,9 @@ public final class RkmEncoder implements Encoder<GameMap> {
 
   @Override
   public void encode(GameMap map, OutputStream outputStream, boolean shouldCloseStream) throws IOException, NoSuchAlgorithmException {
+    Objects.requireNonNull(map);
+    Objects.requireNonNull(outputStream);
+
     writeSignature(outputStream);
     writeField(RkmField.MAP_CODE_NAME, map.codename().getBytes(StandardCharsets.UTF_8), outputStream);
     writeField(RkmField.MAP_DISPLAY_NAME, map.displayName().getBytes(StandardCharsets.UTF_8), outputStream);

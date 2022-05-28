@@ -20,6 +20,7 @@ package com.riskrieg.core.rkm;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Objects;
 
 public enum RkmField {
 
@@ -107,6 +108,7 @@ public enum RkmField {
   private final byte[] fieldName;
 
   RkmField(String fieldName) {
+    Objects.requireNonNull(fieldName);
     if (fieldName.getBytes(StandardCharsets.UTF_8).length != 4) {
       throw new IllegalArgumentException("String 'fieldName' length must be exactly four (4) bytes");
     }
@@ -118,6 +120,7 @@ public enum RkmField {
   }
 
   public static RkmField of(byte[] fieldNameByteArray) {
+    Objects.requireNonNull(fieldNameByteArray);
     for (RkmField field : RkmField.values()) {
       if (Arrays.equals(field.fieldName(), fieldNameByteArray)) {
         return field;

@@ -88,14 +88,17 @@ public record GameMap(String codename, String displayName, String author,
   }
 
   public boolean contains(TerritoryIdentifier identifier) {
+    Objects.requireNonNull(identifier);
     return vertices.stream().anyMatch(territory -> territory.identifier().id().equals(identifier.id()));
   }
 
   public Optional<Territory> get(TerritoryIdentifier identifier) {
+    Objects.requireNonNull(identifier);
     return vertices.stream().filter(territory -> territory.identifier().equals(identifier)).findFirst();
   }
 
   public Set<Territory> neighbors(TerritoryIdentifier identifier) {
+    Objects.requireNonNull(identifier);
     var territory = get(identifier);
     if (territory.isPresent()) {
       var graph = graph();
@@ -105,6 +108,7 @@ public record GameMap(String codename, String displayName, String author,
   }
 
   public Set<TerritoryIdentifier> neighborsAsIdentifiers(TerritoryIdentifier identifier) {
+    Objects.requireNonNull(identifier);
     var territory = get(identifier);
     if (territory.isPresent()) {
       var graph = graph();

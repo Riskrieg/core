@@ -38,6 +38,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.imageio.ImageIO;
 
@@ -48,6 +49,7 @@ public final class RkmDecoder implements Decoder<GameMap> {
 
   @Override
   public GameMap decode(Path path) throws IOException, NoSuchAlgorithmException {
+    Objects.requireNonNull(path);
     final ByteArrayInputStream input = new ByteArrayInputStream(Files.readAllBytes(path));
     final long lengthInBytes = path.toFile().length();
     GameMap result = decodeInternal(input, lengthInBytes);
@@ -57,6 +59,7 @@ public final class RkmDecoder implements Decoder<GameMap> {
 
   @Override
   public GameMap decode(URL url) throws IOException, NoSuchAlgorithmException {
+    Objects.requireNonNull(url);
     try (InputStream inputStream = url.openStream()) {
       final byte[] fileData = inputStream.readAllBytes();
       final ByteArrayInputStream input = new ByteArrayInputStream(fileData);
@@ -69,6 +72,7 @@ public final class RkmDecoder implements Decoder<GameMap> {
 
   @Override
   public GameMap decode(byte[] data) throws IOException, NoSuchAlgorithmException {
+    Objects.requireNonNull(data);
     final ByteArrayInputStream input = new ByteArrayInputStream(data);
     final long lengthInBytes = data.length;
     GameMap result = decodeInternal(input, lengthInBytes);
