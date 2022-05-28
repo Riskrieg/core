@@ -47,7 +47,7 @@ public interface Game {
   GameConstants constants();
 
   @NonNull
-  ColorPalette colors();
+  ColorPalette colorPalette();
 
   @NonNull
   Instant creationTime();

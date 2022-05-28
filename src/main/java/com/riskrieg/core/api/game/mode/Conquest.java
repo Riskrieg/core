@@ -122,7 +122,7 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public ColorPalette colors() {
+  public ColorPalette colorPalette() {
     return colors;
   }
 

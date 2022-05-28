@@ -34,7 +34,7 @@ public record Save(GameIdentifier identifier, GameConstants constants, ColorPale
                    Class<? extends Game> type) {
 
   public Save(Game game, Class<? extends Game> type) {
-    this(game.identifier(), game.constants(), game.colors(),
+    this(game.identifier(), game.constants(), game.colorPalette(),
         game.creationTime(), game.updatedTime(), game.phase(),
         game.map() == null ? "" : Objects.requireNonNull(game.map()).codename(),
         game.players(), game.nations(), game.claims(),
