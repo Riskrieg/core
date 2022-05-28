@@ -57,7 +57,7 @@ public record GenericAction<T>(T value, Throwable throwable) implements GameActi
   public T complete() {
     if (value == null) {
       if (throwable != null) {
-        throw new RuntimeException(throwable); // Hacky but meh, fine for now
+        throw new RuntimeException(throwable); // TODO: Hacky but meh, fine for now
       } else {
         throw new NullPointerException("Value passed to GenericAction<T> is null, and complete() cannot return null");
       }
