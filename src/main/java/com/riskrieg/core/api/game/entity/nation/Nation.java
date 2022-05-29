@@ -155,4 +155,21 @@ public record Nation(NationIdentifier identifier, int colorId, PlayerIdentifier 
     return Math.min(getClaimableTerritories(claims, map).size(), allowedClaims);
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Nation nation = (Nation) o;
+    return colorId == nation.colorId && identifier.equals(nation.identifier);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(identifier, colorId);
+  }
+
 }
