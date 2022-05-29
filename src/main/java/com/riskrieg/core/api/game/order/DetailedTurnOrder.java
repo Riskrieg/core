@@ -5,8 +5,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public interface DetailedTurnOrder extends TurnOrder {
 
   /**
-   * The human-readable display name for this function.
-   * Example: FullRandomTurnOrder could have the name "Full Random".
+   * The human-readable display name for this function. Example: FullRandomTurnOrder could have the name "Full Random".
    *
    * @return The human-readable display name for this TurnOrder function.
    */
@@ -14,8 +13,7 @@ public interface DetailedTurnOrder extends TurnOrder {
   String displayName();
 
   /**
-   * The description of how this TurnOrder implementation sorts the elements.
-   * Example:
+   * The description of how this TurnOrder implementation sorts the elements. Example:
    *
    * @return The description of how this implementation sorts the elements.
    */
