@@ -105,6 +105,7 @@ public interface Game {
     return nations().stream().filter(nation -> nation.hasClaimOn(identifier, claims())).findFirst();
   }
 
+  @NonNull
   default Optional<Claim> getClaim(TerritoryIdentifier identifier) {
     return claims().stream().filter(claim -> claim.territory().identifier().equals(identifier)).findFirst();
   }
@@ -135,11 +136,11 @@ public interface Game {
 
   @NonNull
   @CheckReturnValue
-  GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, GameTerritory territory, GameTerritory... territories);
+  GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, TerritoryIdentifier territory, TerritoryIdentifier... territories);
 
   @NonNull
   @CheckReturnValue
-  GameAction<Boolean> unclaim(NationIdentifier identifier, GameTerritory territory, GameTerritory... territories);
+  GameAction<Boolean> unclaim(NationIdentifier identifier, TerritoryIdentifier territory, TerritoryIdentifier... territories);
 
   @NonNull
   @CheckReturnValue

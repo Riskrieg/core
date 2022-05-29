@@ -63,9 +63,9 @@ public class TestApi { // TODO: Implement comprehensive tests
 
     RkmDecoder decoder = new RkmDecoder();
 
-    Attack setup = (attacker, defender, territory, map, claims, constants) -> true;
+    Attack setup = (attacker, defender, territoryIdentifier, map, claims, constants) -> true;
 
-    Attack attack = (attacker, defender, territory, map, claims, constants) -> {
+    Attack attack = (attacker, defender, territoryIdentifier, map, claims, constants) -> {
       if (attacker == null) {
         return false;
       }
@@ -75,14 +75,14 @@ public class TestApi { // TODO: Implement comprehensive tests
       if (attacker.equals(defender)) {
         return false;
       }
-      if (!defender.hasClaimOn(territory.identifier(), claims)) {
+      if (!defender.hasClaimOn(territoryIdentifier, claims)) {
         return false;
       }
       int attackRolls = 1;
       int defenseRolls = 1;
       int attackSides = 8;
       int defenseSides = 6;
-      var neighbors = map.neighborsAsIdentifiers(territory.identifier());
+      var neighbors = map.neighborsAsIdentifiers(territoryIdentifier);
       for (TerritoryIdentifier neighbor : neighbors) {
         var attackerTerritories = attacker.getClaimedTerritories(claims).stream().map(Claim::territory).map(GameTerritory::identifier).collect(Collectors.toSet());
         var defenderTerritories = defender.getClaimedTerritories(claims).stream().map(Claim::territory).map(GameTerritory::identifier).collect(Collectors.toSet());
@@ -94,7 +94,7 @@ public class TestApi { // TODO: Implement comprehensive tests
           }
         } else if (defenderTerritories.contains(neighbor)) {
           defenseRolls++;
-          if (GameUtil.territoryIsOfType(territory.identifier(), TerritoryType.CAPITAL, claims)) {
+          if (GameUtil.territoryIsOfType(territoryIdentifier, TerritoryType.CAPITAL, claims)) {
             defenseSides += 1 + constants.capitalDefenseBonus();
           }
         }
@@ -112,7 +112,7 @@ public class TestApi { // TODO: Implement comprehensive tests
       throw new RuntimeException(e);
     }
 
-    game.claim(attack, nation.identifier(), GameTerritory.of(TerritoryIdentifier.of("1F"), TerritoryType.CAPITAL)).complete();
+    game.claim(attack, nation.identifier(), TerritoryIdentifier.of("1F")).complete();
 
     group.saveGame(game).complete();
 
@@ -202,12 +202,12 @@ public class TestApi { // TODO: Implement comprehensive tests
     assertThrowsExactly(NullPointerException.class, () -> game.dissolveNation(null).queue());
     assertThrowsExactly(NullPointerException.class, () -> game.claim(null, null, null).complete());
     assertThrowsExactly(NullPointerException.class, () -> game.claim(null, null, null).queue());
-    assertThrowsExactly(NullPointerException.class, () -> game.claim(null, null, null, (GameTerritory) null).complete());
-    assertThrowsExactly(NullPointerException.class, () -> game.claim(null, null, null, (GameTerritory) null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> game.claim(null, null, null, (TerritoryIdentifier) null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> game.claim(null, null, null, (TerritoryIdentifier) null).queue());
     assertThrowsExactly(NullPointerException.class, () -> game.unclaim(null, null).complete());
     assertThrowsExactly(NullPointerException.class, () -> game.unclaim(null, null).queue());
-    assertThrowsExactly(NullPointerException.class, () -> game.unclaim(null, null, (GameTerritory) null).complete());
-    assertThrowsExactly(NullPointerException.class, () -> game.unclaim(null, null, (GameTerritory) null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> game.unclaim(null, null, (TerritoryIdentifier) null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> game.unclaim(null, null, (TerritoryIdentifier) null).queue());
     assertThrowsExactly(NullPointerException.class, () -> game.start(null).complete());
     assertThrowsExactly(NullPointerException.class, () -> game.start(null).queue());
 
