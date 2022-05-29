@@ -160,6 +160,19 @@ public class GameUtil {
   }
 
   /**
+   * Determines whether a specific territory neighbors any one of a nation's territories.
+   *
+   * @param identifier          The identifier of the nation
+   * @param territoryIdentifier The identifier of the territory
+   * @param allClaims           The set of claims to build the nation's claims from
+   * @param map                 The map containing the territories and claims in question
+   * @return {@code true} if the provided territory neighbors the provided nation, otherwise {@code false}
+   */
+  public static boolean territoryNeighborsNation(NationIdentifier identifier, TerritoryIdentifier territoryIdentifier, Set<Claim> allClaims, GameMap map) {
+    return getAllNeighbors(identifier, allClaims, map).contains(territoryIdentifier);
+  }
+
+  /**
    * Gets the set of all territories that can be claimed by the provided nation.
    *
    * @param identifier The identifier of the nation
