@@ -35,6 +35,7 @@ import com.riskrieg.core.api.game.territory.TerritoryType;
 import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
+import com.riskrieg.core.api.identifier.TerritoryIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
 import com.riskrieg.core.decode.RkmDecoder;
 import com.riskrieg.core.internal.requests.GenericAction;
@@ -51,6 +52,7 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class Conquest implements Game {
 
@@ -347,6 +349,27 @@ public final class Conquest implements Game {
             throw new IllegalStateException(
                 "You must claim exactly " + allowedClaimsPerTurn + " territories, but are trying to claim " + territoriesToClaim.size() + " territories.");
           }
+          var invalidTerritories = territoriesToClaim.stream().filter(gt -> GameUtil.territoryNotExists(gt.identifier(), map)).toList();
+          if (!invalidTerritories.isEmpty()) {
+            throw new IllegalStateException("The following territories do not exist or are otherwise invalid: "
+                + invalidTerritories.stream().map(GameTerritory::identifier).map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
+          }
+          var alreadyClaimedTerritories = territoriesToClaim.stream().filter(gt -> GameUtil.nationClaimsTerritory(identifier, gt.identifier(), claims)).toList();
+          if (!alreadyClaimedTerritories.isEmpty()) {
+            throw new IllegalStateException("The following territories are already claimed by you: "
+                + alreadyClaimedTerritories.stream().map(GameTerritory::identifier).map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
+          }
+          var notNeighboringTerritories = territoriesToClaim.stream().filter(gt -> GameUtil.territoryNeighborsNation(identifier, gt.identifier(), claims, map)).toList();
+          if (!notNeighboringTerritories.isEmpty()) {
+            throw new IllegalStateException("The following territories are not neighboring your nation: "
+                + notNeighboringTerritories.stream().map(GameTerritory::identifier).map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
+          }
+          long allowedClaims = GameUtil.getAllowedClaimsPerTurn(identifier, claims, constants, map);
+          if (allowedClaims != territoriesToClaim.size()) {
+            throw new IllegalStateException("Trying to claim " + territoriesToClaim.size() + (territoriesToClaim.size() == 1 ? " territory" : " territories")
+                + " but must claim " + allowedClaims + (allowedClaims == 1 ? " territory" : " territories"));
+          }
+          // Can claim now
 
           yield new GenericAction<>(false); // TODO: Implement
         }
