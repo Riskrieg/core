@@ -32,7 +32,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public record Nation(NationIdentifier identifier, int colorId, PlayerIdentifier leaderIdentifier) { // TODO: Override equals() and hashcode()
+public record Nation(NationIdentifier identifier, int colorId, PlayerIdentifier leaderIdentifier) {
 
   public Nation {
     Objects.requireNonNull(identifier);
