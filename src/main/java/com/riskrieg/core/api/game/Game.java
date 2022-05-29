@@ -23,10 +23,10 @@ import com.riskrieg.core.api.color.GameColor;
 import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
 import com.riskrieg.core.api.game.event.ClaimEvent;
+import com.riskrieg.core.api.game.event.TurnAdvanceEvent;
 import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.order.TurnOrder;
 import com.riskrieg.core.api.game.territory.Claim;
-import com.riskrieg.core.api.game.territory.GameTerritory;
 import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
@@ -148,6 +148,6 @@ public interface Game {
 
   @NonNull
   @CheckReturnValue
-  GameAction<Boolean> advanceTurn();
+  GameAction<TurnAdvanceEvent> advanceTurn();
 
 }

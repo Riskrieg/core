@@ -21,6 +21,7 @@ package com.riskrieg.core.api.game.mode;
 import com.riskrieg.core.api.color.ColorPalette;
 import com.riskrieg.core.api.color.GameColor;
 import com.riskrieg.core.api.game.Attack;
+import com.riskrieg.core.api.game.EndReason;
 import com.riskrieg.core.api.game.Game;
 import com.riskrieg.core.api.game.GameConstants;
 import com.riskrieg.core.api.game.GamePhase;
@@ -28,6 +29,7 @@ import com.riskrieg.core.api.game.Save;
 import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
 import com.riskrieg.core.api.game.event.ClaimEvent;
+import com.riskrieg.core.api.game.event.TurnAdvanceEvent;
 import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.order.TurnOrder;
 import com.riskrieg.core.api.game.territory.Claim;
@@ -544,11 +546,42 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<Boolean> advanceTurn() { // TODO: Unimplemented
+  public GameAction<TurnAdvanceEvent> advanceTurn() {
     this.updatedTime = Instant.now();
-    // TODO: Check if anyone is defeated, check if the game is in an end-state, support skipping situation
-    players.addLast(players.removeFirst());
-    return new GenericAction<>(false);
+    try {
+      return switch (phase) {
+        case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
+        case RUNNING -> {
+          /* Defeated Check */
+          Set<Player> defeated = new HashSet<>();
+          for (Nation nation : nations) {
+            if (nation.getClaimedTerritories(claims).size() == 0) {
+              getPlayer(nation.leaderIdentifier()).ifPresent(defeated::add);
+            }
+          }
+          defeated.forEach(player -> removePlayer(player.identifier()).complete());
+
+          EndReason endReason = EndReason.NONE;
+          /* End State Check */
+          if (players.size() == 0) {
+            endReason = EndReason.NO_PLAYERS;
+            phase = GamePhase.ENDED;
+          } else if (players.size() == 1) {
+            endReason = EndReason.DEFEAT;
+            phase = GamePhase.ENDED;
+          } else if (nations.stream().allMatch(nation -> nation.getAllowedClaimAmount(claims, constants, map) == 0)) {
+            endReason = EndReason.STALEMATE;
+            phase = GamePhase.ENDED;
+          }
+
+          players.addLast(players.removeFirst());
+          yield new GenericAction<>(new TurnAdvanceEvent(defeated, endReason));
+        }
+        case SETUP -> throw new IllegalStateException("Turns can only be advanced while the game is in the active phase");
+      };
+    } catch (Exception e) {
+      return new GenericAction<>(e);
+    }
   }
 
 }
