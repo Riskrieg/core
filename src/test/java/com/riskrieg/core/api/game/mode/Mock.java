@@ -310,7 +310,7 @@ public final class Mock implements Game {
 
   @NonNull
   @Override
-  public GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, GameTerritory territory, GameTerritory... territories) {
+  public GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, TerritoryIdentifier territory, TerritoryIdentifier... territories) {
     Objects.requireNonNull(attack);
     Objects.requireNonNull(identifier);
     Objects.requireNonNull(territory);
@@ -320,6 +320,9 @@ public final class Mock implements Game {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case RUNNING -> {
+          if (map == null) {
+            throw new IllegalStateException("A valid map must be selected before claiming territories");
+          }
           Optional<Nation> nation = getNation(identifier);
           if (nation.isEmpty()) {
             throw new IllegalStateException("That nation does not exist");
@@ -328,26 +331,23 @@ public final class Mock implements Game {
           if (!players.getFirst().identifier().equals(attacker.leaderIdentifier())) {
             throw new IllegalStateException("It is not that player's turn");
           }
-          if (map == null) {
-            throw new IllegalStateException("A valid map must be selected before claiming territories");
-          }
 
-          Set<GameTerritory> territoriesToClaim = new HashSet<>(Set.of(territories));
+          Set<TerritoryIdentifier> territoriesToClaim = new HashSet<>(Set.of(territories));
           territoriesToClaim.add(territory);
-          var invalidTerritories = territoriesToClaim.stream().filter(gt -> GameUtil.territoryNotExists(gt.identifier(), map)).toList();
+          var invalidTerritories = territoriesToClaim.stream().filter(territoryIdentifier -> GameUtil.territoryNotExists(territoryIdentifier, map)).toList();
           if (!invalidTerritories.isEmpty()) {
             throw new IllegalStateException("The following territories do not exist or are otherwise invalid: "
-                + invalidTerritories.stream().map(GameTerritory::identifier).map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
+                + invalidTerritories.stream().map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
           }
-          var alreadyClaimedTerritories = territoriesToClaim.stream().filter(gt -> attacker.hasClaimOn(gt.identifier(), claims)).toList();
+          var alreadyClaimedTerritories = territoriesToClaim.stream().filter(territoryIdentifier -> attacker.hasClaimOn(territoryIdentifier, claims)).toList();
           if (!alreadyClaimedTerritories.isEmpty()) {
             throw new IllegalStateException("The following territories are already claimed by you: "
-                + alreadyClaimedTerritories.stream().map(GameTerritory::identifier).map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
+                + alreadyClaimedTerritories.stream().map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
           }
-          var notNeighboringTerritories = territoriesToClaim.stream().filter(gt -> attacker.isTerritoryNeighboring(gt.identifier(), claims, map)).toList();
+          var notNeighboringTerritories = territoriesToClaim.stream().filter(territoryIdentifier -> attacker.isTerritoryNeighboring(territoryIdentifier, claims, map)).toList();
           if (!notNeighboringTerritories.isEmpty()) {
             throw new IllegalStateException("The following territories are not neighboring your nation: "
-                + notNeighboringTerritories.stream().map(GameTerritory::identifier).map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
+                + notNeighboringTerritories.stream().map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
           }
           long allowedClaimAmount = attacker.getAllowedClaimAmount(claims, constants, map);
           if (allowedClaimAmount != territoriesToClaim.size()) {
@@ -359,13 +359,13 @@ public final class Mock implements Game {
           Set<Claim> wonClaims = new HashSet<>();
           Set<Claim> defendedClaims = new HashSet<>();
 
-          for (GameTerritory attackedTerritory : territoriesToClaim) {
-            Optional<Nation> defendingNation = getNation(attackedTerritory.identifier());
+          for (TerritoryIdentifier attackedTerritory : territoriesToClaim) {
+            Optional<Nation> defendingNation = getNation(attackedTerritory);
             if (defendingNation.isPresent()) {
               Nation defender = defendingNation.get();
               if (attack.success(attacker, defender, attackedTerritory, map, claims, constants)) { // Attacker wins, so the claim is transferred to the attacker
-                boolean wasCapital = defender.hasClaimOn(attackedTerritory.identifier(), claims, TerritoryType.CAPITAL);
-                claims.removeIf(claim -> claim.identifier().equals(defender.identifier()) && claim.territory().identifier().equals(attackedTerritory.identifier()));
+                boolean wasCapital = defender.hasClaimOn(attackedTerritory, claims, TerritoryType.CAPITAL);
+                claims.removeIf(claim -> claim.identifier().equals(defender.identifier()) && claim.territory().identifier().equals(attackedTerritory));
                 Set<Claim> defenderClaims = defender.getClaimedTerritories(claims);
                 if (wasCapital && defenderClaims.size() > 0) { // Make one of the defender's territories its new capital
                   Optional<Claim> randomClaim = defenderClaims.stream().skip(new Random().nextInt(defenderClaims.size())).findFirst();
@@ -374,19 +374,22 @@ public final class Mock implements Game {
                     claims.add(new Claim(claim.identifier(), claim.territory().with(TerritoryType.CAPITAL)));
                   });
                 }
-                claims.add(new Claim(attacker.identifier(), attackedTerritory.with(TerritoryType.PLAIN)));
-                getClaim(attackedTerritory.identifier()).ifPresent(wonClaims::add);
+                claims.add(new Claim(attacker.identifier(), new GameTerritory(attackedTerritory)));
+                getClaim(attackedTerritory).ifPresent(wonClaims::add);
               } else { // Attacker lost, so nothing happens
-                getClaim(attackedTerritory.identifier()).ifPresent(defendedClaims::add);
+                getClaim(attackedTerritory).ifPresent(defendedClaims::add);
               }
             } else { // Nobody owns it, so it's automatically claimed
-              getClaim(attackedTerritory.identifier()).ifPresent(freeClaims::add);
+              getClaim(attackedTerritory).ifPresent(freeClaims::add);
             }
           }
 
           yield new GenericAction<>(new ClaimEvent(freeClaims, wonClaims, defendedClaims));
         }
         case SETUP -> {
+          if (map == null) {
+            throw new IllegalStateException("A valid map must be selected before claiming territories");
+          }
           if (territories.length > 0) {
             throw new IllegalStateException("Only one territory can be claimed during the setup phase");
           }
@@ -394,22 +397,16 @@ public final class Mock implements Game {
           if (nation.isEmpty()) {
             throw new IllegalStateException("That nation does not exist");
           }
-          if (map == null) {
-            throw new IllegalStateException("A valid map must be selected before claiming territories");
-          }
-          if (GameUtil.territoryNotExists(territory.identifier(), map)) {
+          if (GameUtil.territoryNotExists(territory, map)) {
             throw new IllegalStateException("That territory does not exist on the current map");
           }
-          if (!territory.type().equals(TerritoryType.CAPITAL)) {
-            throw new IllegalStateException("The territory type provided must be a capital during the setup phase");
-          }
-          if (GameUtil.territoryIsClaimed(territory.identifier(), claims)) {
+          if (GameUtil.territoryIsClaimed(territory, claims)) {
             throw new IllegalStateException("That territory is already claimed by someone else");
           }
           if (nation.get().hasAnyClaim(claims, TerritoryType.CAPITAL)) {
             claims.removeIf(claim -> claim.identifier().equals(identifier) && claim.territory().type().equals(TerritoryType.CAPITAL));
           }
-          var freeClaim = new Claim(identifier, territory);
+          var freeClaim = new Claim(identifier, new GameTerritory(territory, TerritoryType.CAPITAL));
           claims.add(freeClaim);
           yield new GenericAction<>(new ClaimEvent(Set.of(freeClaim)));
         }
@@ -421,12 +418,79 @@ public final class Mock implements Game {
 
   @NonNull
   @Override
-  public GameAction<Boolean> unclaim(NationIdentifier identifier, GameTerritory territory, GameTerritory... territories) {
+  public GameAction<Boolean> unclaim(NationIdentifier identifier, TerritoryIdentifier territory, TerritoryIdentifier... territories) {
     Objects.requireNonNull(identifier);
     Objects.requireNonNull(territory);
     Objects.requireNonNull(territories);
     this.updatedTime = Instant.now(); // TODO: Implement
-    return null;
+    try {
+      return switch (phase) {
+        case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
+        case RUNNING -> {
+          if (map == null) {
+            throw new IllegalStateException("A valid map must be selected before unclaiming territories");
+          }
+          Optional<Nation> optionalNation = getNation(identifier);
+          if (optionalNation.isEmpty()) {
+            throw new IllegalStateException("That nation does not exist");
+          }
+          Nation nation = optionalNation.get();
+          if (!players.getFirst().identifier().equals(nation.leaderIdentifier())) {
+            throw new IllegalStateException("It is not that player's turn");
+          }
+          if (!nation.hasAnyClaim(claims)) {
+            throw new IllegalStateException("Cannot unclaim because this nation has no claims");
+          }
+          Set<TerritoryIdentifier> territoriesToUnclaim = new HashSet<>(Set.of(territories));
+          territoriesToUnclaim.add(territory);
+          var invalidTerritories = territoriesToUnclaim.stream().filter(territoryIdentifier -> GameUtil.territoryNotExists(territoryIdentifier, map)).toList();
+          if (!invalidTerritories.isEmpty()) {
+            throw new IllegalStateException("The following territories do not exist or are otherwise invalid: "
+                + invalidTerritories.stream().map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
+          }
+          var notClaimedTerritories = territoriesToUnclaim.stream().filter(territoryIdentifier -> !nation.hasClaimOn(territoryIdentifier, claims)).toList();
+          if (!notClaimedTerritories.isEmpty()) {
+            throw new IllegalStateException("The following territories are not claimed by you: "
+                + notClaimedTerritories.stream().map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
+          }
+          for (TerritoryIdentifier territoryIdentifier : territoriesToUnclaim) {
+            claims.removeIf(claim -> claim.territory().identifier().equals(territoryIdentifier));
+          }
+          yield new GenericAction<>(true);
+        }
+        case SETUP -> {
+          if (map == null) {
+            throw new IllegalStateException("A valid map must be selected before unclaiming territories");
+          }
+          Optional<Nation> optionalNation = getNation(identifier);
+          if (optionalNation.isEmpty()) {
+            throw new IllegalStateException("That nation does not exist");
+          }
+          Nation nation = optionalNation.get();
+          if (!nation.hasAnyClaim(claims)) {
+            throw new IllegalStateException("Cannot unclaim because this nation has no claims");
+          }
+          Set<TerritoryIdentifier> territoriesToUnclaim = new HashSet<>(Set.of(territories));
+          territoriesToUnclaim.add(territory);
+          var invalidTerritories = territoriesToUnclaim.stream().filter(territoryIdentifier -> GameUtil.territoryNotExists(territoryIdentifier, map)).toList();
+          if (!invalidTerritories.isEmpty()) {
+            throw new IllegalStateException("The following territories do not exist or are otherwise invalid: "
+                + invalidTerritories.stream().map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
+          }
+          var notClaimedTerritories = territoriesToUnclaim.stream().filter(territoryIdentifier -> !nation.hasClaimOn(territoryIdentifier, claims)).toList();
+          if (!notClaimedTerritories.isEmpty()) {
+            throw new IllegalStateException("The following territories are not claimed by you: "
+                + notClaimedTerritories.stream().map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
+          }
+          for (TerritoryIdentifier territoryIdentifier : territoriesToUnclaim) {
+            claims.removeIf(claim -> claim.territory().identifier().equals(territoryIdentifier));
+          }
+          yield new GenericAction<>(true);
+        }
+      };
+    } catch (Exception e) {
+      return new GenericAction<>(false, e);
+    }
   }
 
   @NonNull
