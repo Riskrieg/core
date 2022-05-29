@@ -40,7 +40,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
-public interface Game {
+public interface Game { // TODO: Action to rename player
 
   @NonNull
   GameIdentifier identifier();
