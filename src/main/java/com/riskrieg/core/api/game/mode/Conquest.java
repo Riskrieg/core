@@ -186,7 +186,7 @@ public final class Conquest implements Game {
     try {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
-        case SETUP, RUNNING -> {
+        case SETUP, ACTIVE -> {
           if (palette.size() < constants.maximumPlayers()) {
             throw new IllegalStateException("The provided palette only supports up to " + palette.size()
                 + " colors, but the provided constants allows a maximum amount of " + constants.maximumPlayers() + " players.");
@@ -215,7 +215,7 @@ public final class Conquest implements Game {
     try {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
-        case RUNNING -> throw new IllegalStateException("The map can only be set during the setup phase");
+        case ACTIVE -> throw new IllegalStateException("The map can only be set during the setup phase");
         case SETUP -> {
           this.map = map;
           claims.clear();
@@ -236,7 +236,7 @@ public final class Conquest implements Game {
     try {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
-        case RUNNING -> throw new IllegalStateException("Players can only be added during the setup phase");
+        case ACTIVE -> throw new IllegalStateException("Players can only be added during the setup phase");
         case SETUP -> {
           Player player = new Player(identifier, name);
           if (players.contains(player)) {
@@ -265,7 +265,7 @@ public final class Conquest implements Game {
     try {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
-        case SETUP, RUNNING -> {
+        case SETUP, ACTIVE -> {
           if (players.stream().noneMatch(player -> player.identifier().equals(identifier))) {
             throw new IllegalStateException("That player cannot be removed because they are not in the game");
           }
@@ -294,7 +294,7 @@ public final class Conquest implements Game {
     try {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
-        case RUNNING -> throw new IllegalStateException("Nations can only be created in the setup phase");
+        case ACTIVE -> throw new IllegalStateException("Nations can only be created in the setup phase");
         case SETUP -> {
           Nation nation = new Nation(NationIdentifier.uuid(), color.id(), identifier);
           if (players.stream().noneMatch(p -> p.identifier().equals(identifier))) {
@@ -335,7 +335,7 @@ public final class Conquest implements Game {
     try {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
-        case RUNNING -> {
+        case ACTIVE -> {
           if (map == null) {
             throw new IllegalStateException("A valid map must be selected before claiming territories");
           }
@@ -442,7 +442,7 @@ public final class Conquest implements Game {
     try {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
-        case RUNNING -> {
+        case ACTIVE -> {
           if (map == null) {
             throw new IllegalStateException("A valid map must be selected before unclaiming territories");
           }
@@ -517,7 +517,7 @@ public final class Conquest implements Game {
     try {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
-        case RUNNING -> throw new IllegalStateException("A game can only be started in the setup phase");
+        case ACTIVE -> throw new IllegalStateException("A game can only be started in the setup phase");
         case SETUP -> {
           if (players.size() < constants.minimumPlayers()) {
             throw new IllegalStateException("A minimum of " + constants.minimumPlayers() + " players is required to play");
@@ -535,7 +535,7 @@ public final class Conquest implements Game {
             throw new IllegalStateException("All nations must claim exactly one territory.");
           }
           this.players = order.getSorted(players, nations);
-          this.phase = GamePhase.RUNNING;
+          this.phase = GamePhase.ACTIVE;
           yield new GenericAction<>(players.getFirst());
         }
       };
@@ -551,7 +551,7 @@ public final class Conquest implements Game {
     try {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
-        case RUNNING -> {
+        case ACTIVE -> {
           /* Defeated Check */
           Set<Player> defeated = new HashSet<>();
           for (Nation nation : nations) {

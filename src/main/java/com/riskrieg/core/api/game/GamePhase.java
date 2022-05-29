@@ -21,7 +21,7 @@ package com.riskrieg.core.api.game;
 public enum GamePhase {
 
   SETUP,
-  RUNNING,
+  ACTIVE,
   ENDED
 
 }
