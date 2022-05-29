@@ -318,8 +318,8 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<Nation> dissolveNation(GameColor color) {
-    return null; // TODO: Implement
+  public GameAction<Boolean> dissolveNation(GameColor color) {
+    return new GenericAction<>(false, new IllegalAccessException("The dissolve nation action is unavailable in this game mode."));
   }
 
   @NonNull

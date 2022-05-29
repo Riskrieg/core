@@ -304,8 +304,8 @@ public final class Mock implements Game {
 
   @NonNull
   @Override
-  public GameAction<Nation> dissolveNation(GameColor color) {
-    return null; // TODO: Implement
+  public GameAction<Boolean> dissolveNation(GameColor color) { // TODO: This should actually be implemented in this class
+    return new GenericAction<>(false, new IllegalAccessException("The dissolve nation action is unavailable in this game mode."));
   }
 
   @NonNull
