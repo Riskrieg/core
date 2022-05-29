@@ -40,6 +40,10 @@ public record GameTerritory(TerritoryIdentifier identifier, TerritoryType type) 
     this(identifier, TerritoryType.PLAIN);
   }
 
+  public GameTerritory with(TerritoryType type) {
+    return new GameTerritory(identifier, type);
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

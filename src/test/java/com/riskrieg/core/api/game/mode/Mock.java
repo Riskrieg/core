@@ -9,6 +9,7 @@ import com.riskrieg.core.api.game.GamePhase;
 import com.riskrieg.core.api.game.Save;
 import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
+import com.riskrieg.core.api.game.event.ClaimEvent;
 import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.order.TurnOrder;
 import com.riskrieg.core.api.game.territory.Claim;
@@ -34,6 +35,7 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -308,7 +310,7 @@ public final class Mock implements Game {
 
   @NonNull
   @Override
-  public GameAction<Boolean> claim(Attack attack, NationIdentifier identifier, GameTerritory territory, GameTerritory... territories) {
+  public GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, GameTerritory territory, GameTerritory... territories) {
     Objects.requireNonNull(attack);
     Objects.requireNonNull(identifier);
     Objects.requireNonNull(territory);
@@ -352,10 +354,37 @@ public final class Mock implements Game {
             throw new IllegalStateException("Trying to claim " + territoriesToClaim.size() + (territoriesToClaim.size() == 1 ? " territory" : " territories")
                 + " but must claim " + allowedClaimAmount + (allowedClaimAmount == 1 ? " territory" : " territories"));
           }
-          // TODO: Implement new claim functionality
-          // Can claim now
 
-          yield new GenericAction<>(false); // TODO: Implement
+          Set<Claim> freeClaims = new HashSet<>();
+          Set<Claim> wonClaims = new HashSet<>();
+          Set<Claim> defendedClaims = new HashSet<>();
+
+          for (GameTerritory attackedTerritory : territoriesToClaim) {
+            Optional<Nation> defendingNation = getNation(attackedTerritory.identifier());
+            if (defendingNation.isPresent()) {
+              Nation defender = defendingNation.get();
+              if (attack.success(attacker, defender, attackedTerritory, map, claims, constants)) { // Attacker wins, so the claim is transferred to the attacker
+                boolean wasCapital = defender.hasClaimOn(attackedTerritory.identifier(), claims, TerritoryType.CAPITAL);
+                claims.removeIf(claim -> claim.identifier().equals(defender.identifier()) && claim.territory().identifier().equals(attackedTerritory.identifier()));
+                Set<Claim> defenderClaims = defender.getClaimedTerritories(claims);
+                if (wasCapital && defenderClaims.size() > 0) { // Make one of the defender's territories its new capital
+                  Optional<Claim> randomClaim = defenderClaims.stream().skip(new Random().nextInt(defenderClaims.size())).findFirst();
+                  randomClaim.ifPresent(claim -> {
+                    claims.remove(claim);
+                    claims.add(new Claim(claim.identifier(), claim.territory().with(TerritoryType.CAPITAL)));
+                  });
+                }
+                claims.add(new Claim(attacker.identifier(), attackedTerritory.with(TerritoryType.PLAIN)));
+                getClaim(attackedTerritory.identifier()).ifPresent(wonClaims::add);
+              } else { // Attacker lost, so nothing happens
+                getClaim(attackedTerritory.identifier()).ifPresent(defendedClaims::add);
+              }
+            } else { // Nobody owns it, so it's automatically claimed
+              getClaim(attackedTerritory.identifier()).ifPresent(freeClaims::add);
+            }
+          }
+
+          yield new GenericAction<>(new ClaimEvent(freeClaims, wonClaims, defendedClaims));
         }
         case SETUP -> {
           if (territories.length > 0) {
@@ -380,12 +409,13 @@ public final class Mock implements Game {
           if (nation.get().hasAnyClaim(claims, TerritoryType.CAPITAL)) {
             claims.removeIf(claim -> claim.identifier().equals(identifier) && claim.territory().type().equals(TerritoryType.CAPITAL));
           }
-          claims.add(new Claim(identifier, territory));
-          yield new GenericAction<>(true);
+          var freeClaim = new Claim(identifier, territory);
+          claims.add(freeClaim);
+          yield new GenericAction<>(new ClaimEvent(Set.of(freeClaim)));
         }
       };
     } catch (Exception e) {
-      return new GenericAction<>(false, e);
+      return new GenericAction<>(e);
     }
   }
 

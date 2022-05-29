@@ -22,6 +22,7 @@ import com.riskrieg.core.api.color.ColorPalette;
 import com.riskrieg.core.api.color.GameColor;
 import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
+import com.riskrieg.core.api.game.event.ClaimEvent;
 import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.order.TurnOrder;
 import com.riskrieg.core.api.game.territory.Claim;
@@ -29,6 +30,7 @@ import com.riskrieg.core.api.game.territory.GameTerritory;
 import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
+import com.riskrieg.core.api.identifier.TerritoryIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
 import edu.umd.cs.findbugs.annotations.CheckReturnValue;
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -99,6 +101,15 @@ public interface Game {
   }
 
   @NonNull
+  default Optional<Nation> getNation(TerritoryIdentifier identifier) {
+    return nations().stream().filter(nation -> nation.hasClaimOn(identifier, claims())).findFirst();
+  }
+
+  default Optional<Claim> getClaim(TerritoryIdentifier identifier) {
+    return claims().stream().filter(claim -> claim.territory().identifier().equals(identifier)).findFirst();
+  }
+
+  @NonNull
   @CheckReturnValue
   GameAction<Boolean> setPalette(ColorPalette palette);
 
@@ -124,7 +135,7 @@ public interface Game {
 
   @NonNull
   @CheckReturnValue
-  GameAction<Boolean> claim(Attack attack, NationIdentifier identifier, GameTerritory territory, GameTerritory... territories);
+  GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, GameTerritory territory, GameTerritory... territories);
 
   @NonNull
   @CheckReturnValue
