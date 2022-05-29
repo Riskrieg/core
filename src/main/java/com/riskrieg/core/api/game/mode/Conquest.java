@@ -51,6 +51,7 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -330,45 +331,42 @@ public final class Conquest implements Game {
     try {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
-        case RUNNING -> { // claim
-          var nation = getNation(identifier);
+        case RUNNING -> {
+          Optional<Nation> nation = getNation(identifier);
           if (nation.isEmpty()) {
             throw new IllegalStateException("That nation does not exist");
           }
-          if (!players.getFirst().identifier().equals(nation.get().leaderIdentifier())) {
+          Nation attacker = nation.get();
+          if (!players.getFirst().identifier().equals(attacker.leaderIdentifier())) {
             throw new IllegalStateException("It is not that player's turn");
           }
           if (map == null) {
             throw new IllegalStateException("A valid map must be selected before claiming territories");
           }
-          // TODO: Implement new claim functionality
+
           Set<GameTerritory> territoriesToClaim = new HashSet<>(Set.of(territories));
           territoriesToClaim.add(territory);
-          long allowedClaimsPerTurn = GameUtil.getAllowedClaimsPerTurn(identifier, claims, constants, map);
-          if (territoriesToClaim.size() != allowedClaimsPerTurn) {
-            throw new IllegalStateException(
-                "You must claim exactly " + allowedClaimsPerTurn + " territories, but are trying to claim " + territoriesToClaim.size() + " territories.");
-          }
           var invalidTerritories = territoriesToClaim.stream().filter(gt -> GameUtil.territoryNotExists(gt.identifier(), map)).toList();
           if (!invalidTerritories.isEmpty()) {
             throw new IllegalStateException("The following territories do not exist or are otherwise invalid: "
                 + invalidTerritories.stream().map(GameTerritory::identifier).map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
           }
-          var alreadyClaimedTerritories = territoriesToClaim.stream().filter(gt -> GameUtil.nationClaimsTerritory(identifier, gt.identifier(), claims)).toList();
+          var alreadyClaimedTerritories = territoriesToClaim.stream().filter(gt -> attacker.hasClaimOn(gt.identifier(), claims)).toList();
           if (!alreadyClaimedTerritories.isEmpty()) {
             throw new IllegalStateException("The following territories are already claimed by you: "
                 + alreadyClaimedTerritories.stream().map(GameTerritory::identifier).map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
           }
-          var notNeighboringTerritories = territoriesToClaim.stream().filter(gt -> GameUtil.territoryNeighborsNation(identifier, gt.identifier(), claims, map)).toList();
+          var notNeighboringTerritories = territoriesToClaim.stream().filter(gt -> attacker.isTerritoryNeighboring(gt.identifier(), claims, map)).toList();
           if (!notNeighboringTerritories.isEmpty()) {
             throw new IllegalStateException("The following territories are not neighboring your nation: "
                 + notNeighboringTerritories.stream().map(GameTerritory::identifier).map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
           }
-          long allowedClaims = GameUtil.getAllowedClaimsPerTurn(identifier, claims, constants, map);
-          if (allowedClaims != territoriesToClaim.size()) {
+          long allowedClaimAmount = attacker.getAllowedClaimAmount(claims, constants, map);
+          if (allowedClaimAmount != territoriesToClaim.size()) {
             throw new IllegalStateException("Trying to claim " + territoriesToClaim.size() + (territoriesToClaim.size() == 1 ? " territory" : " territories")
-                + " but must claim " + allowedClaims + (allowedClaims == 1 ? " territory" : " territories"));
+                + " but must claim " + allowedClaimAmount + (allowedClaimAmount == 1 ? " territory" : " territories"));
           }
+          // TODO: Implement new claim functionality
           // Can claim now
 
           yield new GenericAction<>(false); // TODO: Implement
@@ -377,7 +375,8 @@ public final class Conquest implements Game {
           if (territories.length > 0) {
             throw new IllegalStateException("Only one territory can be claimed during the setup phase");
           }
-          if (nations.stream().noneMatch(nation -> nation.identifier().equals(identifier))) {
+          Optional<Nation> nation = getNation(identifier);
+          if (nation.isEmpty()) {
             throw new IllegalStateException("That nation does not exist");
           }
           if (map == null) {
@@ -392,7 +391,7 @@ public final class Conquest implements Game {
           if (GameUtil.territoryIsClaimed(territory.identifier(), claims)) {
             throw new IllegalStateException("That territory is already claimed by someone else");
           }
-          if (GameUtil.nationClaimsAnyTerritory(identifier, claims, TerritoryType.CAPITAL)) {
+          if (nation.get().hasAnyClaim(claims, TerritoryType.CAPITAL)) {
             claims.removeIf(claim -> claim.identifier().equals(identifier) && claim.territory().type().equals(TerritoryType.CAPITAL));
           }
           claims.add(new Claim(identifier, territory));
@@ -436,7 +435,7 @@ public final class Conquest implements Game {
           if (nations.size() > players.size()) {
             throw new IllegalStateException("Critical error: Too many nations for the amount of players. Please report this as a bug");
           }
-          if (!nations.stream().allMatch(nation -> GameUtil.getTerritorialClaimCount(nation.identifier(), claims) == 1)) {
+          if (!nations.stream().allMatch(nation -> nation.getClaimedTerritories(claims).size() == 1)) {
             throw new IllegalStateException("All nations must claim exactly one territory.");
           }
           this.players = order.getSorted(players, nations);

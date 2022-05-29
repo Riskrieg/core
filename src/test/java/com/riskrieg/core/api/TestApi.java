@@ -75,7 +75,7 @@ public class TestApi { // TODO: Implement comprehensive tests
       if (attacker.equals(defender)) {
         return false;
       }
-      if (!GameUtil.nationClaimsTerritory(defender, territory.identifier(), claims)) {
+      if (!defender.hasClaimOn(territory.identifier(), claims)) {
         return false;
       }
       int attackRolls = 1;
@@ -84,8 +84,8 @@ public class TestApi { // TODO: Implement comprehensive tests
       int defenseSides = 6;
       var neighbors = map.neighborsAsIdentifiers(territory.identifier());
       for (TerritoryIdentifier neighbor : neighbors) {
-        var attackerTerritories = GameUtil.getClaimSet(attacker, claims).stream().map(Claim::territory).map(GameTerritory::identifier).collect(Collectors.toSet());
-        var defenderTerritories = GameUtil.getClaimSet(defender, claims).stream().map(Claim::territory).map(GameTerritory::identifier).collect(Collectors.toSet());
+        var attackerTerritories = attacker.getClaimedTerritories(claims).stream().map(Claim::territory).map(GameTerritory::identifier).collect(Collectors.toSet());
+        var defenderTerritories = defender.getClaimedTerritories(claims).stream().map(Claim::territory).map(GameTerritory::identifier).collect(Collectors.toSet());
         if (attackerTerritories.contains(neighbor)) {
           if (GameUtil.territoryIsOfType(neighbor, TerritoryType.CAPITAL, claims)) {
             attackRolls += 1 + constants.capitalAttackBonus();
