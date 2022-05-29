@@ -436,7 +436,7 @@ public final class Conquest implements Game {
     Objects.requireNonNull(identifier);
     Objects.requireNonNull(territory);
     Objects.requireNonNull(territories);
-    this.updatedTime = Instant.now(); // TODO: Implement
+    this.updatedTime = Instant.now();
     try {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
