@@ -137,12 +137,22 @@ public interface Game { // TODO: Action to rename player
 
   @NonNull
   @CheckReturnValue
-  GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, TerritoryIdentifier territory, TerritoryIdentifier... territories);
+  GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, ClaimOverride override, TerritoryIdentifier territory, TerritoryIdentifier... territories);
+
+  @NonNull
+  @CheckReturnValue
+  default GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, TerritoryIdentifier territory, TerritoryIdentifier... territories) {
+    return claim(attack, identifier, ClaimOverride.NONE, territory, territories);
+  }
+
+  default GameAction<ClaimEvent> claim(Attack attack, PlayerIdentifier identifier, ClaimOverride override, TerritoryIdentifier territory, TerritoryIdentifier... territories) {
+    Optional<Nation> nation = getNation(identifier);
+    return nation.map(n -> claim(attack, n.identifier(), override, territory, territories))
+        .orElseGet(() -> new GenericAction<>(new IllegalStateException("Unable to find nation with that player")));
+  }
 
   default GameAction<ClaimEvent> claim(Attack attack, PlayerIdentifier identifier, TerritoryIdentifier territory, TerritoryIdentifier... territories) {
-    Optional<Nation> nation = getNation(identifier);
-    return nation.map(n -> claim(attack, n.identifier(), territory, territories))
-        .orElseGet(() -> new GenericAction<>(new IllegalStateException("Unable to find nation with that player")));
+    return claim(attack, identifier, ClaimOverride.NONE, territory, territories);
   }
 
   @NonNull

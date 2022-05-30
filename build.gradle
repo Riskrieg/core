@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.riskrieg'
-version '3.0.0-alpha5'
+version '3.0.0-alpha6'
 
 publishing {
     publications {

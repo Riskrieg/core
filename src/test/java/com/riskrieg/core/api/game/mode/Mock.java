@@ -3,6 +3,7 @@ package com.riskrieg.core.api.game.mode;
 import com.riskrieg.core.api.color.ColorPalette;
 import com.riskrieg.core.api.color.GameColor;
 import com.riskrieg.core.api.game.Attack;
+import com.riskrieg.core.api.game.ClaimOverride;
 import com.riskrieg.core.api.game.EndReason;
 import com.riskrieg.core.api.game.Game;
 import com.riskrieg.core.api.game.GameConstants;
@@ -313,7 +314,7 @@ public final class Mock implements Game {
 
   @NonNull
   @Override
-  public GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, TerritoryIdentifier territory, TerritoryIdentifier... territories) {
+  public GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, ClaimOverride override, TerritoryIdentifier territory, TerritoryIdentifier... territories) {
     Objects.requireNonNull(attack);
     Objects.requireNonNull(identifier);
     Objects.requireNonNull(territory);
@@ -498,7 +499,7 @@ public final class Mock implements Game {
 
   @NonNull
   @Override
-  public GameAction<Player> start(TurnOrder order) {
+  public GameAction<Player> start(TurnOrder order, boolean reverse, boolean randomizeStart) {
     Objects.requireNonNull(order);
     this.updatedTime = Instant.now();
     try {
