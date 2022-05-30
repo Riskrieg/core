@@ -32,6 +32,7 @@ import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
 import com.riskrieg.core.api.identifier.TerritoryIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
+import com.riskrieg.core.internal.requests.GenericAction;
 import edu.umd.cs.findbugs.annotations.CheckReturnValue;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -137,6 +138,12 @@ public interface Game { // TODO: Action to rename player
   @NonNull
   @CheckReturnValue
   GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, TerritoryIdentifier territory, TerritoryIdentifier... territories);
+
+  default GameAction<ClaimEvent> claim(Attack attack, PlayerIdentifier identifier, TerritoryIdentifier territory, TerritoryIdentifier... territories) {
+    Optional<Nation> nation = getNation(identifier);
+    return nation.map(n -> claim(attack, n.identifier(), territory, territories))
+        .orElseGet(() -> new GenericAction<>(new IllegalStateException("Unable to find nation with that player")));
+  }
 
   @NonNull
   @CheckReturnValue
