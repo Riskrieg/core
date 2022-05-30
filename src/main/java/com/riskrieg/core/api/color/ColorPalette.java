@@ -25,13 +25,17 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public record ColorPalette(SortedSet<GameColor> set) {
+public record ColorPalette(String name, SortedSet<GameColor> set) { // Encode as json with file extension of (.rkp)
 
   public static final int MINIMUM_SIZE = 2;
   public static final int MAXIMUM_SIZE = 16;
 
   public ColorPalette {
+    Objects.requireNonNull(name);
     Objects.requireNonNull(set);
+    if (name.isBlank()) {
+      throw new IllegalStateException("String 'name' cannot be blank");
+    }
     if (set.size() < MINIMUM_SIZE) {
       throw new IllegalStateException("Your color set cannot have fewer than " + MINIMUM_SIZE + " colors defined. You have " + set.size() + " unique items in your set.");
     } else if (set.size() > MAXIMUM_SIZE) {
@@ -40,8 +44,8 @@ public record ColorPalette(SortedSet<GameColor> set) {
     set = Collections.unmodifiableSortedSet(set);
   }
 
-  public ColorPalette(GameColor... colors) {
-    this(new TreeSet<>(Set.of(colors)));
+  public ColorPalette(String name, GameColor... colors) {
+    this(name, new TreeSet<>(Set.of(colors)));
   }
 
   public GameColor first() {
@@ -76,12 +80,12 @@ public record ColorPalette(SortedSet<GameColor> set) {
   }
 
   /**
-   * The current standard palette. Includes support for most types of color blindness.
+   * The current default palette. Includes support for most types of color blindness.
    *
-   * @return the standard color palette
+   * @return the default color palette
    */
   public static ColorPalette standard() {
-    return new ColorPalette(
+    return new ColorPalette("Default",
         new GameColor(0, "Salmon", 255, 140, 150), new GameColor(1, "Lavender", 155, 120, 190),
         new GameColor(2, "Thistle", 215, 190, 240), new GameColor(3, "Ice", 195, 230, 255),
         new GameColor(4, "Sky", 120, 165, 215), new GameColor(5, "Sea", 140, 225, 175),
@@ -94,7 +98,7 @@ public record ColorPalette(SortedSet<GameColor> set) {
   }
 
   public static ColorPalette original() {
-    return new ColorPalette(
+    return new ColorPalette("Original",
         new GameColor(0, "Cadmium", 240, 130, 50), new GameColor(1, "Sun", 241, 224, 82),
         new GameColor(2, "Sod", 171, 191, 94), new GameColor(3, "Sea", 140, 198, 183),
         new GameColor(4, "Sky", 122, 165, 217), new GameColor(5, "Burgundy", 111, 16, 56),
@@ -106,47 +110,47 @@ public record ColorPalette(SortedSet<GameColor> set) {
     );
   }
 
-  public static ColorPalette grayscale() { // TODO: Doesn't really work, maybe 8-color palette?
-    return new ColorPalette(
-        new GameColor(0, "Ceramic", 255, 255, 255), new GameColor(1, "Paper", 231, 231, 231),
-        new GameColor(2, "Cloud", 209, 209, 209), new GameColor(3, "Fog", 189, 189, 189),
-        new GameColor(4, "Aluminum", 171, 171, 171), new GameColor(5, "Stardust", 155, 155, 155),
-        new GameColor(6, "Monsoon", 140, 140, 140), new GameColor(7, "Granite", 126, 126, 126),
-        new GameColor(8, "Smoke", 113, 113, 113), new GameColor(9, "Carbon", 100, 100, 100),
-        new GameColor(10, "Charcoal", 86, 86, 86), new GameColor(11, "Iridium", 71, 71, 71),
-        new GameColor(12, "Peppercorn", 56, 56, 56), new GameColor(13, "Graphite", 40, 40, 40),
-        new GameColor(14, "Obsidian", 24, 24, 24), new GameColor(15, "Onyx", 0, 0, 0)
-    );
-  }
+//  public static ColorPalette grayscale() { // TODO: Doesn't really work, maybe 8-color palette?
+//    return new ColorPalette("Grayscale",
+//        new GameColor(0, "Ceramic", 255, 255, 255), new GameColor(1, "Paper", 231, 231, 231),
+//        new GameColor(2, "Cloud", 209, 209, 209), new GameColor(3, "Fog", 189, 189, 189),
+//        new GameColor(4, "Aluminum", 171, 171, 171), new GameColor(5, "Stardust", 155, 155, 155),
+//        new GameColor(6, "Monsoon", 140, 140, 140), new GameColor(7, "Granite", 126, 126, 126),
+//        new GameColor(8, "Smoke", 113, 113, 113), new GameColor(9, "Carbon", 100, 100, 100),
+//        new GameColor(10, "Charcoal", 86, 86, 86), new GameColor(11, "Iridium", 71, 71, 71),
+//        new GameColor(12, "Peppercorn", 56, 56, 56), new GameColor(13, "Graphite", 40, 40, 40),
+//        new GameColor(14, "Obsidian", 24, 24, 24), new GameColor(15, "Onyx", 0, 0, 0)
+//    );
+//  }
 
-  public static ColorPalette pastel() { // TODO: Good, but needs work
-    return new ColorPalette(
-        new GameColor(0, "Champagne", "#FFF7E4"), new GameColor(1, "Daffodil", "#FFF7A0"),
-        new GameColor(2, "Chardonnay", "#FFC384"), new GameColor(3, "Geraldine", "#DEA38B"),
-        new GameColor(4, "Tequila", "#FFE6C6"), new GameColor(5, "Sweetcorn", "#E9F59D"),
-        new GameColor(6, "Veltliner", "#B0EB93"), new GameColor(7, "Sage", "#87A889"),
-        new GameColor(8, "Orchid", "#FEAAE4"), new GameColor(9, "Edgewater", "#B3E3DA"),
-        new GameColor(10, "Cornflower", "#ACCCE4"), new GameColor(11, "Biloba", "#B0A9E4"),
-        new GameColor(12, "Rosé", "#F98284"), new GameColor(13, "Carnation", "#D9C8BF"),
-        new GameColor(14, "Allium", "#6C5671"), new GameColor(15, "Baccara", "#28282E")
-    );
-  }
+//  public static ColorPalette pastel() { // TODO: Good, but needs work
+//    return new ColorPalette("Pastel",
+//        new GameColor(0, "Champagne", "#FFF7E4"), new GameColor(1, "Daffodil", "#FFF7A0"),
+//        new GameColor(2, "Chardonnay", "#FFC384"), new GameColor(3, "Geraldine", "#DEA38B"),
+//        new GameColor(4, "Tequila", "#FFE6C6"), new GameColor(5, "Sweetcorn", "#E9F59D"),
+//        new GameColor(6, "Veltliner", "#B0EB93"), new GameColor(7, "Sage", "#87A889"),
+//        new GameColor(8, "Orchid", "#FEAAE4"), new GameColor(9, "Edgewater", "#B3E3DA"),
+//        new GameColor(10, "Cornflower", "#ACCCE4"), new GameColor(11, "Biloba", "#B0A9E4"),
+//        new GameColor(12, "Rosé", "#F98284"), new GameColor(13, "Carnation", "#D9C8BF"),
+//        new GameColor(14, "Allium", "#6C5671"), new GameColor(15, "Baccara", "#28282E")
+//    );
+//  }
 
-  public static ColorPalette antiquity() { // TODO: Good, but needs work
-    return new ColorPalette(
-        new GameColor(0, "Hampton", "#E8D8A5"), new GameColor(1, "Ochre", "#DE9A28"),
-        new GameColor(2, "Sienna", "#D26730"), new GameColor(3, "Coral", "#F1866C"),
-        new GameColor(4, "Valentine", "#E55D4D"), new GameColor(5, "Cascade", "#8AA7AC"),
-        new GameColor(6, "Raven", "#707B88"), new GameColor(7, "Olive", "#8E9257"),
-        new GameColor(8, "Fern", "#5D7557"), new GameColor(9, "Apache", "#E8BE82"),
-        new GameColor(10, "Sepia", "#E89F6E"), new GameColor(11, "Clay", "#B16B4A"),
-        new GameColor(12, "Tawny", "#6D3D29"), new GameColor(13, "Bistre", "#452923"),
-        new GameColor(14, "Umber", "#2D211E"), new GameColor(15, "Sable", "#202020")
-    );
-  }
+//  public static ColorPalette antiquity() { // TODO: Good, but needs work
+//    return new ColorPalette("Antiquity",
+//        new GameColor(0, "Hampton", "#E8D8A5"), new GameColor(1, "Ochre", "#DE9A28"),
+//        new GameColor(2, "Sienna", "#D26730"), new GameColor(3, "Coral", "#F1866C"),
+//        new GameColor(4, "Valentine", "#E55D4D"), new GameColor(5, "Cascade", "#8AA7AC"),
+//        new GameColor(6, "Raven", "#707B88"), new GameColor(7, "Olive", "#8E9257"),
+//        new GameColor(8, "Fern", "#5D7557"), new GameColor(9, "Apache", "#E8BE82"),
+//        new GameColor(10, "Sepia", "#E89F6E"), new GameColor(11, "Clay", "#B16B4A"),
+//        new GameColor(12, "Tawny", "#6D3D29"), new GameColor(13, "Bistre", "#452923"),
+//        new GameColor(14, "Umber", "#2D211E"), new GameColor(15, "Sable", "#202020")
+//    );
+//  }
 
   private static ColorPalette PLACEHOLDER() { // Just a placeholder for copy-pasting
-    return new ColorPalette(
+    return new ColorPalette("PLACEHOLDER",
         new GameColor(0, "NAME", ""), new GameColor(1, "NAME", ""),
         new GameColor(2, "NAME", ""), new GameColor(3, "NAME", ""),
         new GameColor(4, "NAME", ""), new GameColor(5, "NAME", ""),
