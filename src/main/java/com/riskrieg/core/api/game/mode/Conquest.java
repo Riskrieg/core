@@ -332,7 +332,7 @@ public final class Conquest implements Game {
     Objects.requireNonNull(attack);
     Objects.requireNonNull(identifier);
     Objects.requireNonNull(territory);
-    Objects.requireNonNull(territories); // /claim territories: A1 override:Exact
+    Objects.requireNonNull(territories);
     this.updatedTime = Instant.now();
     try {
       return switch (phase) {
@@ -372,6 +372,8 @@ public final class Conquest implements Game {
             throw new IllegalStateException("Trying to claim " + territoriesToClaim.size() + (territoriesToClaim.size() == 1 ? " territory" : " territories")
                 + " but must claim " + allowedClaimAmount + (allowedClaimAmount == 1 ? " territory" : " territories"));
           }
+
+          // TODO: Implement ClaimOverride
 
           Set<Claim> freeClaims = new HashSet<>();
           Set<Claim> wonClaims = new HashSet<>();
