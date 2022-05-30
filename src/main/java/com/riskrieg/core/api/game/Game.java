@@ -151,7 +151,13 @@ public interface Game { // TODO: Action to rename player
 
   @NonNull
   @CheckReturnValue
-  GameAction<Player> start(TurnOrder order);
+  GameAction<Player> start(TurnOrder order, boolean reverse, boolean randomizeStart);
+
+  @NonNull
+  @CheckReturnValue
+  default GameAction<Player> start(TurnOrder order) {
+    return start(order, false, false);
+  }
 
   @NonNull
   @CheckReturnValue

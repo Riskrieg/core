@@ -512,7 +512,7 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<Player> start(TurnOrder order) {
+  public GameAction<Player> start(TurnOrder order, boolean reverse, boolean randomizeStart) {
     Objects.requireNonNull(order);
     this.updatedTime = Instant.now();
     try {
@@ -536,6 +536,12 @@ public final class Conquest implements Game {
             throw new IllegalStateException("All nations must claim exactly one territory.");
           }
           this.players = order.getSorted(players, nations);
+          if (reverse) {
+            this.players = TurnOrder.reverse(this.players);
+          }
+          if (randomizeStart) {
+            this.players = TurnOrder.randomizeStart(this.players);
+          }
           this.phase = GamePhase.ACTIVE;
           yield new GenericAction<>(players.getFirst());
         }
