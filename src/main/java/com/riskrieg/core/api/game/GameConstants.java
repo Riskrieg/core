@@ -18,6 +18,8 @@
 
 package com.riskrieg.core.api.game;
 
+import com.riskrieg.core.api.color.ColorPalette;
+
 public record GameConstants(int minimumPlayers,
                             int maximumPlayers,
                             int initialClaimAmount,
@@ -49,6 +51,17 @@ public record GameConstants(int minimumPlayers,
     if (capitalDefenseBonus < 0) {
       throw new IllegalArgumentException("The capital defense bonus cannot be negative.");
     }
+  }
+
+  /**
+   * Clamps the minimum and maximum players to values that are compatible with the provided ColorPalette.
+   *
+   * @param palette The ColorPalette to clamp values to.
+   * @return a GameConstants object that has values compatible with the provided ColorPalette
+   */
+  public GameConstants clampTo(ColorPalette palette) {
+    return new GameConstants(minimumPlayers > palette.size() ? palette.size() : minimumPlayers, palette.size(),
+        initialClaimAmount, claimIncreaseThreshold, capitalAttackBonus, capitalDefenseBonus);
   }
 
   public static GameConstants standard() {
