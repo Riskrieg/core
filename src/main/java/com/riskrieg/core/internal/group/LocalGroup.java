@@ -28,7 +28,7 @@ import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.GroupIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
 import com.riskrieg.core.internal.requests.GenericAction;
-import com.riskrieg.core.util.io.MoshiUtil;
+import com.riskrieg.core.util.io.RkJsonUtil;
 import edu.umd.cs.findbugs.annotations.CheckReturnValue;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.FileNotFoundException;
@@ -71,7 +71,7 @@ public record LocalGroup(Path path) implements Group {
     Path savePath = path.resolve(identifier.id() + Save.FILE_EXT);
     try {
       if (Files.exists(savePath)) {
-        Save save = MoshiUtil.read(savePath, Save.class);
+        Save save = RkJsonUtil.read(savePath, Save.class);
         if (save == null) {
           throw new IllegalStateException("Save is null");
         }
@@ -83,7 +83,7 @@ public record LocalGroup(Path path) implements Group {
         }
       }
       var newGame = type.getDeclaredConstructor(GameIdentifier.class, GameConstants.class, ColorPalette.class).newInstance(identifier, constants, palette);
-      MoshiUtil.write(savePath, Save.class, new Save(newGame, type));
+      RkJsonUtil.write(savePath, Save.class, new Save(newGame, type));
       return new GenericAction<>(newGame);
     } catch (Exception e) {
       return new GenericAction<>(e);
@@ -100,7 +100,7 @@ public record LocalGroup(Path path) implements Group {
       if (Files.notExists(savePath)) {
         throw new FileNotFoundException("Save file does not exist");
       }
-      Save save = MoshiUtil.read(savePath, Save.class);
+      Save save = RkJsonUtil.read(savePath, Save.class);
       if (save == null) {
         throw new IllegalStateException("Save is null");
       }
@@ -141,7 +141,7 @@ public record LocalGroup(Path path) implements Group {
     Objects.requireNonNull(game);
     Path savePath = path.resolve(game.identifier().id() + Save.FILE_EXT);
     try {
-      MoshiUtil.write(savePath, Save.class, new Save(game, game.getClass()));
+      RkJsonUtil.write(savePath, Save.class, new Save(game, game.getClass()));
       return new GenericAction<>(true);
     } catch (Exception e) {
       return new GenericAction<>(false, e);

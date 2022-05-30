@@ -39,9 +39,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class MoshiUtil {
+public class RkJsonUtil {
 
-  private MoshiUtil() {
+  private RkJsonUtil() {
   }
 
   private static final Moshi.Builder jsonAdapterBuilder = new Moshi.Builder()

@@ -23,7 +23,7 @@ import com.riskrieg.core.api.game.map.options.Flavor;
 import com.riskrieg.core.api.game.map.options.HorizontalAlignment;
 import com.riskrieg.core.api.game.map.options.InterfaceAlignment;
 import com.riskrieg.core.api.game.map.options.VerticalAlignment;
-import com.riskrieg.core.util.io.MoshiUtil;
+import com.riskrieg.core.util.io.RkJsonUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.nio.file.Path;
 import java.util.Objects;
@@ -33,10 +33,10 @@ public record Options(Flavor flavor, Availability availability, InterfaceAlignme
   @NonNull
   public static Options load(@NonNull Path path) {
     try {
-      Options result = MoshiUtil.read(path, Options.class);
+      Options result = RkJsonUtil.read(path, Options.class);
       if (result == null) {
         result = new Options();
-        MoshiUtil.write(path, Options.class, result);
+        RkJsonUtil.write(path, Options.class, result);
       }
       return result;
     } catch (Exception e) {

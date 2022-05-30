@@ -1,7 +1,7 @@
 package com.riskrieg.core.decode;
 
 import com.riskrieg.core.api.color.ColorPalette;
-import com.riskrieg.core.util.io.MoshiUtil;
+import com.riskrieg.core.util.io.RkJsonUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -14,7 +14,7 @@ public final class RkpDecoder implements Decoder<ColorPalette> {
   @Override
   public ColorPalette decode(Path path) throws IOException {
     Objects.requireNonNull(path);
-    return MoshiUtil.read(path, ColorPalette.class);
+    return RkJsonUtil.read(path, ColorPalette.class);
   }
 
   @Override
@@ -22,14 +22,14 @@ public final class RkpDecoder implements Decoder<ColorPalette> {
     Objects.requireNonNull(url);
     try (InputStream inputStream = url.openStream()) {
       final byte[] data = inputStream.readAllBytes();
-      return MoshiUtil.read(new String(data, StandardCharsets.UTF_8), ColorPalette.class);
+      return RkJsonUtil.read(new String(data, StandardCharsets.UTF_8), ColorPalette.class);
     }
   }
 
   @Override
   public ColorPalette decode(byte[] data) throws IOException {
     Objects.requireNonNull(data);
-    return MoshiUtil.read(new String(data, StandardCharsets.UTF_8), ColorPalette.class);
+    return RkJsonUtil.read(new String(data, StandardCharsets.UTF_8), ColorPalette.class);
   }
 
 }
