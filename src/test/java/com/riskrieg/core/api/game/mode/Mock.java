@@ -539,6 +539,7 @@ public final class Mock implements Game {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case ACTIVE -> {
+          Player previous = players.getFirst();
           /* Defeated Check */
           Set<Player> defeated = new HashSet<>();
           for (Nation nation : nations) {
@@ -561,7 +562,6 @@ public final class Mock implements Game {
             phase = GamePhase.ENDED;
           }
 
-          Player previous = players.getFirst();
           players.addLast(players.removeFirst());
           yield new GenericAction<>(new TurnAdvanceEvent(players.getFirst(), previous, defeated, endReason));
         }
