@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.security.NoSuchAlgorithmException;
 
-public sealed interface Encoder<T> permits RkmEncoder {
+public sealed interface Encoder<T> permits RkmEncoder, RkpEncoder {
 
   void encode(T object, OutputStream outputStream, boolean shouldCloseStream) throws IOException, NoSuchAlgorithmException;
 

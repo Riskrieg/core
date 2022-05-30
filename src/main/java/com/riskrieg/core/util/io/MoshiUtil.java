@@ -33,6 +33,7 @@ import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -84,6 +85,12 @@ public class MoshiUtil {
     return null;
   }
 
+  @Nullable
+  public static <T> T read(@NonNull String string, @NonNull Type type) throws IOException {
+    JsonAdapter<T> jsonAdapter = jsonAdapter().adapter(type);
+    return jsonAdapter.fromJson(string);
+  }
+
   // Write
 
   public static <T> void write(@NonNull Path path, @NonNull Class<T> type, @NonNull T object) throws IOException {
@@ -94,6 +101,10 @@ public class MoshiUtil {
   public static <T> void write(@NonNull Path path, @NonNull Type type, @NonNull T object) throws IOException {
     Files.createDirectories(path.getParent());
     Files.writeString(path, jsonAdapter().adapter(type).indent("  ").toJson(object), StandardCharsets.UTF_8);
+  }
+
+  public static <T> void write(@NonNull OutputStream outputStream, @NonNull Type type, @NonNull T object) throws IOException {
+    outputStream.write(jsonAdapter().adapter(type).indent("  ").toJson(object).getBytes(StandardCharsets.UTF_8));
   }
 
 }

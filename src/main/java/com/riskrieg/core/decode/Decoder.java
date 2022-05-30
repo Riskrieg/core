@@ -23,7 +23,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 
-public sealed interface Decoder<T> permits RkmDecoder {
+public sealed interface Decoder<T> permits RkmDecoder, RkpDecoder {
 
   T decode(Path path) throws IOException, NoSuchAlgorithmException;
 
