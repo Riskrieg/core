@@ -575,8 +575,9 @@ public final class Conquest implements Game {
             phase = GamePhase.ENDED;
           }
 
+          Player previous = players.getFirst();
           players.addLast(players.removeFirst());
-          yield new GenericAction<>(new TurnAdvanceEvent(defeated, endReason));
+          yield new GenericAction<>(new TurnAdvanceEvent(players.getFirst(), previous, defeated, endReason));
         }
         case SETUP -> throw new IllegalStateException("Turns can only be advanced while the game is in the active phase");
       };
