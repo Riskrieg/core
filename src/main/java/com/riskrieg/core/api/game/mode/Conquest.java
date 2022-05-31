@@ -91,10 +91,13 @@ public final class Conquest implements Game {
     this.updatedTime = save.updatedTime().toInstant();
     this.phase = save.phase();
     if (!save.mapCodename().isBlank()) {
+      System.out.println("Codename: " + save.mapCodename());
       RkmDecoder decoder = new RkmDecoder();
       try {
+        System.out.println("Trying " + mapRepository.toString() + "  | " + mapRepository.resolve(save.mapCodename() + ".rkm"));
         decoder.decode(mapRepository.resolve(save.mapCodename() + ".rkm"));
       } catch (IOException | NoSuchAlgorithmException e) {
+        e.printStackTrace();
         throw new RuntimeException(e); // Panic, map can't be loaded.
       }
     }
