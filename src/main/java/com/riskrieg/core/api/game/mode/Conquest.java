@@ -208,6 +208,9 @@ public final class Conquest implements Game {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case SETUP, ACTIVE -> {
+          if (palette.equals(this.palette)) {
+            throw new IllegalStateException("The provided palette is identical to the current palette, so no changes were made.");
+          }
           if (palette.size() < constants.maximumPlayers()) {
             throw new IllegalStateException("The provided palette only supports up to " + palette.size()
                 + " colors, but the provided constants allows a maximum amount of " + constants.maximumPlayers() + " players.");
