@@ -75,7 +75,7 @@ public final class Mock implements Game {
     if (!save.mapCodename().isBlank()) {
       RkmDecoder decoder = new RkmDecoder();
       try {
-        decoder.decode(mapRepository.resolve(save.mapCodename() + ".rkm"));
+        this.map = decoder.decode(mapRepository.resolve(save.mapCodename() + ".rkm"));
       } catch (IOException | NoSuchAlgorithmException e) {
         throw new RuntimeException(e); // Panic, map can't be loaded.
       }
