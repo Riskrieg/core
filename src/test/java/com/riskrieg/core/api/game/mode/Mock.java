@@ -163,6 +163,24 @@ public final class Mock implements Game {
     return Collections.unmodifiableSet(claims);
   }
 
+  @NonNull
+  @Override
+  public Optional<Player> getCurrentPlayer() {
+    return switch (phase) {
+      default -> Optional.empty();
+      case ACTIVE -> Optional.of(players.getFirst());
+    };
+  }
+
+  @NonNull
+  @Override
+  public Optional<Nation> getCurrentNation() {
+    return switch (phase) {
+      default -> Optional.empty();
+      case ACTIVE -> getNation(players.getFirst().identifier());
+    };
+  }
+
   public void setPhase(GamePhase phase) {
     this.phase = phase;
   }

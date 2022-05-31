@@ -107,6 +107,12 @@ public interface Game { // TODO: Action to rename player
   }
 
   @NonNull
+  Optional<Player> getCurrentPlayer();
+
+  @NonNull
+  Optional<Nation> getCurrentNation();
+
+  @NonNull
   default Optional<Claim> getClaim(TerritoryIdentifier identifier) {
     return claims().stream().filter(claim -> claim.territory().identifier().equals(identifier)).findFirst();
   }

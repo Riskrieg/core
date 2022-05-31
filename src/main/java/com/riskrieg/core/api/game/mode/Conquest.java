@@ -183,6 +183,24 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
+  public Optional<Player> getCurrentPlayer() {
+    return switch (phase) {
+      default -> Optional.empty();
+      case ACTIVE -> Optional.of(players.getFirst());
+    };
+  }
+
+  @NonNull
+  @Override
+  public Optional<Nation> getCurrentNation() {
+    return switch (phase) {
+      default -> Optional.empty();
+      case ACTIVE -> getNation(players.getFirst().identifier());
+    };
+  }
+
+  @NonNull
+  @Override
   public GameAction<Boolean> setPalette(ColorPalette palette) {
     Objects.requireNonNull(palette);
     try {
