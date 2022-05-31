@@ -19,9 +19,9 @@
 package com.riskrieg.core.api.color;
 
 import java.awt.Color;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -45,7 +45,7 @@ public record ColorPalette(String name, SortedSet<GameColor> set) { // Encode as
   }
 
   public ColorPalette(String name, GameColor... colors) {
-    this(name, new TreeSet<>(Set.of(colors)));
+    this(name, new TreeSet<>(Arrays.asList(colors)));
   }
 
   public GameColor first() {
