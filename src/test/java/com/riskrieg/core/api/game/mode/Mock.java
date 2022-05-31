@@ -32,6 +32,7 @@ import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
@@ -353,10 +354,44 @@ public final class Mock implements Game {
             throw new IllegalStateException("The following territories are not neighboring your nation: "
                 + notNeighboringTerritories.stream().map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
           }
+
           long allowedClaimAmount = attacker.getAllowedClaimAmount(claims, constants, map);
-          if (allowedClaimAmount != territoriesToClaim.size()) {
+          if (allowedClaimAmount == 0) {
             throw new IllegalStateException("Trying to claim " + territoriesToClaim.size() + (territoriesToClaim.size() == 1 ? " territory" : " territories")
-                + " but must claim " + allowedClaimAmount + (allowedClaimAmount == 1 ? " territory" : " territories"));
+                + " but unable to claim any territories.");
+          }
+
+          switch (override) {
+            case NONE -> {
+              if (allowedClaimAmount != territoriesToClaim.size()) { // If there's no override, must match exactly.
+                throw new IllegalStateException("Trying to claim " + territoriesToClaim.size() + (territoriesToClaim.size() == 1 ? " territory" : " territories")
+                    + " but must claim " + allowedClaimAmount + (allowedClaimAmount == 1 ? " territory" : " territories"));
+              }
+            }
+            case AUTO -> {
+              if (allowedClaimAmount > territoriesToClaim.size()) { // Invalid state
+                throw new IllegalStateException("Trying to claim " + territoriesToClaim.size() + (territoriesToClaim.size() == 1 ? " territory" : " territories")
+                    + " but cannot claim more than " + allowedClaimAmount + (allowedClaimAmount == 1 ? " territory" : " territories"));
+              } else if (allowedClaimAmount < territoriesToClaim.size()) { // Add random territories to fill out the rest
+                var claimable = new ArrayList<>(attacker.getClaimableTerritories(claims, map));
+                claimable.removeAll(territoriesToClaim);
+                Collections.shuffle(claimable);
+                claimable.stream()
+                    .limit(allowedClaimAmount - territoriesToClaim.size())
+                    .forEach(territoriesToClaim::add);
+
+                if (allowedClaimAmount != territoriesToClaim.size()) { // Check to make sure it matches exactly, just for sanity
+                  throw new IllegalStateException("Auto: Trying to claim " + territoriesToClaim.size() + (territoriesToClaim.size() == 1 ? " territory" : " territories")
+                      + " but must claim " + allowedClaimAmount + (allowedClaimAmount == 1 ? " territory" : " territories"));
+                }
+              }
+            }
+            case EXACT -> {
+              if (allowedClaimAmount > territoriesToClaim.size()) { // Invalid state
+                throw new IllegalStateException("Trying to claim " + territoriesToClaim.size() + (territoriesToClaim.size() == 1 ? " territory" : " territories")
+                    + " but cannot claim more than " + allowedClaimAmount + (allowedClaimAmount == 1 ? " territory" : " territories"));
+              }
+            }
           }
 
           Set<Claim> freeClaims = new HashSet<>();
