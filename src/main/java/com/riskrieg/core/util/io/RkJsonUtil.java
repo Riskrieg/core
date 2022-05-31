@@ -70,7 +70,7 @@ public class RkJsonUtil {
   @Nullable
   public static <T> T read(@NonNull Path path, @NonNull Class<T> type) throws IOException {
     if (Files.isRegularFile(path) && Files.isReadable(path)) {
-      JsonAdapter<T> jsonAdapter = jsonAdapter().adapter(type);
+      JsonAdapter<T> jsonAdapter = jsonAdapter().adapter(type).nullSafe();
       return jsonAdapter.fromJson(Files.readString(path));
     }
     return null;
