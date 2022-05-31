@@ -604,7 +604,7 @@ public final class Mock implements Game {
       return switch (phase) {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case ACTIVE -> {
-          Player previous = players.getFirst();
+          Optional<Player> previous = players.isEmpty() ? Optional.empty() : Optional.of(players.getFirst());
           /* Defeated Check */
           Set<Player> defeated = new HashSet<>();
           for (Nation nation : nations) {
@@ -630,9 +630,9 @@ public final class Mock implements Game {
           if (advanceTurn) {
             players.addLast(players.removeFirst());
           }
-          yield new GenericAction<>(new UpdateEvent(players.getFirst(), previous, defeated, endReason));
+          yield new GenericAction<>(new UpdateEvent(players.isEmpty() ? Optional.empty() : Optional.of(players.getFirst()), previous, defeated, endReason));
         }
-        case SETUP -> new GenericAction<>(new UpdateEvent(players.getFirst(), players.getFirst(), new HashSet<>(), EndReason.NONE));
+        case SETUP -> new GenericAction<>(new UpdateEvent(Optional.empty(), Optional.empty(), new HashSet<>(), EndReason.NONE));
       };
     } catch (Exception e) {
       return new GenericAction<>(e);
