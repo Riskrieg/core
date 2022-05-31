@@ -51,6 +51,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
@@ -347,10 +348,9 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, ClaimOverride override, TerritoryIdentifier territory, TerritoryIdentifier... territories) {
+  public GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, ClaimOverride override, TerritoryIdentifier... territories) {
     Objects.requireNonNull(attack);
     Objects.requireNonNull(identifier);
-    Objects.requireNonNull(territory);
     Objects.requireNonNull(territories);
     this.updatedTime = Instant.now();
     try {
@@ -369,8 +369,7 @@ public final class Conquest implements Game {
             throw new IllegalStateException("It is not that player's turn");
           }
 
-          Set<TerritoryIdentifier> territoriesToClaim = new HashSet<>(Set.of(territories));
-          territoriesToClaim.add(territory);
+          Set<TerritoryIdentifier> territoriesToClaim = new HashSet<>(Arrays.asList(territories));
           var invalidTerritories = territoriesToClaim.stream().filter(territoryIdentifier -> GameUtil.territoryNotExists(territoryIdentifier, map)).toList();
           if (!invalidTerritories.isEmpty()) {
             throw new IllegalStateException("The following territories do not exist or are otherwise invalid: "
@@ -395,16 +394,16 @@ public final class Conquest implements Game {
 
           switch (override) {
             case NONE -> {
-              if (allowedClaimAmount != territoriesToClaim.size()) { // If there's no override, must match exactly.
+              if (territoriesToClaim.size() != allowedClaimAmount) { // If there's no override, must match exactly.
                 throw new IllegalStateException("Trying to claim " + territoriesToClaim.size() + (territoriesToClaim.size() == 1 ? " territory" : " territories")
                     + " but must claim " + allowedClaimAmount + (allowedClaimAmount == 1 ? " territory" : " territories"));
               }
             }
             case AUTO -> {
-              if (allowedClaimAmount > territoriesToClaim.size()) { // Invalid state
+              if (territoriesToClaim.size() > allowedClaimAmount) { // Invalid state
                 throw new IllegalStateException("Trying to claim " + territoriesToClaim.size() + (territoriesToClaim.size() == 1 ? " territory" : " territories")
                     + " but cannot claim more than " + allowedClaimAmount + (allowedClaimAmount == 1 ? " territory" : " territories"));
-              } else if (allowedClaimAmount < territoriesToClaim.size()) { // Add random territories to fill out the rest
+              } else if (territoriesToClaim.size() < allowedClaimAmount) { // Add random territories to fill out the rest
                 var claimable = new ArrayList<>(attacker.getClaimableTerritories(claims, map));
                 claimable.removeAll(territoriesToClaim);
                 Collections.shuffle(claimable);
@@ -412,14 +411,17 @@ public final class Conquest implements Game {
                     .limit(allowedClaimAmount - territoriesToClaim.size())
                     .forEach(territoriesToClaim::add);
 
-                if (allowedClaimAmount != territoriesToClaim.size()) { // Check to make sure it matches exactly, just for sanity
+                if (territoriesToClaim.size() != allowedClaimAmount) { // Check to make sure it matches exactly, just for sanity
                   throw new IllegalStateException("Auto: Trying to claim " + territoriesToClaim.size() + (territoriesToClaim.size() == 1 ? " territory" : " territories")
                       + " but must claim " + allowedClaimAmount + (allowedClaimAmount == 1 ? " territory" : " territories"));
                 }
               }
             }
             case EXACT -> {
-              if (allowedClaimAmount > territoriesToClaim.size()) { // Invalid state
+              if (territoriesToClaim.size() == 0) {
+                throw new IllegalStateException("Trying to claim 0 territories but must claim at least one territory");
+              }
+              if (territoriesToClaim.size() > allowedClaimAmount) { // Invalid state
                 throw new IllegalStateException("Trying to claim " + territoriesToClaim.size() + (territoriesToClaim.size() == 1 ? " territory" : " territories")
                     + " but cannot claim more than " + allowedClaimAmount + (allowedClaimAmount == 1 ? " territory" : " territories"));
               }
@@ -461,9 +463,10 @@ public final class Conquest implements Game {
           if (map == null) {
             throw new IllegalStateException("A valid map must be selected before claiming territories");
           }
-          if (territories.length > 0) {
-            throw new IllegalStateException("Only one territory can be claimed during the setup phase");
+          if (territories.length != 1) {
+            throw new IllegalStateException("Exactly one territory must be claimed during the setup phase.");
           }
+          TerritoryIdentifier territory = territories[0];
           Optional<Nation> nation = getNation(identifier);
           if (nation.isEmpty()) {
             throw new IllegalStateException("That nation does not exist");
@@ -489,9 +492,8 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<Boolean> unclaim(NationIdentifier identifier, TerritoryIdentifier territory, TerritoryIdentifier... territories) {
+  public GameAction<Boolean> unclaim(NationIdentifier identifier, TerritoryIdentifier... territories) {
     Objects.requireNonNull(identifier);
-    Objects.requireNonNull(territory);
     Objects.requireNonNull(territories);
     this.updatedTime = Instant.now();
     try {
@@ -512,8 +514,10 @@ public final class Conquest implements Game {
           if (!nation.hasAnyClaim(claims)) {
             throw new IllegalStateException("Cannot unclaim because this nation has no claims");
           }
-          Set<TerritoryIdentifier> territoriesToUnclaim = new HashSet<>(Set.of(territories));
-          territoriesToUnclaim.add(territory);
+          Set<TerritoryIdentifier> territoriesToUnclaim = new HashSet<>(Arrays.asList(territories));
+          if (territoriesToUnclaim.isEmpty()) {
+            throw new IllegalStateException("Nothing to unclaim");
+          }
           var invalidTerritories = territoriesToUnclaim.stream().filter(territoryIdentifier -> GameUtil.territoryNotExists(territoryIdentifier, map)).toList();
           if (!invalidTerritories.isEmpty()) {
             throw new IllegalStateException("The following territories do not exist or are otherwise invalid: "
@@ -541,8 +545,10 @@ public final class Conquest implements Game {
           if (!nation.hasAnyClaim(claims)) {
             throw new IllegalStateException("Cannot unclaim because this nation has no claims");
           }
-          Set<TerritoryIdentifier> territoriesToUnclaim = new HashSet<>(Set.of(territories));
-          territoriesToUnclaim.add(territory);
+          Set<TerritoryIdentifier> territoriesToUnclaim = new HashSet<>(Arrays.asList(territories));
+          if (territoriesToUnclaim.isEmpty()) {
+            throw new IllegalStateException("Nothing to unclaim");
+          }
           var invalidTerritories = territoriesToUnclaim.stream().filter(territoryIdentifier -> GameUtil.territoryNotExists(territoryIdentifier, map)).toList();
           if (!invalidTerritories.isEmpty()) {
             throw new IllegalStateException("The following territories do not exist or are otherwise invalid: "

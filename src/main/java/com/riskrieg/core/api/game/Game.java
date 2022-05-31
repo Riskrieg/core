@@ -143,27 +143,27 @@ public interface Game { // TODO: Action to rename player
 
   @NonNull
   @CheckReturnValue
-  GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, ClaimOverride override, TerritoryIdentifier territory, TerritoryIdentifier... territories);
+  GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, ClaimOverride override, TerritoryIdentifier... territories);
 
   @NonNull
   @CheckReturnValue
-  default GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, TerritoryIdentifier territory, TerritoryIdentifier... territories) {
-    return claim(attack, identifier, ClaimOverride.NONE, territory, territories);
+  default GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, TerritoryIdentifier... territories) {
+    return claim(attack, identifier, ClaimOverride.NONE, territories);
   }
 
-  default GameAction<ClaimEvent> claim(Attack attack, PlayerIdentifier identifier, ClaimOverride override, TerritoryIdentifier territory, TerritoryIdentifier... territories) {
+  default GameAction<ClaimEvent> claim(Attack attack, PlayerIdentifier identifier, ClaimOverride override, TerritoryIdentifier... territories) {
     Optional<Nation> nation = getNation(identifier);
-    return nation.map(n -> claim(attack, n.identifier(), override, territory, territories))
+    return nation.map(n -> claim(attack, n.identifier(), override, territories))
         .orElseGet(() -> new GenericAction<>(new IllegalStateException("Unable to find nation with that player")));
   }
 
-  default GameAction<ClaimEvent> claim(Attack attack, PlayerIdentifier identifier, TerritoryIdentifier territory, TerritoryIdentifier... territories) {
-    return claim(attack, identifier, ClaimOverride.NONE, territory, territories);
+  default GameAction<ClaimEvent> claim(Attack attack, PlayerIdentifier identifier, TerritoryIdentifier... territories) {
+    return claim(attack, identifier, ClaimOverride.NONE, territories);
   }
 
   @NonNull
   @CheckReturnValue
-  GameAction<Boolean> unclaim(NationIdentifier identifier, TerritoryIdentifier territory, TerritoryIdentifier... territories);
+  GameAction<Boolean> unclaim(NationIdentifier identifier, TerritoryIdentifier... territories);
 
   @NonNull
   @CheckReturnValue
