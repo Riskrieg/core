@@ -69,8 +69,8 @@ public final class Mock implements Game {
     this.identifier = save.identifier();
     this.constants = save.constants();
     this.palette = save.palette();
-    this.creationTime = save.creationTime();
-    this.updatedTime = save.updatedTime();
+    this.creationTime = save.creationTime().toInstant();
+    this.updatedTime = save.updatedTime().toInstant();
     this.phase = save.phase();
     if (!save.mapCodename().isBlank()) {
       RkmDecoder decoder = new RkmDecoder();

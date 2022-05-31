@@ -23,13 +23,12 @@ import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
 import com.riskrieg.core.api.game.territory.Claim;
 import com.riskrieg.core.api.identifier.GameIdentifier;
-import java.time.Instant;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 
 public record Save(GameIdentifier identifier, GameConstants constants, ColorPalette palette,
-                   Instant creationTime, Instant updatedTime, GamePhase phase, String mapCodename,
+                   TimePoint creationTime, TimePoint updatedTime, GamePhase phase, String mapCodename,
                    Collection<Player> players, Set<Nation> nations, Set<Claim> claims,
                    Class<? extends Game> type) {
 
@@ -49,7 +48,7 @@ public record Save(GameIdentifier identifier, GameConstants constants, ColorPale
 
   public Save(Game game, Class<? extends Game> type) {
     this(game.identifier(), game.constants(), game.palette(),
-        game.creationTime(), game.updatedTime(), game.phase(),
+        TimePoint.fromInstant(game.creationTime()), TimePoint.fromInstant(game.updatedTime()), game.phase(),
         game.map() == null ? "" : Objects.requireNonNull(game.map()).codename(),
         game.players(), game.nations(), game.claims(),
         type);
