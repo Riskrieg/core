@@ -5,9 +5,9 @@ import com.riskrieg.core.api.game.entity.player.Player;
 import java.util.Objects;
 import java.util.Set;
 
-public record TurnAdvanceEvent(Player currentPlayer, Player previousPlayer, Set<Player> defeatedPlayers, EndReason endReason) {
+public record UpdateEvent(Player currentPlayer, Player previousPlayer, Set<Player> defeatedPlayers, EndReason endReason) {
 
-  public TurnAdvanceEvent {
+  public UpdateEvent {
     Objects.requireNonNull(currentPlayer);
     Objects.requireNonNull(previousPlayer);
     Objects.requireNonNull(defeatedPlayers);

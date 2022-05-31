@@ -23,7 +23,7 @@ import com.riskrieg.core.api.color.GameColor;
 import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
 import com.riskrieg.core.api.game.event.ClaimEvent;
-import com.riskrieg.core.api.game.event.TurnAdvanceEvent;
+import com.riskrieg.core.api.game.event.UpdateEvent;
 import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.order.TurnOrder;
 import com.riskrieg.core.api.game.territory.Claim;
@@ -179,6 +179,6 @@ public interface Game { // TODO: Action to rename player
 
   @NonNull
   @CheckReturnValue
-  GameAction<TurnAdvanceEvent> advanceTurn();
+  GameAction<UpdateEvent> update(boolean advanceTurn);
 
 }

@@ -30,7 +30,7 @@ import com.riskrieg.core.api.game.Save;
 import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
 import com.riskrieg.core.api.game.event.ClaimEvent;
-import com.riskrieg.core.api.game.event.TurnAdvanceEvent;
+import com.riskrieg.core.api.game.event.UpdateEvent;
 import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.order.TurnOrder;
 import com.riskrieg.core.api.game.territory.Claim;
@@ -295,8 +295,6 @@ public final class Conquest implements Game {
               .forEach(nation -> claims.removeIf(claim -> claim.identifier().equals(nation.identifier())));
           nations.removeIf(nation -> nation.leaderIdentifier().equals(identifier));
           players.removeIf(player -> player.identifier().equals(identifier));
-
-          // TODO: Potentially end game when appropriate, maybe do in advanceTurn
 
           yield new GenericAction<>(true);
         }
@@ -614,7 +612,7 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<TurnAdvanceEvent> advanceTurn() {
+  public GameAction<UpdateEvent> update(boolean advanceTurn) {
     this.updatedTime = Instant.now();
     try {
       return switch (phase) {
@@ -643,8 +641,10 @@ public final class Conquest implements Game {
             phase = GamePhase.ENDED;
           }
 
-          players.addLast(players.removeFirst());
-          yield new GenericAction<>(new TurnAdvanceEvent(players.getFirst(), previous, defeated, endReason));
+          if (advanceTurn) {
+            players.addLast(players.removeFirst());
+          }
+          yield new GenericAction<>(new UpdateEvent(players.getFirst(), previous, defeated, endReason));
         }
         case SETUP -> throw new IllegalStateException("Turns can only be advanced while the game is in the active phase");
       };
