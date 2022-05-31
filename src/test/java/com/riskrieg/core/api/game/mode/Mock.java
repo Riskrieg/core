@@ -348,11 +348,16 @@ public final class Mock implements Game {
           if (map == null) {
             throw new IllegalStateException("A valid map must be selected before claiming territories");
           }
-          Optional<Nation> nation = getNation(identifier);
-          if (nation.isEmpty()) {
+          Optional<Nation> optNation = getNation(identifier);
+          if (optNation.isEmpty()) {
             throw new IllegalStateException("That nation does not exist");
           }
-          Nation attacker = nation.get();
+          Nation attacker = optNation.get();
+          Optional<Player> optPlayer = getPlayer(attacker.leaderIdentifier());
+          if (optPlayer.isEmpty()) {
+            throw new IllegalStateException("That player does not exist");
+          }
+          Player leader = optPlayer.get();
           if (!players.getFirst().identifier().equals(attacker.leaderIdentifier())) {
             throw new IllegalStateException("It is not that player's turn");
           }
@@ -445,7 +450,7 @@ public final class Mock implements Game {
             }
           }
 
-          yield new GenericAction<>(new ClaimEvent(freeClaims, wonClaims, defendedClaims));
+          yield new GenericAction<>(new ClaimEvent(attacker, leader, freeClaims, wonClaims, defendedClaims));
         }
         case SETUP -> {
           if (map == null) {
@@ -455,22 +460,28 @@ public final class Mock implements Game {
             throw new IllegalStateException("Exactly one territory must be claimed during the setup phase.");
           }
           TerritoryIdentifier territory = territories[0];
-          Optional<Nation> nation = getNation(identifier);
-          if (nation.isEmpty()) {
+          Optional<Nation> optNation = getNation(identifier);
+          if (optNation.isEmpty()) {
             throw new IllegalStateException("That nation does not exist");
           }
+          Nation attacker = optNation.get();
+          Optional<Player> optPlayer = getPlayer(attacker.leaderIdentifier());
+          if (optPlayer.isEmpty()) {
+            throw new IllegalStateException("That player does not exist");
+          }
+          Player leader = optPlayer.get();
           if (GameUtil.territoryNotExists(territory, map)) {
             throw new IllegalStateException("That territory does not exist on the current map");
           }
           if (GameUtil.territoryIsClaimed(territory, claims)) {
             throw new IllegalStateException("That territory is already claimed by someone else");
           }
-          if (nation.get().hasAnyClaim(claims, TerritoryType.CAPITAL)) {
+          if (attacker.hasAnyClaim(claims, TerritoryType.CAPITAL)) {
             claims.removeIf(claim -> claim.identifier().equals(identifier) && claim.territory().type().equals(TerritoryType.CAPITAL));
           }
           var freeClaim = new Claim(identifier, new GameTerritory(territory, TerritoryType.CAPITAL));
           claims.add(freeClaim);
-          yield new GenericAction<>(new ClaimEvent(Set.of(freeClaim)));
+          yield new GenericAction<>(new ClaimEvent(attacker, leader, Set.of(freeClaim)));
         }
       };
     } catch (Exception e) {
