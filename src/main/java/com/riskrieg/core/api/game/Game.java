@@ -38,6 +38,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -152,6 +153,7 @@ public interface Game { // TODO: Action to rename player
   }
 
   default GameAction<ClaimEvent> claim(Attack attack, PlayerIdentifier identifier, ClaimOverride override, TerritoryIdentifier... territories) {
+    Objects.requireNonNull(identifier);
     Optional<Nation> nation = getNation(identifier);
     return nation.map(n -> claim(attack, n.identifier(), override, territories))
         .orElseGet(() -> new GenericAction<>(new IllegalStateException("Unable to find nation with that player")));

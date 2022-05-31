@@ -351,6 +351,7 @@ public final class Conquest implements Game {
   public GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, ClaimOverride override, TerritoryIdentifier... territories) {
     Objects.requireNonNull(attack);
     Objects.requireNonNull(identifier);
+    Objects.requireNonNull(override);
     Objects.requireNonNull(territories);
     this.updatedTime = Instant.now();
     try {
