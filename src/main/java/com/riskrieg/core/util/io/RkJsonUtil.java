@@ -18,18 +18,12 @@
 
 package com.riskrieg.core.util.io;
 
+import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.riskrieg.core.api.game.Game;
 import com.riskrieg.core.api.game.mode.Conquest;
-import com.riskrieg.core.util.io.adapter.ColorAdapter;
-import com.riskrieg.core.util.io.adapter.GameTypeAdapter;
-import com.riskrieg.core.util.io.adapter.InstantAdapter;
-import com.riskrieg.core.util.io.adapter.PointAdapter;
-import com.riskrieg.core.util.io.adapter.UUIDAdapter;
-import com.riskrieg.core.util.io.adapter.factory.DequeAdapterFactory;
-import com.riskrieg.core.util.io.adapter.factory.SortedSetAdapterFactory;
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
-import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.IOException;
@@ -44,24 +38,25 @@ public class RkJsonUtil {
   private RkJsonUtil() {
   }
 
-  private static final Moshi.Builder jsonAdapterBuilder = new Moshi.Builder()
-      .add(new InstantAdapter())
-      .add(new UUIDAdapter())
-      .add(new PointAdapter())
-      .add(new ColorAdapter())
-      .add(new SortedSetAdapterFactory())
-      .add(new DequeAdapterFactory())
-      .add(new GameTypeAdapter())
-      .add(PolymorphicJsonAdapterFactory.of(Game.class, "game_type").withSubtype(Conquest.class, "conquest"));
+  private static JsonMapper.Builder jsonAdapterBuilder = JsonMapper.builder().addModule(new JavaTimeModule());
 
-  public static void register(PolymorphicJsonAdapterFactory<?> factory, PolymorphicJsonAdapterFactory<?>... factories) {
-    jsonAdapterBuilder.add(factory);
-    for (PolymorphicJsonAdapterFactory<?> f : factories) {
-      jsonAdapterBuilder.add(f);
+  public static void registerIfBaseType(final Class<?>... baseClasses) {
+    var builder = BasicPolymorphicTypeValidator.builder();
+    for (Class<?> baseClass : baseClasses) {
+      builder.allowIfBaseType(baseClass);
     }
+    jsonAdapterBuilder = jsonAdapterBuilder.activateDefaultTypingAsProperty(builder.build(), DefaultTyping.NON_FINAL, "type");
   }
 
-  private static Moshi jsonAdapter() {
+  public static void registerIfSubType(final Class<?>... subClasses) {
+    var builder = BasicPolymorphicTypeValidator.builder();
+    for (Class<?> subClass : subClasses) {
+      builder.allowIfSubType(subClass);
+    }
+    jsonAdapterBuilder = jsonAdapterBuilder.activateDefaultTypingAsProperty(builder.build(), DefaultTyping.NON_FINAL, "type");
+  }
+
+  private static JsonMapper jsonAdapter() {
     return jsonAdapterBuilder.build();
   }
 
@@ -70,8 +65,7 @@ public class RkJsonUtil {
   @Nullable
   public static <T> T read(@NonNull Path path, @NonNull Class<T> type) throws IOException {
     if (Files.isRegularFile(path) && Files.isReadable(path)) {
-      JsonAdapter<T> jsonAdapter = jsonAdapter().adapter(type).nullSafe();
-      return jsonAdapter.fromJson(Files.readString(path));
+      return jsonAdapter().readValue(Files.newBufferedReader(path), jsonAdapter().constructType(type));
     }
     return null;
   }
@@ -79,32 +73,30 @@ public class RkJsonUtil {
   @Nullable
   public static <T> T read(@NonNull Path path, @NonNull Type type) throws IOException {
     if (Files.isRegularFile(path) && Files.isReadable(path)) {
-      JsonAdapter<T> jsonAdapter = jsonAdapter().adapter(type);
-      return jsonAdapter.fromJson(Files.readString(path));
+      return jsonAdapter().readValue(Files.newBufferedReader(path), jsonAdapter().constructType(type));
     }
     return null;
   }
 
   @Nullable
   public static <T> T read(@NonNull String string, @NonNull Type type) throws IOException {
-    JsonAdapter<T> jsonAdapter = jsonAdapter().adapter(type);
-    return jsonAdapter.fromJson(string);
+    return jsonAdapter().readValue(string, jsonAdapter().constructType(type));
   }
 
   // Write
 
   public static <T> void write(@NonNull Path path, @NonNull Class<T> type, @NonNull T object) throws IOException {
     Files.createDirectories(path.getParent());
-    Files.writeString(path, jsonAdapter().adapter(type).indent("  ").toJson(object), StandardCharsets.UTF_8);
+    Files.writeString(path, jsonAdapter().writerWithDefaultPrettyPrinter().writeValueAsString(object), StandardCharsets.UTF_8);
   }
 
   public static <T> void write(@NonNull Path path, @NonNull Type type, @NonNull T object) throws IOException {
     Files.createDirectories(path.getParent());
-    Files.writeString(path, jsonAdapter().adapter(type).indent("  ").toJson(object), StandardCharsets.UTF_8);
+    Files.writeString(path, jsonAdapter().writerWithDefaultPrettyPrinter().writeValueAsString(object), StandardCharsets.UTF_8);
   }
 
   public static <T> void write(@NonNull OutputStream outputStream, @NonNull Type type, @NonNull T object) throws IOException {
-    outputStream.write(jsonAdapter().adapter(type).indent("  ").toJson(object).getBytes(StandardCharsets.UTF_8));
+    outputStream.write(jsonAdapter().writerWithDefaultPrettyPrinter().writeValueAsString(object).getBytes(StandardCharsets.UTF_8));
   }
 
 }
