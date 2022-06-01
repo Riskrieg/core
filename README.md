@@ -54,13 +54,14 @@ Prior to June 1, 2022, Riskrieg used semantic versioning, but didn't always foll
 
 In an attempt to add some clarity to the project version structure, Riskrieg, as of June 1, 2022, adopts a new versioning structure that still works fairly well for versions prior to June 1, 2022.
 
-The new version schema is as follows: **BREAKING.MINOR.NONBREAKING-DATE.PATCH**
+The new version schema is as follows: **BREAKING.MINOR.NONBREAKING-DATE.PATCH-TAG**
 
 * **BREAKING**: *This version includes major breaking changes compared to the previous BREAKING version.*
 * **MINOR**: *This version includes minor breaking changes compared to the previous MINOR version on the same BREAKING version.*
 * **NONBREAKING**: *This version includes no breaking changes compared to the previous NONBREAKING version on the same BREAKING.MINOR version. It may include deprecations.*
 * **DATE**: *This is a date signifier that uses the following [CalVer](https://calver.org/) format:* **0Y0M**
 * **PATCH**: *This version includes no breaking changes or deprecations compared to the previous patch on the same BREAKING.MINOR.NONBREAKING version. It starts at 0, increments as long as DATE remains the same, and resets every time DATE is updated.*
+* **TAG**: *This signifies something special about this version, usually that is it pre-release. Valid tags: **dev**, **alpha**, **beta**, **rc***
 
 ### Examples
 **Version**: 3.0.0-2205.0
