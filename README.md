@@ -47,7 +47,9 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 ```
+
 ***
+
 ## Versioning
 
 Prior to June 1, 2022, Riskrieg used semantic versioning, but didn't always follow best practice. Major version changes are always breaking, but minor version bumps were sometimes breaking, when they shouldn't be according to semantic versioning. Patch versions were usually never breaking.
@@ -76,7 +78,9 @@ The new version schema is as follows: **BREAKING.MINOR.NONBREAKING-DATE.PATCH-TA
 **Version**: 3.1.7-2206.14-alpha
 
 **Description**: Contains major breaking changes compared to version 2, contains minor breaking changes compared to 3.0.x, contains no breaking changes compared to 3.1.x, was released in June of 2022, and has been updated fourteen times so far in June. This is an alpha release.
+
 ***
+
 ## Contributing
 
 Please [join us on Discord](https://discord.gg/weU8jYDbW4) if you'd like to be more involved in
