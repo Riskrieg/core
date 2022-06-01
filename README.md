@@ -66,11 +66,16 @@ The new version schema is as follows: **BREAKING.MINOR.NONBREAKING-DATE.PATCH-TA
 ### Examples
 **Version**: 3.0.0-2205.0
 
-**Description**: Contains major breaking changes compared to version 2 and was released some time in May of 2022.
+**Description**: Contains major breaking changes compared to version 2 and was released in May of 2022.
 
 **Version**: 3.1.2-2206.3
 
-**Description**: Contains major breaking changes compared to version 2, contains minor breaking changes compared to 3.0.x, contains no breaking changes compared to 3.1.1, was released some time in June of 2022, and has been updated three times so far in June.
+**Description**: Contains major breaking changes compared to version 2, contains minor breaking changes compared to 3.0.x, contains no breaking changes compared to 3.1.x, was released in June of 2022, and has been updated three times so far in June.
+
+
+**Version**: 3.1.7-2206.14-alpha
+
+**Description**: Contains major breaking changes compared to version 2, contains minor breaking changes compared to 3.0.x, contains no breaking changes compared to 3.1.x, was released in June of 2022, and has been updated fourteen times so far in June. This is an alpha release.
 ***
 ## Contributing
 
