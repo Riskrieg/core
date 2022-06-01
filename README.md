@@ -69,6 +69,9 @@ Group group = api.retrieveGroup(GroupIdentifier.of("your-id")).complete();
 Game game = group.createGame(GameIdentifier.of("game-id"), Conquest.class).complete(); // Create a new Conquest game
 ```
 
+The `.complete()` method does not currently actively block threads, but it should be treated as if it does, because it will eventually.
+Likewise, `.queue()` could eventually make non-blocking network requests, so it should be treated as if it does.
+
 ***
 
 ## Versioning
