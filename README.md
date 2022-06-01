@@ -11,7 +11,7 @@ world-domination games.
 
 This is the core Riskrieg game that can be used as a library API in other programs. Game maps are to
 be submitted to the [maps repository](https://github.com/Riskrieg/maps).
-
+***
 ## Download
 
 Latest release: https://github.com/Riskrieg/core/releases/latest
@@ -47,7 +47,7 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 ```
-
+***
 ## Versioning
 
 Prior to June 1, 2022, Riskrieg used semantic versioning, but didn't always follow best practice. Major version changes are always breaking, but minor version bumps were sometimes breaking, when they shouldn't be according to semantic versioning. Patch versions were usually never breaking.
@@ -63,12 +63,14 @@ The new version schema is as follows: **BREAKING.MINOR.NONBREAKING-DATE.PATCH**
 * **PATCH**: *This version includes no breaking changes or deprecations compared to the previous patch on the same BREAKING.MINOR.NONBREAKING version. It starts at 0, increments as long as DATE remains the same, and resets every time DATE is updated.*
 
 ### Examples
-Version: 3.0.0-2205.0
-Description: Contains major breaking changes compared to version 2 and was released some time in May of 2022.
+**Version**: 3.0.0-2205.0
 
-Version: 3.1.2-2206.3
-Description: Contains major breaking changes compared to version 2, contains minor breaking changes compared to 3.0.x, contains no breaking changes compared to 3.1.1, was released some time in June of 2022, and has been updated three times so far in June.
+**Description**: Contains major breaking changes compared to version 2 and was released some time in May of 2022.
 
+**Version**: 3.1.2-2206.3
+
+**Description**: Contains major breaking changes compared to version 2, contains minor breaking changes compared to 3.0.x, contains no breaking changes compared to 3.1.1, was released some time in June of 2022, and has been updated three times so far in June.
+***
 ## Contributing
 
 Please [join us on Discord](https://discord.gg/weU8jYDbW4) if you'd like to be more involved in
