@@ -59,7 +59,7 @@ Riskrieg api = RiskriegBuilder.createLocal(Path.of(BotConstants.REPOSITORY_PATH)
 Group group = api.createGroup(GroupIdentifier.of("your-id")).complete(); // Can throw a Runtime Exception
 // OR
 // Exceptions wrapped in the failure block
-api.createGroup(GroupIdentifier.of("your-id")).queue(group -> { // do something }, throwable -> { // do something else });
+api.createGroup(GroupIdentifier.of("your-id")).queue(group -> { /* do something */ }, throwable -> { / do something else */ });
 ```
 
 Retrieving a Group and creating a Game.
