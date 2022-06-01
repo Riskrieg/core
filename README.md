@@ -47,6 +47,27 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 ```
+***
+
+### Usage
+
+Instantiating the API and creating a group.
+```java
+Riskrieg api = RiskriegBuilder.createLocal(Path.of(BotConstants.REPOSITORY_PATH)).build();
+
+// Create a Group
+Group group = api.createGroup(GroupIdentifier.of("your-id")).complete(); // Can throw a Runtime Exception
+// OR
+// Exceptions wrapped in the failure block
+Group group = api.createGroup(GroupIdentifier.of("your-id")).queue(group -> { // do something }, throwable -> { // do something else });
+```
+
+Retrieving a Group and creating a Game.
+```java
+Riskrieg api = RiskriegBuilder.createLocal(Path.of(BotConstants.REPOSITORY_PATH)).build();
+Group group = api.retrieveGroup(GroupIdentifier.of("your-id")).complete();
+Game game = group.createGame(GameIdentifier.of("game-id"), Conquest.class).complete(); // Create a new Conquest game
+```
 
 ***
 
