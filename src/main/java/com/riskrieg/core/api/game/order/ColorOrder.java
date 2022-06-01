@@ -37,12 +37,9 @@ public class ColorOrder implements DetailedTurnOrder {
 
     List<Player> sortedPlayerList = new ArrayList<>();
     for (Nation nation : nationList) {
-      var iterator = playerList.iterator();
-      while (iterator.hasNext()) {
-        Player player = iterator.next();
+      for (Player player : playerList) {
         if (player.identifier().equals(nation.leaderIdentifier())) {
           sortedPlayerList.add(player);
-          iterator.remove();
           break;
         }
       }
