@@ -80,26 +80,26 @@ Prior to June 1, 2022, Riskrieg used semantic versioning, but didn't always foll
 
 In an attempt to add some clarity to the project version structure, Riskrieg, as of June 1, 2022, adopts a new versioning structure that still works fairly well for versions prior to June 1, 2022.
 
-The new version schema is as follows: **BREAKING.MINOR.NONBREAKING-DATE.PATCH-TAG**
+The new version schema is as follows: **BREAKING.MINOR.NONBREAKING-REVISION.DATE-CLASSIFIER**
 
 * **BREAKING**: *This version includes major breaking changes compared to the previous BREAKING version.*
 * **MINOR**: *This version includes minor breaking changes compared to the previous MINOR version on the same BREAKING version.*
 * **NONBREAKING**: *This version includes no breaking changes compared to the previous NONBREAKING version on the same BREAKING.MINOR version. It may include deprecations.*
+* **REVISION**: *Starts at 0, and 1-9 should be zero-padded. This version includes no breaking changes or deprecations compared to the previous patch on the same BREAKING.MINOR.NONBREAKING version. Increments as long as DATE remains the same, and resets every time DATE or any version before it changes.*
 * **DATE**: *This is a date signifier that uses the following [CalVer](https://calver.org/) format:* **0Y0M**
-* **PATCH**: *This version includes no breaking changes or deprecations compared to the previous patch on the same BREAKING.MINOR.NONBREAKING version. It starts at 0, increments as long as DATE remains the same, and resets every time DATE is updated.*
-* **TAG**: *This signifies something special about this version, usually that is it pre-release. Valid tags: **dev**, **alpha**, **beta**, **rc***
+* **CLASSIFIER**: *This signifies something special about this version, usually that it is pre-release. Valid classifiers: **dev**, **alpha**, **beta**, **rc***
 
 ### Examples
-**Version**: 3.0.0-2205.0
+**Version**: 3.0.0-0.2205
 
 **Description**: Contains major breaking changes compared to version 2 and was released in May of 2022.
 
-**Version**: 3.1.2-2206.3
+**Version**: 3.1.2-3.2206
 
 **Description**: Contains major breaking changes compared to version 2, contains minor breaking changes compared to 3.0.x, contains no breaking changes compared to 3.1.x, was released in June of 2022, and has been updated three times so far in June.
 
 
-**Version**: 3.1.7-2206.14-alpha
+**Version**: 3.1.7-14.2206-alpha
 
 **Description**: Contains major breaking changes compared to version 2, contains minor breaking changes compared to 3.0.x, contains no breaking changes compared to 3.1.x, was released in June of 2022, and has been updated fourteen times so far in June. This is an alpha release.
 
