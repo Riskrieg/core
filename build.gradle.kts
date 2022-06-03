@@ -6,7 +6,7 @@ plugins {
     id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
 }
 
-val versionObject = Version(breaking = "3", minor = "0", nonbreaking = "0", revision = "0", date = "2206", classifier = "alpha")
+val versionObject = Version(breaking = "3", minor = "0", nonbreaking = "0", revision = "1", date = "2206", classifier = "alpha")
 project.group = "com.riskrieg"
 project.version = "$versionObject"
 
