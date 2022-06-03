@@ -28,25 +28,20 @@ Make sure you replace **VERSION** with one of the versions from the releases.
 </dependency>
 ```
 
-```xml
-<repository>
-    <id>jitpack.io</id>
-    <url>https://jitpack.io</url>
-</repository>
-```
-
 **Gradle**
 
 ```gradle
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     implementation('com.riskrieg:core:VERSION')
 }
-
-repositories {
-    mavenCentral() // for transitive dependencies
-    maven { url 'https://jitpack.io' }
-}
 ```
+
+Starting with version `3.0.0-1.2206-alpha`, Riskrieg Core is available from Maven Central.
+If you need any version prior to `3.0.0-1.2206-alpha`, you need to declare Jitpack as a repository. You can figure out how to do that [here](https://jitpack.io/).
 ***
 
 ### Usage
