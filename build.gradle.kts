@@ -3,6 +3,7 @@ plugins {
     `maven-publish`
     signing
     id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
 }
 
 val versionObject = Version(breaking = "3", minor = "0", nonbreaking = "0", revision = "0", date = "2206", classifier = "alpha")
@@ -144,5 +145,14 @@ val canSign = getProjectProperty("signing.keyId") != null
 if (canSign) {
     signing {
         sign(publishing.publications.getByName("Release"))
+    }
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
     }
 }
