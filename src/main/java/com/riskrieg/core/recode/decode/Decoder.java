@@ -16,18 +16,19 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.riskrieg.core.encode;
+package com.riskrieg.core.recode.decode;
 
 import java.io.IOException;
-import java.io.OutputStream;
+import java.net.URL;
+import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 
-public sealed interface Encoder<T> permits RkmEncoder, RkpEncoder {
+public sealed interface Decoder<T> permits RkmDecoder, RkpDecoder {
 
-  void encode(T object, OutputStream outputStream, boolean shouldCloseStream) throws IOException, NoSuchAlgorithmException;
+  T decode(Path path) throws IOException, NoSuchAlgorithmException;
 
-  default void encode(T object, OutputStream outputStream) throws IOException, NoSuchAlgorithmException {
-    encode(object, outputStream, true);
-  }
+  T decode(URL url) throws IOException, NoSuchAlgorithmException;
+
+  T decode(byte[] data) throws IOException, NoSuchAlgorithmException;
 
 }

@@ -3,10 +3,10 @@ package com.riskrieg.core.rkm;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.riskrieg.core.api.game.map.GameMap;
-import com.riskrieg.core.decode.Decoder;
-import com.riskrieg.core.decode.RkmDecoder;
-import com.riskrieg.core.encode.Encoder;
-import com.riskrieg.core.encode.RkmEncoder;
+import com.riskrieg.core.recode.decode.Decoder;
+import com.riskrieg.core.recode.decode.RkmDecoder;
+import com.riskrieg.core.recode.encode.Encoder;
+import com.riskrieg.core.recode.encode.RkmEncoder;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;

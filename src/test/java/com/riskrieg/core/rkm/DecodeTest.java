@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.riskrieg.core.api.game.map.GameMap;
-import com.riskrieg.core.decode.Decoder;
-import com.riskrieg.core.decode.RkmDecoder;
+import com.riskrieg.core.recode.decode.Decoder;
+import com.riskrieg.core.recode.decode.RkmDecoder;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;

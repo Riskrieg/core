@@ -1,4 +1,4 @@
-package com.riskrieg.core.decode;
+package com.riskrieg.core.recode.decode;
 
 import com.riskrieg.core.api.color.ColorPalette;
 import com.riskrieg.core.util.io.RkJsonUtil;

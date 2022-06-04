@@ -16,13 +16,13 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.riskrieg.core.encode;
+package com.riskrieg.core.recode.encode;
 
 import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.map.Territory;
 import com.riskrieg.core.api.game.map.territory.Border;
 import com.riskrieg.core.api.game.map.territory.Nucleus;
-import com.riskrieg.core.rkm.RkmField;
+import com.riskrieg.core.recode.rkm.RkmField;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

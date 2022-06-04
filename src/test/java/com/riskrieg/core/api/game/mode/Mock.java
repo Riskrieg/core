@@ -23,7 +23,7 @@ import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
 import com.riskrieg.core.api.identifier.TerritoryIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
-import com.riskrieg.core.decode.RkmDecoder;
+import com.riskrieg.core.recode.decode.RkmDecoder;
 import com.riskrieg.core.internal.requests.GenericAction;
 import com.riskrieg.core.util.game.GameUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;

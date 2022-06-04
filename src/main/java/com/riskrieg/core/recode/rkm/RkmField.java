@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.riskrieg.core.rkm;
+package com.riskrieg.core.recode.rkm;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
