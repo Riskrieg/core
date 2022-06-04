@@ -18,7 +18,6 @@ import com.riskrieg.core.api.game.GamePhase;
 import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.mode.Conquest;
-import com.riskrieg.core.api.game.mode.Mock;
 import com.riskrieg.core.api.game.territory.Claim;
 import com.riskrieg.core.api.game.territory.GameTerritory;
 import com.riskrieg.core.api.game.territory.TerritoryType;
@@ -181,7 +180,7 @@ public class TestApi { // TODO: Implement comprehensive tests
   public void testGameNullThrows() {
     // Arrange
     Group group = createLocalTestGroup("test-group");
-    Game game = createLocalTestGame(group, "test-game", Mock.class);
+    Game game = createLocalTestGame(group, "test-game", Conquest.class);
 
     // Act & Assert
     assertEquals(Optional.empty(), game.getPlayer(null));
@@ -238,7 +237,7 @@ public class TestApi { // TODO: Implement comprehensive tests
     Group group = api.createGroup(GroupIdentifier.of("test-group")).complete();
 
     // Act
-    Game game = group.createGame(GameIdentifier.of("test-game"), Mock.class).complete();
+    Game game = group.createGame(GameIdentifier.of("test-game"), Conquest.class).complete();
 
     // Assert
     assertTrue(Files.exists(Path.of("res/saves/test-group/test-game.json")));
@@ -267,7 +266,7 @@ public class TestApi { // TODO: Implement comprehensive tests
   public void testGroupSaveGame() throws IOException {
     // Arrange
     Group group = createLocalTestGroup("test-group");
-    Game game = createLocalTestGame(group, "test-game", Mock.class);
+    Game game = createLocalTestGame(group, "test-game", Conquest.class);
 
     Path saveGamePath = Path.of("res/saves/test-group/test-game.json");
     Files.deleteIfExists(saveGamePath); // Delete the file, so we can test saving independently of creation
@@ -285,7 +284,7 @@ public class TestApi { // TODO: Implement comprehensive tests
   public void testGroupRetrieveGame() {
     // Arrange
     Group group = createLocalTestGroup("test-group");
-    createLocalTestGame(group, "test-game", Mock.class);
+    createLocalTestGame(group, "test-game", Conquest.class);
 
     // Act
     Game game = assertDoesNotThrow(() -> group.retrieveGame(GameIdentifier.of("test-game")).complete());
@@ -301,7 +300,7 @@ public class TestApi { // TODO: Implement comprehensive tests
   public void testGameSetPalette() {
     // Arrange
     Group group = createLocalTestGroup("test-group");
-    Game game = createLocalTestGame(group, "test-game", Mock.class);
+    Game game = createLocalTestGame(group, "test-game", Conquest.class);
     assertEquals(ColorPalette.standard(), game.palette());
 
     // Act
@@ -318,7 +317,7 @@ public class TestApi { // TODO: Implement comprehensive tests
   public void testGameSelectMap() throws IOException, NoSuchAlgorithmException {
     // Arrange
     Group group = createLocalTestGroup("test-group");
-    Game game = createLocalTestGame(group, "test-game", Mock.class);
+    Game game = createLocalTestGame(group, "test-game", Conquest.class);
     assertNull(game.map());
     assertEquals(GamePhase.SETUP, game.phase());
 
