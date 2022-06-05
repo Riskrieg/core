@@ -8,15 +8,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.riskrieg.core.api.color.ColorPalette;
-import com.riskrieg.core.api.color.GameColor;
+import com.riskrieg.codec.decode.RkmDecoder;
 import com.riskrieg.core.api.game.Attack;
 import com.riskrieg.core.api.game.ClaimOverride;
 import com.riskrieg.core.api.game.Game;
 import com.riskrieg.core.api.game.GameConstants;
 import com.riskrieg.core.api.game.GamePhase;
 import com.riskrieg.core.api.game.entity.nation.Nation;
-import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.mode.Conquest;
 import com.riskrieg.core.api.game.territory.Claim;
 import com.riskrieg.core.api.game.territory.GameTerritory;
@@ -26,9 +24,12 @@ import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.GroupIdentifier;
 import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
-import com.riskrieg.core.api.identifier.TerritoryIdentifier;
-import com.riskrieg.core.recode.decode.RkmDecoder;
 import com.riskrieg.core.util.game.GameUtil;
+import com.riskrieg.map.RkmMap;
+import com.riskrieg.map.Territory;
+import com.riskrieg.map.territory.TerritoryIdentity;
+import com.riskrieg.palette.RkpColor;
+import com.riskrieg.palette.RkpPalette;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -51,21 +52,21 @@ public class TestApi { // TODO: Implement comprehensive tests
     Group group = api.createGroup(GroupIdentifier.of("12345")).complete();
     Game game = group.createGame(GameIdentifier.of("123"), Conquest.class).complete();
 
-    var batch = ColorPalette.standard();
-    for (int i = 0; i < batch.set().size(); i++) {
-      assertEquals(i, batch.get(i).id());
+    var palette = RkpPalette.standard();
+    for (int i = 0; i < palette.size(); i++) {
+      assertEquals(i, palette.get(i).orElse(palette.last()).order());
     }
-    assertEquals(0, ColorPalette.standard().get(-1).id());
-    assertEquals(15, ColorPalette.standard().get(16).id());
+    assertEquals(0, RkpPalette.standard().get(-1).orElse(RkpPalette.standard().last()).order());
+    assertEquals(15, RkpPalette.standard().get(16).orElse(RkpPalette.standard().last()).order());
 
     game.addPlayer(PlayerIdentifier.of("1"), "One").complete();
-    Nation nation = game.createNation(ColorPalette.standard().get(3), PlayerIdentifier.of("1")).complete();
+    Nation nation = game.createNation(RkpPalette.standard().get(3).orElse(RkpPalette.standard().last()), PlayerIdentifier.of("1")).complete();
 
     RkmDecoder decoder = new RkmDecoder();
 
-    Attack setup = (attacker, defender, territoryIdentifier, map, claims, constants) -> true;
+    Attack setup = (attacker, defender, identity, map, claims, constants) -> true;
 
-    Attack attack = (attacker, defender, territoryIdentifier, map, claims, constants) -> {
+    Attack attack = (attacker, defender, identity, map, claims, constants) -> {
       if (attacker == null) {
         return false;
       }
@@ -75,17 +76,17 @@ public class TestApi { // TODO: Implement comprehensive tests
       if (attacker.equals(defender)) {
         return false;
       }
-      if (!defender.hasClaimOn(territoryIdentifier, claims)) {
+      if (!defender.hasClaimOn(identity, claims)) {
         return false;
       }
       int attackRolls = 1;
       int defenseRolls = 1;
       int attackSides = 8;
       int defenseSides = 6;
-      var neighbors = map.neighborsAsIdentifiers(territoryIdentifier);
-      for (TerritoryIdentifier neighbor : neighbors) {
-        var attackerTerritories = attacker.getClaimedTerritories(claims).stream().map(Claim::territory).map(GameTerritory::identifier).collect(Collectors.toSet());
-        var defenderTerritories = defender.getClaimedTerritories(claims).stream().map(Claim::territory).map(GameTerritory::identifier).collect(Collectors.toSet());
+      var neighbors = GameUtil.getNeighbors(identity, map).stream().map(Territory::identity).collect(Collectors.toSet());
+      for (TerritoryIdentity neighbor : neighbors) {
+        var attackerTerritories = attacker.getClaimedTerritories(claims).stream().map(Claim::territory).map(GameTerritory::identity).collect(Collectors.toSet());
+        var defenderTerritories = defender.getClaimedTerritories(claims).stream().map(Claim::territory).map(GameTerritory::identity).collect(Collectors.toSet());
         if (attackerTerritories.contains(neighbor)) {
           if (GameUtil.territoryIsOfType(neighbor, TerritoryType.CAPITAL, claims)) {
             attackRolls += 1 + constants.capitalAttackBonus();
@@ -94,7 +95,7 @@ public class TestApi { // TODO: Implement comprehensive tests
           }
         } else if (defenderTerritories.contains(neighbor)) {
           defenseRolls++;
-          if (GameUtil.territoryIsOfType(territoryIdentifier, TerritoryType.CAPITAL, claims)) {
+          if (GameUtil.territoryIsOfType(identity, TerritoryType.CAPITAL, claims)) {
             defenseSides += 1 + constants.capitalDefenseBonus();
           }
         }
@@ -112,7 +113,7 @@ public class TestApi { // TODO: Implement comprehensive tests
       throw new RuntimeException(e);
     }
 
-    game.claim(attack, nation.identifier(), TerritoryIdentifier.of("1F")).complete();
+    game.claim(attack, nation.identifier(), new TerritoryIdentity("1F")).complete();
 
     group.saveGame(game).complete();
 
@@ -186,7 +187,7 @@ public class TestApi { // TODO: Implement comprehensive tests
     assertEquals(Optional.empty(), game.getPlayer(null));
     assertEquals(Optional.empty(), game.getNation((PlayerIdentifier) null));
     assertEquals(Optional.empty(), game.getNation((NationIdentifier) null));
-    assertEquals(Optional.empty(), game.getNation((GameColor) null));
+    assertEquals(Optional.empty(), game.getNation((RkpColor) null));
 
     assertThrowsExactly(NullPointerException.class, () -> game.setPalette(null).complete());
     assertThrowsExactly(NullPointerException.class, () -> game.setPalette(null).queue());
@@ -200,12 +201,12 @@ public class TestApi { // TODO: Implement comprehensive tests
     assertThrowsExactly(NullPointerException.class, () -> game.createNation(null, null).queue());
     assertThrowsExactly(NullPointerException.class, () -> game.dissolveNation(null).complete());
     assertThrowsExactly(NullPointerException.class, () -> game.dissolveNation(null).queue());
-    assertThrowsExactly(NullPointerException.class, () -> game.claim(null, (NationIdentifier) null, (TerritoryIdentifier) null).complete());
-    assertThrowsExactly(NullPointerException.class, () -> game.claim(null, (PlayerIdentifier) null, (TerritoryIdentifier) null).queue());
-    assertThrowsExactly(NullPointerException.class, () -> game.claim(null, (NationIdentifier) null, (ClaimOverride) null, (TerritoryIdentifier) null).complete());
-    assertThrowsExactly(NullPointerException.class, () -> game.claim(null, (PlayerIdentifier) null, (ClaimOverride) null, (TerritoryIdentifier) null).queue());
-    assertThrowsExactly(NullPointerException.class, () -> game.unclaim(null, (TerritoryIdentifier) null).complete());
-    assertThrowsExactly(NullPointerException.class, () -> game.unclaim(null, (TerritoryIdentifier) null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> game.claim(null, (NationIdentifier) null, (TerritoryIdentity) null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> game.claim(null, (PlayerIdentifier) null, (TerritoryIdentity) null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> game.claim(null, (NationIdentifier) null, (ClaimOverride) null, (TerritoryIdentity) null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> game.claim(null, (PlayerIdentifier) null, (ClaimOverride) null, (TerritoryIdentity) null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> game.unclaim(null, (TerritoryIdentity) null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> game.unclaim(null, (TerritoryIdentity) null).queue());
     assertThrowsExactly(NullPointerException.class, () -> game.unclaim(null, null, null).complete());
     assertThrowsExactly(NullPointerException.class, () -> game.unclaim(null, null, null).queue());
     assertThrowsExactly(NullPointerException.class, () -> game.start(null).complete());
@@ -244,7 +245,7 @@ public class TestApi { // TODO: Implement comprehensive tests
 
     assertEquals(GameIdentifier.of("test-game"), game.identifier());
     assertEquals(GameConstants.standard(), game.constants());
-    assertEquals(ColorPalette.standard(), game.palette());
+    assertEquals(RkpPalette.standard(), game.palette());
     assertEquals(GamePhase.SETUP, game.phase());
 
     assertNotNull(game.creationTime());
@@ -301,14 +302,14 @@ public class TestApi { // TODO: Implement comprehensive tests
     // Arrange
     Group group = createLocalTestGroup("test-group");
     Game game = createLocalTestGame(group, "test-game", Conquest.class);
-    assertEquals(ColorPalette.standard(), game.palette());
+    assertEquals(RkpPalette.standard(), game.palette());
 
     // Act
     assertThrowsExactly(NullPointerException.class, () -> game.setPalette(null).complete());
-    assertDoesNotThrow(() -> game.setPalette(ColorPalette.original()).complete());
+    assertDoesNotThrow(() -> game.setPalette(RkpPalette.original()).complete());
 
     // Assert
-    assertEquals(ColorPalette.original(), game.palette());
+    assertEquals(RkpPalette.original(), game.palette());
 
     assertTrue(cleanup(group, game));
   }
@@ -321,7 +322,7 @@ public class TestApi { // TODO: Implement comprehensive tests
     assertNull(game.map());
     assertEquals(GamePhase.SETUP, game.phase());
 
-    GameMap map = new RkmDecoder().decode(new URL("https://github.com/Riskrieg/maps/raw/main/antarctica.rkm"));
+    RkmMap map = new RkmDecoder().decode(new URL("https://github.com/Riskrieg/maps/raw/main/antarctica.rkm"));
 
     // Act
     assertThrows(RuntimeException.class, () -> game.selectMap(null).complete());

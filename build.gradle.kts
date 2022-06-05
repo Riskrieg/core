@@ -31,6 +31,10 @@ dependencies {
 
     implementation("org.jgrapht:jgrapht-core:1.5.1")
 
+    implementation("com.riskrieg:map:1.0.0-0.2206")
+    implementation("com.riskrieg:palette:1.1.0-0.2206")
+    implementation("com.riskrieg:codec:1.0.0-1.2206")
+
     implementation("com.fasterxml.jackson.core:jackson-databind:2.13.3")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3")
 

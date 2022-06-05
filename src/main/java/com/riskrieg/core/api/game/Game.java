@@ -18,21 +18,21 @@
 
 package com.riskrieg.core.api.game;
 
-import com.riskrieg.core.api.color.ColorPalette;
-import com.riskrieg.core.api.color.GameColor;
 import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
 import com.riskrieg.core.api.game.event.ClaimEvent;
 import com.riskrieg.core.api.game.event.UpdateEvent;
-import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.order.TurnOrder;
 import com.riskrieg.core.api.game.territory.Claim;
 import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
-import com.riskrieg.core.api.identifier.TerritoryIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
 import com.riskrieg.core.internal.requests.GenericAction;
+import com.riskrieg.map.RkmMap;
+import com.riskrieg.map.territory.TerritoryIdentity;
+import com.riskrieg.palette.RkpColor;
+import com.riskrieg.palette.RkpPalette;
 import edu.umd.cs.findbugs.annotations.CheckReturnValue;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -51,7 +51,7 @@ public interface Game { // TODO: Action to rename player
   GameConstants constants();
 
   @NonNull
-  ColorPalette palette();
+  RkpPalette palette();
 
   @NonNull
   Instant creationTime();
@@ -63,7 +63,7 @@ public interface Game { // TODO: Action to rename player
   GamePhase phase();
 
   @Nullable
-  GameMap map();
+  RkmMap map();
 
   @NonNull
   Collection<Player> players();
@@ -96,15 +96,15 @@ public interface Game { // TODO: Action to rename player
   }
 
   @NonNull
-  default Optional<Nation> getNation(GameColor color) {
+  default Optional<Nation> getNation(RkpColor color) {
     return nations().stream()
-        .filter(n -> n.colorId() == color.id())
+        .filter(n -> n.colorId() == color.order())
         .findFirst();
   }
 
   @NonNull
-  default Optional<Nation> getNation(TerritoryIdentifier identifier) {
-    return nations().stream().filter(nation -> nation.hasClaimOn(identifier, claims())).findFirst();
+  default Optional<Nation> getNation(TerritoryIdentity identity) {
+    return nations().stream().filter(nation -> nation.hasClaimOn(identity, claims())).findFirst();
   }
 
   @NonNull
@@ -114,17 +114,17 @@ public interface Game { // TODO: Action to rename player
   Optional<Nation> getCurrentNation();
 
   @NonNull
-  default Optional<Claim> getClaim(TerritoryIdentifier identifier) {
-    return claims().stream().filter(claim -> claim.territory().identifier().equals(identifier)).findFirst();
+  default Optional<Claim> getClaim(TerritoryIdentity identity) {
+    return claims().stream().filter(claim -> claim.territory().identity().equals(identity)).findFirst();
   }
 
   @NonNull
   @CheckReturnValue
-  GameAction<Boolean> setPalette(ColorPalette palette);
+  GameAction<Boolean> setPalette(RkpPalette palette);
 
   @NonNull
   @CheckReturnValue
-  GameAction<GameMap> selectMap(GameMap map);
+  GameAction<RkmMap> selectMap(RkmMap map);
 
   @NonNull
   @CheckReturnValue
@@ -136,36 +136,36 @@ public interface Game { // TODO: Action to rename player
 
   @NonNull
   @CheckReturnValue
-  GameAction<Nation> createNation(GameColor color, PlayerIdentifier identifier);
+  GameAction<Nation> createNation(RkpColor color, PlayerIdentifier identifier);
 
   @NonNull
   @CheckReturnValue
-  GameAction<Boolean> dissolveNation(GameColor color);
+  GameAction<Boolean> dissolveNation(RkpColor color);
 
   @NonNull
   @CheckReturnValue
-  GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, ClaimOverride override, TerritoryIdentifier... territories);
+  GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, ClaimOverride override, TerritoryIdentity... territories);
 
   @NonNull
   @CheckReturnValue
-  default GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, TerritoryIdentifier... territories) {
+  default GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, TerritoryIdentity... territories) {
     return claim(attack, identifier, ClaimOverride.NONE, territories);
   }
 
-  default GameAction<ClaimEvent> claim(Attack attack, PlayerIdentifier identifier, ClaimOverride override, TerritoryIdentifier... territories) {
+  default GameAction<ClaimEvent> claim(Attack attack, PlayerIdentifier identifier, ClaimOverride override, TerritoryIdentity... territories) {
     Objects.requireNonNull(identifier);
     Optional<Nation> nation = getNation(identifier);
     return nation.map(n -> claim(attack, n.identifier(), override, territories))
         .orElseGet(() -> new GenericAction<>(new IllegalStateException("Unable to find nation with that player")));
   }
 
-  default GameAction<ClaimEvent> claim(Attack attack, PlayerIdentifier identifier, TerritoryIdentifier... territories) {
+  default GameAction<ClaimEvent> claim(Attack attack, PlayerIdentifier identifier, TerritoryIdentity... territories) {
     return claim(attack, identifier, ClaimOverride.NONE, territories);
   }
 
   @NonNull
   @CheckReturnValue
-  GameAction<Boolean> unclaim(NationIdentifier identifier, TerritoryIdentifier... territories);
+  GameAction<Boolean> unclaim(NationIdentifier identifier, TerritoryIdentity... territories);
 
   @NonNull
   @CheckReturnValue

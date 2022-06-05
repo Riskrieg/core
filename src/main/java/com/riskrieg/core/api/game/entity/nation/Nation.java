@@ -19,13 +19,15 @@
 package com.riskrieg.core.api.game.entity.nation;
 
 import com.riskrieg.core.api.game.GameConstants;
-import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.territory.Claim;
 import com.riskrieg.core.api.game.territory.GameTerritory;
 import com.riskrieg.core.api.game.territory.TerritoryType;
 import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
-import com.riskrieg.core.api.identifier.TerritoryIdentifier;
+import com.riskrieg.core.util.game.GameUtil;
+import com.riskrieg.map.RkmMap;
+import com.riskrieg.map.Territory;
+import com.riskrieg.map.territory.TerritoryIdentity;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
@@ -68,26 +70,26 @@ public record Nation(NationIdentifier identifier, int colorId, PlayerIdentifier 
   /**
    * Determines whether this nation has a claim on the provided territory
    *
-   * @param territoryIdentifier The territory identifier
-   * @param claims              The set of all claims
+   * @param identity The territory identifier
+   * @param claims   The set of all claims
    * @return {@code true} if this nation has a claim on the provided territory, otherwise {@code false}
    */
-  public boolean hasClaimOn(TerritoryIdentifier territoryIdentifier, Set<Claim> claims) {
+  public boolean hasClaimOn(TerritoryIdentity identity, Set<Claim> claims) {
     return claims.stream().anyMatch(claim -> claim.identifier().equals(identifier)
-        && claim.territory().identifier().equals(territoryIdentifier));
+        && claim.territory().identity().equals(identity));
   }
 
   /**
    * Determines whether this nation has a claim on the provided territory, and the territory is of the provided type
    *
-   * @param territoryIdentifier The territory identifier
-   * @param claims              The set of all claims
-   * @param type                The territory type
+   * @param identity The territory identifier
+   * @param claims   The set of all claims
+   * @param type     The territory type
    * @return {@code true} if this nation has a claim on the provided territory and the territory is of the provided type, otherwise {@code false}
    */
-  public boolean hasClaimOn(TerritoryIdentifier territoryIdentifier, Set<Claim> claims, TerritoryType type) {
+  public boolean hasClaimOn(TerritoryIdentity identity, Set<Claim> claims, TerritoryType type) {
     return claims.stream().anyMatch(claim -> claim.identifier().equals(identifier)
-        && claim.territory().identifier().equals(territoryIdentifier)
+        && claim.territory().identity().equals(identity)
         && claim.territory().type().equals(type));
   }
 
@@ -108,11 +110,11 @@ public record Nation(NationIdentifier identifier, int colorId, PlayerIdentifier 
    * @param map    The game map
    * @return the set of all territories (as identifiers) that neighbor any of this nation's claims
    */
-  public Set<TerritoryIdentifier> getNeighbors(Set<Claim> claims, GameMap map) {
-    Set<TerritoryIdentifier> neighbors = new HashSet<>();
-    Set<TerritoryIdentifier> myTerritories = getClaimedTerritories(claims).stream().map(Claim::territory).map(GameTerritory::identifier).collect(Collectors.toSet());
-    for (TerritoryIdentifier id : myTerritories) {
-      neighbors.addAll(map.neighborsAsIdentifiers(id));
+  public Set<TerritoryIdentity> getNeighbors(Set<Claim> claims, RkmMap map) {
+    Set<TerritoryIdentity> neighbors = new HashSet<>();
+    Set<TerritoryIdentity> myTerritories = getClaimedTerritories(claims).stream().map(Claim::territory).map(GameTerritory::identity).collect(Collectors.toSet());
+    for (TerritoryIdentity identity : myTerritories) {
+      neighbors.addAll(GameUtil.getNeighbors(identity, map).stream().map(Territory::identity).collect(Collectors.toSet()));
     }
     neighbors.removeAll(myTerritories);
     return Collections.unmodifiableSet(neighbors);
@@ -121,13 +123,13 @@ public record Nation(NationIdentifier identifier, int colorId, PlayerIdentifier 
   /**
    * Determines whether the provided territory is neighboring any of this nation's claims
    *
-   * @param territoryIdentifier The territory identifier
-   * @param claims              The set of all claims
-   * @param map                 The game map
+   * @param identity The territory identifier
+   * @param claims   The set of all claims
+   * @param map      The game map
    * @return {@code true} if the provided territory neighbors any of this nation's claims, otherwise {@code false}
    */
-  public boolean isTerritoryNeighboring(TerritoryIdentifier territoryIdentifier, Set<Claim> claims, GameMap map) {
-    return getNeighbors(claims, map).contains(territoryIdentifier);
+  public boolean isTerritoryNeighboring(TerritoryIdentity identity, Set<Claim> claims, RkmMap map) {
+    return getNeighbors(claims, map).contains(identity);
   }
 
   /**
@@ -137,8 +139,8 @@ public record Nation(NationIdentifier identifier, int colorId, PlayerIdentifier 
    * @param map    The game map
    * @return the set of all territories (as identifiers) that this nation has the ability to claim
    */
-  public Set<TerritoryIdentifier> getClaimableTerritories(Set<Claim> claims, GameMap map) {
-    Set<TerritoryIdentifier> neighbors = new HashSet<>(getNeighbors(claims, map));
+  public Set<TerritoryIdentity> getClaimableTerritories(Set<Claim> claims, RkmMap map) {
+    Set<TerritoryIdentity> neighbors = new HashSet<>(getNeighbors(claims, map));
     return Collections.unmodifiableSet(neighbors);
   }
 
@@ -150,7 +152,7 @@ public record Nation(NationIdentifier identifier, int colorId, PlayerIdentifier 
    * @param map       The game map
    * @return the number claims that can be made as a {@code long}
    */
-  public long getAllowedClaimAmount(Set<Claim> claims, GameConstants constants, GameMap map) {
+  public long getAllowedClaimAmount(Set<Claim> claims, GameConstants constants, RkmMap map) {
     long allowedClaims = constants.initialClaimAmount() + (long) (Math.floor(getClaimedTerritories(claims).size() / (double) constants.claimIncreaseThreshold()));
     return Math.min(getClaimableTerritories(claims, map).size(), allowedClaims);
   }

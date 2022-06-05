@@ -25,7 +25,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  *
  * @since 3.0
  */
-public sealed interface Identifier permits GameIdentifier, GroupIdentifier, NationIdentifier, PlayerIdentifier, TerritoryIdentifier {
+public sealed interface Identifier permits GameIdentifier, GroupIdentifier, NationIdentifier, PlayerIdentifier {
 
   @NonNull
   String id();

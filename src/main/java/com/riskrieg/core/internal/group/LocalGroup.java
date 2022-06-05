@@ -18,7 +18,6 @@
 
 package com.riskrieg.core.internal.group;
 
-import com.riskrieg.core.api.color.ColorPalette;
 import com.riskrieg.core.api.game.Game;
 import com.riskrieg.core.api.game.GameConstants;
 import com.riskrieg.core.api.game.GamePhase;
@@ -29,6 +28,7 @@ import com.riskrieg.core.api.identifier.GroupIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
 import com.riskrieg.core.internal.requests.GenericAction;
 import com.riskrieg.core.util.io.RkJsonUtil;
+import com.riskrieg.palette.RkpPalette;
 import edu.umd.cs.findbugs.annotations.CheckReturnValue;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.FileNotFoundException;
@@ -63,7 +63,7 @@ public record LocalGroup(Path path) implements Group {
   @NonNull
   @Override
   @CheckReturnValue
-  public <T extends Game> GameAction<Game> createGame(GameConstants constants, ColorPalette palette, GameIdentifier identifier, Class<T> type) {
+  public <T extends Game> GameAction<Game> createGame(GameConstants constants, RkpPalette palette, GameIdentifier identifier, Class<T> type) {
     Objects.requireNonNull(constants);
     Objects.requireNonNull(palette);
     Objects.requireNonNull(identifier);
@@ -82,7 +82,7 @@ public record LocalGroup(Path path) implements Group {
           throw new FileAlreadyExistsException("An active game already exists");
         }
       }
-      var newGame = type.getDeclaredConstructor(GameIdentifier.class, GameConstants.class, ColorPalette.class).newInstance(identifier, constants, palette);
+      var newGame = type.getDeclaredConstructor(GameIdentifier.class, GameConstants.class, RkpPalette.class).newInstance(identifier, constants, palette);
       RkJsonUtil.write(savePath, Save.class, new Save(newGame, type));
       return new GenericAction<>(newGame);
     } catch (Exception e) {

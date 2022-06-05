@@ -18,12 +18,12 @@
 
 package com.riskrieg.core.api.group;
 
-import com.riskrieg.core.api.color.ColorPalette;
 import com.riskrieg.core.api.game.Game;
 import com.riskrieg.core.api.game.GameConstants;
 import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.GroupIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
+import com.riskrieg.palette.RkpPalette;
 import edu.umd.cs.findbugs.annotations.CheckReturnValue;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.Collection;
@@ -37,18 +37,18 @@ public interface Group {
 
   @NonNull
   @CheckReturnValue
-  <T extends Game> GameAction<Game> createGame(GameConstants constants, ColorPalette batch, GameIdentifier identifier, Class<T> type);
+  <T extends Game> GameAction<Game> createGame(GameConstants constants, RkpPalette palette, GameIdentifier identifier, Class<T> type);
 
   @NonNull
   @CheckReturnValue
-  default <T extends Game> GameAction<Game> createGame(GameConstants constants, ColorPalette batch, Class<T> type) {
-    return createGame(constants, batch, GameIdentifier.uuid(), type);
+  default <T extends Game> GameAction<Game> createGame(GameConstants constants, RkpPalette palette, Class<T> type) {
+    return createGame(constants, palette, GameIdentifier.uuid(), type);
   }
 
   @NonNull
   @CheckReturnValue
   default <T extends Game> GameAction<Game> createGame(GameIdentifier identifier, Class<T> type) {
-    return createGame(GameConstants.standard(), ColorPalette.standard(), identifier, type);
+    return createGame(GameConstants.standard(), RkpPalette.standard(), identifier, type);
   }
 
   @NonNull

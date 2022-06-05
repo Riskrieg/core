@@ -18,8 +18,7 @@
 
 package com.riskrieg.core.api.game.mode;
 
-import com.riskrieg.core.api.color.ColorPalette;
-import com.riskrieg.core.api.color.GameColor;
+import com.riskrieg.codec.decode.RkmDecoder;
 import com.riskrieg.core.api.game.Attack;
 import com.riskrieg.core.api.game.ClaimOverride;
 import com.riskrieg.core.api.game.EndReason;
@@ -31,7 +30,6 @@ import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
 import com.riskrieg.core.api.game.event.ClaimEvent;
 import com.riskrieg.core.api.game.event.UpdateEvent;
-import com.riskrieg.core.api.game.map.GameMap;
 import com.riskrieg.core.api.game.order.TurnOrder;
 import com.riskrieg.core.api.game.territory.Claim;
 import com.riskrieg.core.api.game.territory.GameTerritory;
@@ -39,11 +37,13 @@ import com.riskrieg.core.api.game.territory.TerritoryType;
 import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.NationIdentifier;
 import com.riskrieg.core.api.identifier.PlayerIdentifier;
-import com.riskrieg.core.api.identifier.TerritoryIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
-import com.riskrieg.core.recode.decode.RkmDecoder;
 import com.riskrieg.core.internal.requests.GenericAction;
 import com.riskrieg.core.util.game.GameUtil;
+import com.riskrieg.map.RkmMap;
+import com.riskrieg.map.territory.TerritoryIdentity;
+import com.riskrieg.palette.RkpColor;
+import com.riskrieg.palette.RkpPalette;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -72,13 +72,13 @@ public final class Conquest implements Game {
   private final Set<Claim> claims;
 
   // Mutable
-  private ColorPalette palette;
+  private RkpPalette palette;
   private Instant updatedTime;
 
   private Deque<Player> players;
 
   private GamePhase phase;
-  private GameMap map; // Nullable
+  private RkmMap map; // Nullable
 
   public Conquest(Save save, Path mapRepository) {
     if (save.palette().size() != save.constants().maximumPlayers()) {
@@ -103,7 +103,7 @@ public final class Conquest implements Game {
     this.claims = save.claims();
   }
 
-  public Conquest(GameIdentifier identifier, GameConstants constants, ColorPalette palette) {
+  public Conquest(GameIdentifier identifier, GameConstants constants, RkpPalette palette) {
     if (palette.size() < constants.maximumPlayers()) {
       throw new IllegalStateException("The provided palette only supports up to " + palette.size()
           + " colors, but the provided constants allows a maximum amount of " + constants.maximumPlayers() + " players.");
@@ -137,7 +137,7 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public ColorPalette palette() {
+  public RkpPalette palette() {
     return palette;
   }
 
@@ -160,7 +160,7 @@ public final class Conquest implements Game {
   }
 
   @Override
-  public GameMap map() {
+  public RkmMap map() {
     return map;
   }
 
@@ -202,7 +202,7 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<Boolean> setPalette(ColorPalette palette) {
+  public GameAction<Boolean> setPalette(RkpPalette palette) {
     Objects.requireNonNull(palette);
     try {
       return switch (phase) {
@@ -233,7 +233,7 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<GameMap> selectMap(GameMap map) {
+  public GameAction<RkmMap> selectMap(RkmMap map) {
     Objects.requireNonNull(map);
     this.updatedTime = Instant.now();
     try {
@@ -309,7 +309,7 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<Nation> createNation(GameColor color, PlayerIdentifier identifier) {
+  public GameAction<Nation> createNation(RkpColor color, PlayerIdentifier identifier) {
     Objects.requireNonNull(color);
     Objects.requireNonNull(identifier);
     this.updatedTime = Instant.now();
@@ -318,7 +318,7 @@ public final class Conquest implements Game {
         case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
         case ACTIVE -> throw new IllegalStateException("Nations can only be created in the setup phase");
         case SETUP -> {
-          Nation nation = new Nation(NationIdentifier.uuid(), color.id(), identifier);
+          Nation nation = new Nation(NationIdentifier.uuid(), color.order(), identifier);
           if (players.stream().noneMatch(p -> p.identifier().equals(identifier))) {
             throw new IllegalStateException("A player must join the game before creating a nation");
           }
@@ -328,7 +328,7 @@ public final class Conquest implements Game {
           if (nations.stream().anyMatch(n -> n.leaderIdentifier().equals(identifier))) {
             throw new IllegalStateException("That player is already in another nation");
           }
-          if (nations.stream().anyMatch(n -> n.colorId() == color.id())) {
+          if (nations.stream().anyMatch(n -> n.colorId() == color.order())) {
             throw new IllegalStateException("A nation with that color is already in the game");
           }
           nations.add(nation);
@@ -342,14 +342,14 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<Boolean> dissolveNation(GameColor color) {
+  public GameAction<Boolean> dissolveNation(RkpColor color) {
     Objects.requireNonNull(color);
     return new GenericAction<>(false, new IllegalAccessException("The dissolve nation action is unavailable in this game mode."));
   }
 
   @NonNull
   @Override
-  public GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, ClaimOverride override, TerritoryIdentifier... territories) {
+  public GameAction<ClaimEvent> claim(Attack attack, NationIdentifier identifier, ClaimOverride override, TerritoryIdentity... territories) {
     Objects.requireNonNull(attack);
     Objects.requireNonNull(identifier);
     Objects.requireNonNull(override);
@@ -376,21 +376,21 @@ public final class Conquest implements Game {
             throw new IllegalStateException("It is not that player's turn");
           }
 
-          Set<TerritoryIdentifier> territoriesToClaim = new HashSet<>(Arrays.asList(territories));
-          var invalidTerritories = territoriesToClaim.stream().filter(territoryIdentifier -> GameUtil.territoryNotExists(territoryIdentifier, map)).toList();
+          Set<TerritoryIdentity> territoriesToClaim = new HashSet<>(Arrays.asList(territories));
+          var invalidTerritories = territoriesToClaim.stream().filter(identity -> GameUtil.territoryNotExists(identity, map)).toList();
           if (!invalidTerritories.isEmpty()) {
             throw new IllegalStateException("The following territories do not exist or are otherwise invalid: "
-                + invalidTerritories.stream().map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
+                + invalidTerritories.stream().map(TerritoryIdentity::toString).collect(Collectors.joining(", ")).trim());
           }
-          var alreadyClaimedTerritories = territoriesToClaim.stream().filter(territoryIdentifier -> attacker.hasClaimOn(territoryIdentifier, claims)).toList();
+          var alreadyClaimedTerritories = territoriesToClaim.stream().filter(identity -> attacker.hasClaimOn(identity, claims)).toList();
           if (!alreadyClaimedTerritories.isEmpty()) {
             throw new IllegalStateException("The following territories are already claimed by you: "
-                + alreadyClaimedTerritories.stream().map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
+                + alreadyClaimedTerritories.stream().map(TerritoryIdentity::toString).collect(Collectors.joining(", ")).trim());
           }
-          var notNeighboringTerritories = territoriesToClaim.stream().filter(territoryIdentifier -> attacker.isTerritoryNeighboring(territoryIdentifier, claims, map)).toList();
+          var notNeighboringTerritories = territoriesToClaim.stream().filter(identity -> attacker.isTerritoryNeighboring(identity, claims, map)).toList();
           if (!notNeighboringTerritories.isEmpty()) {
             throw new IllegalStateException("The following territories are not neighboring your nation: "
-                + notNeighboringTerritories.stream().map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
+                + notNeighboringTerritories.stream().map(TerritoryIdentity::toString).collect(Collectors.joining(", ")).trim());
           }
 
           long allowedClaimAmount = attacker.getAllowedClaimAmount(claims, constants, map);
@@ -439,13 +439,13 @@ public final class Conquest implements Game {
           Set<Claim> wonClaims = new HashSet<>();
           Set<Claim> defendedClaims = new HashSet<>();
 
-          for (TerritoryIdentifier attackedTerritory : territoriesToClaim) {
+          for (TerritoryIdentity attackedTerritory : territoriesToClaim) {
             Optional<Nation> defendingNation = getNation(attackedTerritory);
             if (defendingNation.isPresent()) {
               Nation defender = defendingNation.get();
               if (attack.success(attacker, defender, attackedTerritory, map, claims, constants)) { // Attacker wins, so the claim is transferred to the attacker
                 boolean wasCapital = defender.hasClaimOn(attackedTerritory, claims, TerritoryType.CAPITAL);
-                claims.removeIf(claim -> claim.identifier().equals(defender.identifier()) && claim.territory().identifier().equals(attackedTerritory));
+                claims.removeIf(claim -> claim.identifier().equals(defender.identifier()) && claim.territory().identity().equals(attackedTerritory));
                 Set<Claim> defenderClaims = defender.getClaimedTerritories(claims);
                 if (wasCapital && defenderClaims.size() > 0) { // Make one of the defender's territories its new capital
                   Optional<Claim> randomClaim = defenderClaims.stream().skip(new Random().nextInt(defenderClaims.size())).findFirst();
@@ -473,7 +473,7 @@ public final class Conquest implements Game {
           if (territories.length != 1) {
             throw new IllegalStateException("Exactly one territory must be claimed during the setup phase.");
           }
-          TerritoryIdentifier territory = territories[0];
+          TerritoryIdentity territory = territories[0];
           Optional<Nation> optNation = getNation(identifier);
           if (optNation.isEmpty()) {
             throw new IllegalStateException("That nation does not exist");
@@ -505,7 +505,7 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<Boolean> unclaim(NationIdentifier identifier, TerritoryIdentifier... territories) {
+  public GameAction<Boolean> unclaim(NationIdentifier identifier, TerritoryIdentity... territories) {
     Objects.requireNonNull(identifier);
     Objects.requireNonNull(territories);
     this.updatedTime = Instant.now();
@@ -527,22 +527,22 @@ public final class Conquest implements Game {
           if (!nation.hasAnyClaim(claims)) {
             throw new IllegalStateException("Cannot unclaim because this nation has no claims");
           }
-          Set<TerritoryIdentifier> territoriesToUnclaim = new HashSet<>(Arrays.asList(territories));
+          Set<TerritoryIdentity> territoriesToUnclaim = new HashSet<>(Arrays.asList(territories));
           if (territoriesToUnclaim.isEmpty()) {
             throw new IllegalStateException("Nothing to unclaim");
           }
           var invalidTerritories = territoriesToUnclaim.stream().filter(territoryIdentifier -> GameUtil.territoryNotExists(territoryIdentifier, map)).toList();
           if (!invalidTerritories.isEmpty()) {
             throw new IllegalStateException("The following territories do not exist or are otherwise invalid: "
-                + invalidTerritories.stream().map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
+                + invalidTerritories.stream().map(TerritoryIdentity::toString).collect(Collectors.joining(", ")).trim());
           }
           var notClaimedTerritories = territoriesToUnclaim.stream().filter(territoryIdentifier -> !nation.hasClaimOn(territoryIdentifier, claims)).toList();
           if (!notClaimedTerritories.isEmpty()) {
             throw new IllegalStateException("The following territories are not claimed by you: "
-                + notClaimedTerritories.stream().map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
+                + notClaimedTerritories.stream().map(TerritoryIdentity::toString).collect(Collectors.joining(", ")).trim());
           }
-          for (TerritoryIdentifier territoryIdentifier : territoriesToUnclaim) {
-            claims.removeIf(claim -> claim.territory().identifier().equals(territoryIdentifier));
+          for (TerritoryIdentity identity : territoriesToUnclaim) {
+            claims.removeIf(claim -> claim.territory().identity().equals(identity));
           }
           yield new GenericAction<>(true);
         }
@@ -558,22 +558,22 @@ public final class Conquest implements Game {
           if (!nation.hasAnyClaim(claims)) {
             throw new IllegalStateException("Cannot unclaim because this nation has no claims");
           }
-          Set<TerritoryIdentifier> territoriesToUnclaim = new HashSet<>(Arrays.asList(territories));
+          Set<TerritoryIdentity> territoriesToUnclaim = new HashSet<>(Arrays.asList(territories));
           if (territoriesToUnclaim.isEmpty()) {
             throw new IllegalStateException("Nothing to unclaim");
           }
           var invalidTerritories = territoriesToUnclaim.stream().filter(territoryIdentifier -> GameUtil.territoryNotExists(territoryIdentifier, map)).toList();
           if (!invalidTerritories.isEmpty()) {
             throw new IllegalStateException("The following territories do not exist or are otherwise invalid: "
-                + invalidTerritories.stream().map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
+                + invalidTerritories.stream().map(TerritoryIdentity::toString).collect(Collectors.joining(", ")).trim());
           }
           var notClaimedTerritories = territoriesToUnclaim.stream().filter(territoryIdentifier -> !nation.hasClaimOn(territoryIdentifier, claims)).toList();
           if (!notClaimedTerritories.isEmpty()) {
             throw new IllegalStateException("The following territories are not claimed by you: "
-                + notClaimedTerritories.stream().map(TerritoryIdentifier::id).collect(Collectors.joining(", ")).trim());
+                + notClaimedTerritories.stream().map(TerritoryIdentity::toString).collect(Collectors.joining(", ")).trim());
           }
-          for (TerritoryIdentifier territoryIdentifier : territoriesToUnclaim) {
-            claims.removeIf(claim -> claim.territory().identifier().equals(territoryIdentifier));
+          for (TerritoryIdentity identity : territoriesToUnclaim) {
+            claims.removeIf(claim -> claim.territory().identity().equals(identity));
           }
           yield new GenericAction<>(true);
         }

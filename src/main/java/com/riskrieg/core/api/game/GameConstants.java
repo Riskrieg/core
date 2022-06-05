@@ -18,7 +18,7 @@
 
 package com.riskrieg.core.api.game;
 
-import com.riskrieg.core.api.color.ColorPalette;
+import com.riskrieg.palette.RkpPalette;
 
 public record GameConstants(int minimumPlayers,
                             int maximumPlayers,
@@ -59,7 +59,7 @@ public record GameConstants(int minimumPlayers,
    * @param palette The ColorPalette to clamp values to.
    * @return a GameConstants object that has values compatible with the provided ColorPalette
    */
-  public GameConstants clampTo(ColorPalette palette) {
+  public GameConstants clampTo(RkpPalette palette) {
     return new GameConstants(minimumPlayers > palette.size() ? palette.size() : minimumPlayers, palette.size(),
         initialClaimAmount, claimIncreaseThreshold, capitalAttackBonus, capitalDefenseBonus);
   }

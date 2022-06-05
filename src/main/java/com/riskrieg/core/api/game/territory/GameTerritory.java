@@ -18,30 +18,30 @@
 
 package com.riskrieg.core.api.game.territory;
 
-import com.riskrieg.core.api.identifier.TerritoryIdentifier;
+import com.riskrieg.map.territory.TerritoryIdentity;
 import java.util.Objects;
 
-public record GameTerritory(TerritoryIdentifier identifier, TerritoryType type) {
+public record GameTerritory(TerritoryIdentity identity, TerritoryType type) {
 
-  public static GameTerritory of(TerritoryIdentifier identifier, TerritoryType type) {
-    return new GameTerritory(identifier, type);
+  public static GameTerritory of(TerritoryIdentity identity, TerritoryType type) {
+    return new GameTerritory(identity, type);
   }
 
-  public static GameTerritory of(TerritoryIdentifier identifier) {
-    return new GameTerritory(identifier, TerritoryType.PLAIN);
+  public static GameTerritory of(TerritoryIdentity identity) {
+    return new GameTerritory(identity, TerritoryType.PLAIN);
   }
 
   public GameTerritory {
-    Objects.requireNonNull(identifier);
+    Objects.requireNonNull(identity);
     Objects.requireNonNull(type);
   }
 
-  public GameTerritory(TerritoryIdentifier identifier) {
-    this(identifier, TerritoryType.PLAIN);
+  public GameTerritory(TerritoryIdentity identity) {
+    this(identity, TerritoryType.PLAIN);
   }
 
   public GameTerritory with(TerritoryType type) {
-    return new GameTerritory(identifier, type);
+    return new GameTerritory(identity, type);
   }
 
   @Override
@@ -52,13 +52,13 @@ public record GameTerritory(TerritoryIdentifier identifier, TerritoryType type) 
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    GameTerritory that = (GameTerritory) o;
-    return identifier.equals(that.identifier);
+    GameTerritory gt = (GameTerritory) o;
+    return identity.equals(gt.identity);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identifier);
+    return Objects.hash(identity);
   }
 
 }
