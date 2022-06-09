@@ -9,7 +9,7 @@ plugins {
 // gradlew publishToSonatype closeSonatypeStagingRepository for staging and manual release
 // gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository for automatic release
 
-val versionObject = Version(breaking = "3", minor = "0", nonbreaking = "0", revision = "2", date = "2206", classifier = "alpha")
+val versionObject = Version(breaking = "3", minor = "0", nonbreaking = "0", revision = "3", date = "2206", classifier = "alpha")
 project.group = "com.riskrieg"
 project.version = "$versionObject"
 
@@ -31,9 +31,9 @@ dependencies {
 
     implementation("org.jgrapht:jgrapht-core:1.5.1")
 
-    implementation("com.riskrieg:map:1.0.0-0.2206")
-    implementation("com.riskrieg:palette:1.1.0-0.2206")
-    implementation("com.riskrieg:codec:1.0.0-1.2206")
+    implementation("com.riskrieg:map:1.0.0-2.2206")
+    implementation("com.riskrieg:palette:1.1.0-1.2206")
+    implementation("com.riskrieg:codec:1.0.0-3.2206")
 
     implementation("com.fasterxml.jackson.core:jackson-databind:2.13.3")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3")
