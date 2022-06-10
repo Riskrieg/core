@@ -26,10 +26,15 @@ import com.riskrieg.core.api.game.Game;
 import com.riskrieg.core.api.game.GameConstants;
 import com.riskrieg.core.api.game.GamePhase;
 import com.riskrieg.core.api.game.Save;
+import com.riskrieg.core.api.game.entity.alliance.Alliance;
 import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
+import com.riskrieg.core.api.game.event.AllianceEvent;
 import com.riskrieg.core.api.game.event.ClaimEvent;
 import com.riskrieg.core.api.game.event.UpdateEvent;
+import com.riskrieg.core.api.game.feature.Feature;
+import com.riskrieg.core.api.game.feature.FeatureFlag;
+import com.riskrieg.core.api.game.feature.alliance.AllianceStatus;
 import com.riskrieg.core.api.game.order.TurnOrder;
 import com.riskrieg.core.api.game.territory.Claim;
 import com.riskrieg.core.api.game.territory.GameTerritory;
@@ -56,6 +61,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
@@ -70,6 +76,9 @@ public final class Conquest implements Game {
   private final Instant creationTime;
   private final Set<Nation> nations;
   private final Set<Claim> claims;
+  private final Set<Alliance> alliances;
+
+  private final Set<FeatureFlag> featureFlags;
 
   // Mutable
   private RkpPalette palette;
@@ -101,9 +110,11 @@ public final class Conquest implements Game {
     this.players = new ArrayDeque<>(save.players());
     this.nations = save.nations();
     this.claims = save.claims();
+    this.alliances = save.alliances();
+    this.featureFlags = save.featureFlags();
   }
 
-  public Conquest(GameIdentifier identifier, GameConstants constants, RkpPalette palette) {
+  public Conquest(GameIdentifier identifier, GameConstants constants, RkpPalette palette, FeatureFlag... featureFlags) {
     if (palette.size() < constants.maximumPlayers()) {
       throw new IllegalStateException("The provided palette only supports up to " + palette.size()
           + " colors, but the provided constants allows a maximum amount of " + constants.maximumPlayers() + " players.");
@@ -121,6 +132,8 @@ public final class Conquest implements Game {
     this.players = new ArrayDeque<>();
     this.nations = new HashSet<>();
     this.claims = new HashSet<>();
+    this.alliances = new HashSet<>();
+    this.featureFlags = new HashSet<>();
   }
 
   @NonNull
@@ -180,6 +193,27 @@ public final class Conquest implements Game {
   @Override
   public Set<Claim> claims() {
     return Collections.unmodifiableSet(claims);
+  }
+
+  @NonNull
+  @Override
+  public Set<Alliance> alliances() {
+    return Collections.unmodifiableSet(alliances);
+  }
+
+  @Override
+  public Set<FeatureFlag> featureFlags() {
+    return Collections.unmodifiableSet(featureFlags);
+  }
+
+  @Override
+  public boolean isFeatureEnabled(Feature feature) {
+    for (FeatureFlag flag : featureFlags) {
+      if (flag.feature() == feature) {
+        return flag.enabled();
+      }
+    }
+    return false;
   }
 
   @NonNull
@@ -295,7 +329,11 @@ public final class Conquest implements Game {
           }
 
           nations.stream().filter(nation -> nation.leaderIdentifier().equals(identifier))
-              .forEach(nation -> claims.removeIf(claim -> claim.identifier().equals(nation.identifier())));
+              .forEach(nation -> {
+                    claims.removeIf(claim -> claim.identifier().equals(nation.identifier()));
+                    alliances.removeIf(alliance -> alliance.ally() == nation.identifier() || alliance.coally() == nation.identifier());
+                  }
+              );
           nations.removeIf(nation -> nation.leaderIdentifier().equals(identifier));
           players.removeIf(player -> player.identifier().equals(identifier));
 
@@ -392,8 +430,22 @@ public final class Conquest implements Game {
             throw new IllegalStateException("The following territories are not neighboring your nation: "
                 + notNeighboringTerritories.stream().map(TerritoryIdentity::toString).collect(Collectors.joining(", ")).trim());
           }
+          if (isFeatureEnabled(Feature.ALLIANCES)) {
+            List<TerritoryIdentity> allyTerritories = new ArrayList<>();
+            for (Nation n : nations) {
+              if (allianceStatus(attacker.identifier(), n.identifier()) == AllianceStatus.COMPLETE) {
+                Set<TerritoryIdentity> nTerritories = n.getClaimedTerritories(claims).stream().map(Claim::territory).map(GameTerritory::identity).collect(Collectors.toSet());
+                allyTerritories.addAll(territoriesToClaim.stream().filter(nTerritories::contains).collect(Collectors.toSet()));
+              }
+            }
 
-          long allowedClaimAmount = attacker.getAllowedClaimAmount(claims, constants, map);
+            if (!allyTerritories.isEmpty()) {
+              throw new IllegalStateException("The following territories belong to allies: "
+                  + allyTerritories.stream().map(TerritoryIdentity::toString).collect(Collectors.joining(", ")).trim());
+            }
+          }
+
+          long allowedClaimAmount = attacker.getAllowedClaimAmount(claims, constants, map, getAllies(attacker.identifier()));
           if (allowedClaimAmount == 0) {
             throw new IllegalStateException("Trying to claim " + territoriesToClaim.size() + (territoriesToClaim.size() == 1 ? " territory" : " territories")
                 + " but unable to claim any territories.");
@@ -411,7 +463,7 @@ public final class Conquest implements Game {
                 throw new IllegalStateException("Trying to claim " + territoriesToClaim.size() + (territoriesToClaim.size() == 1 ? " territory" : " territories")
                     + " but cannot claim more than " + allowedClaimAmount + (allowedClaimAmount == 1 ? " territory" : " territories"));
               } else if (territoriesToClaim.size() < allowedClaimAmount) { // Add random territories to fill out the rest
-                var claimable = new ArrayList<>(attacker.getClaimableTerritories(claims, map));
+                var claimable = new ArrayList<>(attacker.getClaimableTerritories(claims, map, getAllies(attacker.identifier())));
                 claimable.removeAll(territoriesToClaim);
                 Collections.shuffle(claimable);
                 claimable.stream()
@@ -650,7 +702,11 @@ public final class Conquest implements Game {
           } else if (players.size() == 1) {
             endReason = EndReason.DEFEAT;
             phase = GamePhase.ENDED;
-          } else if (nations.stream().allMatch(nation -> nation.getAllowedClaimAmount(claims, constants, map) == 0)) {
+          } else if (isFeatureEnabled(Feature.ALLIANCES) && nations.stream().allMatch(nation ->
+              nation.getAllowedClaimAmount(claims, constants, map, getAllies(nation.identifier())) == 0)) {
+            endReason = EndReason.ALLIED_VICTORY;
+            phase = GamePhase.ENDED;
+          } else if (nations.stream().allMatch(nation -> nation.getAllowedClaimAmount(claims, constants, map, getAllies(nation.identifier())) == 0)) {
             endReason = EndReason.STALEMATE;
             phase = GamePhase.ENDED;
           }
@@ -665,6 +721,147 @@ public final class Conquest implements Game {
     } catch (Exception e) {
       return new GenericAction<>(e);
     }
+  }
+
+  @Override
+  public GameAction<AllianceEvent> ally(NationIdentifier ally, NationIdentifier coally) {
+    this.updatedTime = Instant.now();
+    try {
+      if (!isFeatureEnabled(Feature.ALLIANCES)) {
+        throw new IllegalStateException("Alliances are not enabled in this game");
+      }
+      return switch (phase) {
+        case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
+        case ACTIVE -> {
+          var allyNationOpt = getNation(ally);
+          var coallyNationOpt = getNation(coally);
+          if (allyNationOpt.isEmpty() || coallyNationOpt.isEmpty()) {
+            throw new IllegalStateException("One of the players provided is not in the game.");
+          }
+          Nation allyNation = allyNationOpt.get();
+          Nation coallyNation = coallyNationOpt.get();
+
+          var allyLeaderOpt = getPlayer(allyNation.leaderIdentifier());
+          var coallyLeaderOpt = getPlayer(coallyNation.leaderIdentifier());
+          if (allyLeaderOpt.isEmpty() || coallyLeaderOpt.isEmpty()) {
+            throw new IllegalStateException("One of the players provided is not in the game.");
+          }
+          Player allyLeader = allyLeaderOpt.get();
+          Player coallyLeader = coallyLeaderOpt.get();
+
+          if (ally == coally) {
+            throw new IllegalStateException("You cannot enter an alliance with yourself.");
+          }
+
+          alliances.add(new Alliance(ally, coally));
+          AllianceStatus status = allianceStatus(ally, coally);
+
+          EndReason reason = EndReason.NONE;
+
+          if (nations.stream().allMatch(nation -> nation.getAllowedClaimAmount(claims, constants, map, getAllies(nation.identifier())) == 0)) {
+            reason = EndReason.ALLIED_VICTORY;
+            phase = GamePhase.ENDED;
+          }
+
+          yield new GenericAction<>(new AllianceEvent(allyNation, allyLeader, coallyNation, coallyLeader, status, reason));
+        }
+        case SETUP -> throw new IllegalStateException("Alliances can only be made after the game has started");
+      };
+    } catch (Exception e) {
+      return new GenericAction<>(e);
+    }
+  }
+
+  @Override
+  public GameAction<AllianceEvent> unally(NationIdentifier ally, NationIdentifier coally) {
+    this.updatedTime = Instant.now();
+    try {
+      if (!isFeatureEnabled(Feature.ALLIANCES)) {
+        throw new IllegalStateException("Alliances are not enabled in this game");
+      }
+      return switch (phase) {
+        case ENDED -> throw new IllegalStateException("A new game must be created in order to do that");
+        case ACTIVE -> {
+          var allyNationOpt = getNation(ally);
+          var coallyNationOpt = getNation(coally);
+          if (allyNationOpt.isEmpty() || coallyNationOpt.isEmpty()) {
+            throw new IllegalStateException("One of the players provided is not in the game.");
+          }
+          Nation allyNation = allyNationOpt.get();
+          Nation coallyNation = coallyNationOpt.get();
+
+          var allyLeaderOpt = getPlayer(allyNation.leaderIdentifier());
+          var coallyLeaderOpt = getPlayer(coallyNation.leaderIdentifier());
+          if (allyLeaderOpt.isEmpty() || coallyLeaderOpt.isEmpty()) {
+            throw new IllegalStateException("One of the players provided is not in the game.");
+          }
+          Player allyLeader = allyLeaderOpt.get();
+          Player coallyLeader = coallyLeaderOpt.get();
+
+          if (ally == coally) {
+            throw new IllegalStateException("You cannot break an alliance with yourself.");
+          }
+
+          AllianceStatus oldStatus = allianceStatus(ally, coally);
+          if (oldStatus == AllianceStatus.COMPLETE) {
+            alliances.removeIf(alliance -> (alliance.ally() == ally && alliance.coally() == coally) || (alliance.ally() == coally && alliance.coally() == ally));
+          } else {
+            alliances.removeIf(alliance -> alliance.ally() == ally && alliance.coally() == coally);
+          }
+
+          AllianceStatus status = allianceStatus(ally, coally);
+          yield new GenericAction<>(new AllianceEvent(allyNation, allyLeader, coallyNation, coallyLeader, status, EndReason.NONE));
+        }
+        case SETUP -> throw new IllegalStateException("Alliances can only be broken after the game has started");
+      };
+    } catch (Exception e) {
+      return new GenericAction<>(e);
+    }
+  }
+
+  @Override
+  public AllianceStatus allianceStatus(NationIdentifier ally, NationIdentifier coally) {
+    this.updatedTime = Instant.now();
+    if (!isFeatureEnabled(Feature.ALLIANCES)) {
+      return AllianceStatus.NONE;
+    }
+    return switch (phase) {
+      case ENDED, SETUP -> AllianceStatus.NONE;
+      case ACTIVE -> {
+        AllianceStatus result = AllianceStatus.NONE;
+
+        for (Alliance alliance : alliances) {
+          if (result == AllianceStatus.COMPLETE) {
+            break;
+          }
+          result = switch (result) {
+            case NONE -> {
+              if (alliance.ally() == ally && alliance.coally() == coally) {
+                yield AllianceStatus.SENT;
+              } else if (alliance.ally() == coally && alliance.coally() == ally) {
+                yield AllianceStatus.RECEIVED;
+              }
+              yield result;
+            }
+            case SENT -> {
+              if (alliance.ally() == coally && alliance.coally() == ally) {
+                yield AllianceStatus.COMPLETE;
+              }
+              yield result;
+            }
+            case RECEIVED -> {
+              if (alliance.ally() == ally && alliance.coally() == coally) {
+                yield AllianceStatus.COMPLETE;
+              }
+              yield result;
+            }
+            case COMPLETE -> result;
+          };
+        }
+
+        yield result;
+      }
+    };
   }
 
 }

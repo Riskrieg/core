@@ -22,6 +22,7 @@ import com.riskrieg.core.api.game.Game;
 import com.riskrieg.core.api.game.GameConstants;
 import com.riskrieg.core.api.game.GamePhase;
 import com.riskrieg.core.api.game.Save;
+import com.riskrieg.core.api.game.feature.FeatureFlag;
 import com.riskrieg.core.api.group.Group;
 import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.GroupIdentifier;
@@ -63,11 +64,12 @@ public record LocalGroup(Path path) implements Group {
   @NonNull
   @Override
   @CheckReturnValue
-  public <T extends Game> GameAction<Game> createGame(GameConstants constants, RkpPalette palette, GameIdentifier identifier, Class<T> type) {
+  public <T extends Game> GameAction<Game> createGame(GameConstants constants, RkpPalette palette, GameIdentifier identifier, Class<T> type, FeatureFlag... featureFlags) {
     Objects.requireNonNull(constants);
     Objects.requireNonNull(palette);
     Objects.requireNonNull(identifier);
     Objects.requireNonNull(type);
+    Objects.requireNonNull(featureFlags);
     Path savePath = path.resolve(identifier.id() + Save.FILE_EXT);
     try {
       if (Files.exists(savePath)) {
@@ -82,7 +84,8 @@ public record LocalGroup(Path path) implements Group {
           throw new FileAlreadyExistsException("An active game already exists");
         }
       }
-      var newGame = type.getDeclaredConstructor(GameIdentifier.class, GameConstants.class, RkpPalette.class).newInstance(identifier, constants, palette);
+      var newGame = type.getDeclaredConstructor(GameIdentifier.class, GameConstants.class, RkpPalette.class, FeatureFlag[].class)
+          .newInstance(identifier, constants, palette, featureFlags);
       RkJsonUtil.write(savePath, Save.class, new Save(newGame, type));
       return new GenericAction<>(newGame);
     } catch (Exception e) {

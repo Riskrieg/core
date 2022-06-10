@@ -5,6 +5,7 @@ public enum EndReason {
   NONE,
   NO_PLAYERS,
   DEFEAT,
-  STALEMATE
+  STALEMATE,
+  ALLIED_VICTORY
 
 }

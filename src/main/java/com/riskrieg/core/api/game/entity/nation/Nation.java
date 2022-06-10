@@ -139,8 +139,9 @@ public record Nation(NationIdentifier identifier, int colorId, PlayerIdentifier 
    * @param map    The game map
    * @return the set of all territories (as identifiers) that this nation has the ability to claim
    */
-  public Set<TerritoryIdentity> getClaimableTerritories(Set<Claim> claims, RkmMap map) {
+  public Set<TerritoryIdentity> getClaimableTerritories(Set<Claim> claims, RkmMap map, Set<Nation> allies) {
     Set<TerritoryIdentity> neighbors = new HashSet<>(getNeighbors(claims, map));
+    neighbors.removeIf(identity -> allies.stream().anyMatch(ally -> ally.hasClaimOn(identity, claims)));
     return Collections.unmodifiableSet(neighbors);
   }
 
@@ -152,9 +153,9 @@ public record Nation(NationIdentifier identifier, int colorId, PlayerIdentifier 
    * @param map       The game map
    * @return the number claims that can be made as a {@code long}
    */
-  public long getAllowedClaimAmount(Set<Claim> claims, GameConstants constants, RkmMap map) {
+  public long getAllowedClaimAmount(Set<Claim> claims, GameConstants constants, RkmMap map, Set<Nation> allies) {
     long allowedClaims = constants.initialClaimAmount() + (long) (Math.floor(getClaimedTerritories(claims).size() / (double) constants.claimIncreaseThreshold()));
-    return Math.min(getClaimableTerritories(claims, map).size(), allowedClaims);
+    return Math.min(getClaimableTerritories(claims, map, allies).size(), allowedClaims);
   }
 
   @Override

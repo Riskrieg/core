@@ -18,10 +18,15 @@
 
 package com.riskrieg.core.api.game;
 
+import com.riskrieg.core.api.game.entity.alliance.Alliance;
 import com.riskrieg.core.api.game.entity.nation.Nation;
 import com.riskrieg.core.api.game.entity.player.Player;
+import com.riskrieg.core.api.game.event.AllianceEvent;
 import com.riskrieg.core.api.game.event.ClaimEvent;
 import com.riskrieg.core.api.game.event.UpdateEvent;
+import com.riskrieg.core.api.game.feature.Feature;
+import com.riskrieg.core.api.game.feature.FeatureFlag;
+import com.riskrieg.core.api.game.feature.alliance.AllianceStatus;
 import com.riskrieg.core.api.game.order.TurnOrder;
 import com.riskrieg.core.api.game.territory.Claim;
 import com.riskrieg.core.api.identifier.GameIdentifier;
@@ -38,6 +43,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -75,6 +82,13 @@ public interface Game { // TODO: Action to rename player
   Set<Claim> claims();
 
   @NonNull
+  Set<Alliance> alliances();
+
+  Set<FeatureFlag> featureFlags();
+
+  boolean isFeatureEnabled(Feature feature);
+
+  @NonNull
   default Optional<Player> getPlayer(PlayerIdentifier identifier) {
     return players().stream()
         .filter(p -> p.identifier().equals(identifier))
@@ -105,6 +119,51 @@ public interface Game { // TODO: Action to rename player
   @NonNull
   default Optional<Nation> getNation(TerritoryIdentity identity) {
     return nations().stream().filter(nation -> nation.hasClaimOn(identity, claims())).findFirst();
+  }
+
+  default Set<Nation> getAllies(PlayerIdentifier identifier) {
+    var nationOpt = getNation(identifier);
+    if (nationOpt.isEmpty()) {
+      return Set.of();
+    }
+    Set<Nation> allies = new HashSet<>();
+    Nation nation = nationOpt.get();
+    for (Nation n : nations()) {
+      if (allianceStatus(nation.identifier(), n.identifier()).equals(AllianceStatus.COMPLETE)) {
+        allies.add(n);
+      }
+    }
+    return Collections.unmodifiableSet(allies);
+  }
+
+  default Set<Nation> getAllies(NationIdentifier identifier) {
+    var nationOpt = getNation(identifier);
+    if (nationOpt.isEmpty()) {
+      return Set.of();
+    }
+    Set<Nation> allies = new HashSet<>();
+    Nation nation = nationOpt.get();
+    for (Nation n : nations()) {
+      if (allianceStatus(nation.identifier(), n.identifier()).equals(AllianceStatus.COMPLETE)) {
+        allies.add(n);
+      }
+    }
+    return Collections.unmodifiableSet(allies);
+  }
+
+  default Set<Nation> getAllies(RkpColor color) {
+    var nationOpt = getNation(color);
+    if (nationOpt.isEmpty()) {
+      return Set.of();
+    }
+    Set<Nation> allies = new HashSet<>();
+    Nation nation = nationOpt.get();
+    for (Nation n : nations()) {
+      if (allianceStatus(nation.identifier(), n.identifier()).equals(AllianceStatus.COMPLETE)) {
+        allies.add(n);
+      }
+    }
+    return Collections.unmodifiableSet(allies);
   }
 
   @NonNull
@@ -180,5 +239,38 @@ public interface Game { // TODO: Action to rename player
   @NonNull
   @CheckReturnValue
   GameAction<UpdateEvent> update(boolean advanceTurn);
+
+  GameAction<AllianceEvent> ally(NationIdentifier ally, NationIdentifier coally);
+
+  default GameAction<AllianceEvent> ally(PlayerIdentifier ally, PlayerIdentifier coally) {
+    var allyNation = getNation(ally);
+    var coallyNation = getNation(coally);
+    if (allyNation.isEmpty() || coallyNation.isEmpty()) {
+      return new GenericAction<>(new IllegalStateException("One of the players provided is not in the game."));
+    }
+    return ally(allyNation.get().identifier(), coallyNation.get().identifier());
+  }
+
+  GameAction<AllianceEvent> unally(NationIdentifier ally, NationIdentifier coally);
+
+  default GameAction<AllianceEvent> unally(PlayerIdentifier ally, PlayerIdentifier coally) {
+    var allyNation = getNation(ally);
+    var coallyNation = getNation(coally);
+    if (allyNation.isEmpty() || coallyNation.isEmpty()) {
+      return new GenericAction<>(new IllegalStateException("One of the players provided is not in the game."));
+    }
+    return unally(allyNation.get().identifier(), coallyNation.get().identifier());
+  }
+
+  AllianceStatus allianceStatus(NationIdentifier ally, NationIdentifier coally);
+
+  default AllianceStatus allianceStatus(PlayerIdentifier ally, PlayerIdentifier coally) {
+    var allyNation = getNation(ally);
+    var coallyNation = getNation(coally);
+    if (allyNation.isEmpty() || coallyNation.isEmpty()) {
+      return AllianceStatus.NONE;
+    }
+    return allianceStatus(allyNation.get().identifier(), coallyNation.get().identifier());
+  }
 
 }

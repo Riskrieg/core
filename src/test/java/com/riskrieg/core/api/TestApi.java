@@ -158,12 +158,12 @@ public class TestApi { // TODO: Implement comprehensive tests
     // Act & Assert
     assertThrowsExactly(NullPointerException.class, () -> group.createGame(null).complete());
     assertThrowsExactly(NullPointerException.class, () -> group.createGame(null).queue());
-    assertThrowsExactly(NullPointerException.class, () -> group.createGame(null, null).complete());
-    assertThrowsExactly(NullPointerException.class, () -> group.createGame(null, null).queue());
-    assertThrowsExactly(NullPointerException.class, () -> group.createGame(null, null, null).complete());
-    assertThrowsExactly(NullPointerException.class, () -> group.createGame(null, null, null).queue());
-    assertThrowsExactly(NullPointerException.class, () -> group.createGame(null, null, null, null).complete());
-    assertThrowsExactly(NullPointerException.class, () -> group.createGame(null, null, null, null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> group.createGame((GameIdentifier) null, null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> group.createGame((GameIdentifier) null, null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> group.createGame((GameConstants) null, null, null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> group.createGame((GameConstants) null, null, null).queue());
+    assertThrowsExactly(NullPointerException.class, () -> group.createGame(null, null, (GameIdentifier) null, null).complete());
+    assertThrowsExactly(NullPointerException.class, () -> group.createGame(null, null, (GameIdentifier) null, null).queue());
 
     assertThrowsExactly(NullPointerException.class, () -> group.retrieveGame(null).complete());
     assertThrowsExactly(NullPointerException.class, () -> group.retrieveGame(null).queue());
@@ -322,7 +322,7 @@ public class TestApi { // TODO: Implement comprehensive tests
     assertNull(game.map());
     assertEquals(GamePhase.SETUP, game.phase());
 
-    RkmMap map = new RkmDecoder().decode(new URL("https://github.com/Riskrieg/maps/raw/main/antarctica.rkm"));
+    RkmMap map = new RkmDecoder().decode(new URL("https://github.com/Riskrieg/official-maps/raw/main/antarctica.rkm"));
 
     // Act
     assertThrows(RuntimeException.class, () -> game.selectMap(null).complete());

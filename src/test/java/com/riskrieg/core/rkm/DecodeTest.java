@@ -45,7 +45,7 @@ public class DecodeTest {
   @Test
   public void testDecodeRemote() throws IOException, NoSuchAlgorithmException {
     RkmDecoder decoder = new RkmDecoder();
-    RkmMap map = decoder.decode(new URL("https://github.com/Riskrieg/maps/raw/main/antarctica.rkm"));
+    RkmMap map = decoder.decode(new URL("https://github.com/Riskrieg/official-maps/raw/main/antarctica.rkm"));
 
     assertNotNull(map);
     assertNotNull(map.codename());
