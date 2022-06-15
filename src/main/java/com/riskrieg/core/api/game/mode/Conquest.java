@@ -115,7 +115,7 @@ public final class Conquest implements Game {
   }
 
   public Conquest(GameIdentifier identifier, GameConstants constants, RkpPalette palette, FeatureFlag... featureFlags) {
-    if (palette.size() < constants.maximumPlayers()) {
+    if (palette.size() < constants.maximumPlayers()) { // TODO: Store custom palettes locally
       throw new IllegalStateException("The provided palette only supports up to " + palette.size()
           + " colors, but the provided constants allows a maximum amount of " + constants.maximumPlayers() + " players.");
     }
@@ -513,7 +513,14 @@ public final class Conquest implements Game {
                 getClaim(attackedTerritory).ifPresent(defendedClaims::add);
               }
             } else { // Nobody owns it, so it's automatically claimed
-              getClaim(attackedTerritory).ifPresent(freeClaims::add);
+              Optional<Claim> claimOpt = getClaim(attackedTerritory);
+              if (claimOpt.isPresent()) { // Just a sanity check, should always go to the else
+                Claim claim = claimOpt.get();
+                claims.remove(claim);
+                claims.add(new Claim(attacker.identifier(), claim.territory()));
+              } else {
+                claims.add(new Claim(attacker.identifier(), new GameTerritory(attackedTerritory)));
+              }
             }
           }
 
