@@ -765,7 +765,13 @@ public final class Conquest implements Game {
             throw new IllegalStateException("You cannot enter an alliance with yourself.");
           }
 
-          alliances.add(new Alliance(ally, coally));
+          Alliance alliance = new Alliance(ally, coally);
+
+          if (alliances.contains(alliance)) {
+            throw new IllegalStateException("You have already sent an alliance request to that person.");
+          }
+
+          alliances.add(alliance);
           AllianceStatus status = allianceStatus(ally, coally);
 
           EndReason reason = EndReason.NONE;
@@ -840,38 +846,15 @@ public final class Conquest implements Game {
     return switch (phase) {
       case ENDED, SETUP -> AllianceStatus.NONE;
       case ACTIVE -> {
-        AllianceStatus result = AllianceStatus.NONE;
-
-        for (Alliance alliance : alliances) {
-          if (result == AllianceStatus.COMPLETE) {
-            break;
-          }
-          result = switch (result) {
-            case NONE -> {
-              if (alliance.ally() == ally && alliance.coally() == coally) {
-                yield AllianceStatus.SENT;
-              } else if (alliance.ally() == coally && alliance.coally() == ally) {
-                yield AllianceStatus.RECEIVED;
-              }
-              yield result;
-            }
-            case SENT -> {
-              if (alliance.ally() == coally && alliance.coally() == ally) {
-                yield AllianceStatus.COMPLETE;
-              }
-              yield result;
-            }
-            case RECEIVED -> {
-              if (alliance.ally() == ally && alliance.coally() == coally) {
-                yield AllianceStatus.COMPLETE;
-              }
-              yield result;
-            }
-            case COMPLETE -> result;
-          };
+        if (alliances.contains(new Alliance(ally, coally)) && alliances.contains(new Alliance(coally, ally))) {
+          yield AllianceStatus.COMPLETE;
+        } else if (alliances.contains(new Alliance(ally, coally))) {
+          yield AllianceStatus.OUTGOING;
+        } else if (alliances.contains(new Alliance(coally, ally))) {
+          yield AllianceStatus.INCOMING;
+        } else {
+          yield AllianceStatus.NONE;
         }
-
-        yield result;
       }
     };
   }
