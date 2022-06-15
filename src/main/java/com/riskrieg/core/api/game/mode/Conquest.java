@@ -425,7 +425,7 @@ public final class Conquest implements Game {
             throw new IllegalStateException("The following territories are already claimed by you: "
                 + alreadyClaimedTerritories.stream().map(TerritoryIdentity::toString).collect(Collectors.joining(", ")).trim());
           }
-          var notNeighboringTerritories = territoriesToClaim.stream().filter(identity -> attacker.isTerritoryNeighboring(identity, claims, map)).toList();
+          var notNeighboringTerritories = territoriesToClaim.stream().filter(identity -> !attacker.isTerritoryNeighboring(identity, claims, map)).toList();
           if (!notNeighboringTerritories.isEmpty()) {
             throw new IllegalStateException("The following territories are not neighboring your nation: "
                 + notNeighboringTerritories.stream().map(TerritoryIdentity::toString).collect(Collectors.joining(", ")).trim());
