@@ -134,6 +134,7 @@ public final class Conquest implements Game {
     this.claims = new HashSet<>();
     this.alliances = new HashSet<>();
     this.featureFlags = new HashSet<>();
+    this.featureFlags.addAll(Arrays.asList(featureFlags));
   }
 
   @NonNull
