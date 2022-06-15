@@ -517,9 +517,13 @@ public final class Conquest implements Game {
               if (claimOpt.isPresent()) { // Just a sanity check, should always go to the else
                 Claim claim = claimOpt.get();
                 claims.remove(claim);
-                claims.add(new Claim(attacker.identifier(), claim.territory()));
+                Claim switchedClaim = new Claim(attacker.identifier(), claim.territory());
+                claims.add(switchedClaim);
+                freeClaims.add(switchedClaim);
               } else {
-                claims.add(new Claim(attacker.identifier(), new GameTerritory(attackedTerritory)));
+                Claim freeClaim = new Claim(attacker.identifier(), new GameTerritory(attackedTerritory));
+                claims.add(freeClaim);
+                freeClaims.add(freeClaim);
               }
             }
           }
