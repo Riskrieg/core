@@ -846,6 +846,9 @@ public final class Conquest implements Game {
     return switch (phase) {
       case ENDED, SETUP -> AllianceStatus.NONE;
       case ACTIVE -> {
+        if (ally == coally) {
+          yield AllianceStatus.NONE;
+        }
         if (alliances.contains(new Alliance(ally, coally)) && alliances.contains(new Alliance(coally, ally))) {
           yield AllianceStatus.COMPLETE;
         } else if (alliances.contains(new Alliance(ally, coally))) {
