@@ -820,12 +820,11 @@ public final class Conquest implements Game {
             throw new IllegalStateException("You cannot break an alliance with yourself.");
           }
 
-          AllianceStatus oldStatus = allianceStatus(ally, coally);
-          if (oldStatus == AllianceStatus.COMPLETE) {
-            alliances.removeIf(alliance -> (alliance.ally() == ally && alliance.coally() == coally) || (alliance.ally() == coally && alliance.coally() == ally));
-          } else {
-            alliances.removeIf(alliance -> alliance.ally() == ally && alliance.coally() == coally);
-          }
+          Alliance alliance = new Alliance(ally, coally);
+          Alliance coalliance = new Alliance(coally, ally);
+
+          alliances.remove(alliance);
+          alliances.remove(coalliance);
 
           AllianceStatus status = allianceStatus(ally, coally);
           yield new GenericAction<>(new AllianceEvent(allyNation, allyLeader, coallyNation, coallyLeader, status, EndReason.NONE));
