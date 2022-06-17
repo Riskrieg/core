@@ -714,8 +714,7 @@ public final class Conquest implements Game {
           } else if (players.size() == 1) {
             endReason = EndReason.DEFEAT;
             phase = GamePhase.ENDED;
-          } else if (isFeatureEnabled(Feature.ALLIANCES) && nations.stream().allMatch(nation ->
-              nation.getAllowedClaimAmount(claims, constants, map, getAllies(nation.identifier())) == 0)) {
+          } else if (isAlliedVictory()) {
             endReason = EndReason.ALLIED_VICTORY;
             phase = GamePhase.ENDED;
           } else if (nations.stream().allMatch(nation -> nation.getAllowedClaimAmount(claims, constants, map, getAllies(nation.identifier())) == 0)) {
@@ -776,7 +775,7 @@ public final class Conquest implements Game {
 
           EndReason reason = EndReason.NONE;
 
-          if (nations.stream().allMatch(nation -> nation.getAllowedClaimAmount(claims, constants, map, getAllies(nation.identifier())) == 0)) {
+          if (isAlliedVictory()) {
             reason = EndReason.ALLIED_VICTORY;
             phase = GamePhase.ENDED;
           }
@@ -859,6 +858,27 @@ public final class Conquest implements Game {
         }
       }
     };
+  }
+
+  private boolean isAlliedVictory() {
+    if (!isFeatureEnabled(Feature.ALLIANCES)) {
+      return false;
+    }
+
+    List<NationIdentifier> nationIdList = new ArrayList<>(nations.stream().map(Nation::identifier).toList());
+    for (int a = 0; a < nationIdList.size(); a++) {
+      for (int b = a; b < nationIdList.size(); b++) {
+        var idA = nationIdList.get(a);
+        var idB = nationIdList.get(b);
+        if (!idA.equals(idB)) {
+          AllianceStatus status = allianceStatus(idA, idB);
+          if (!status.equals(AllianceStatus.COMPLETE)) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
   }
 
 }
