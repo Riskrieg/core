@@ -571,7 +571,7 @@ public final class Brawl implements Game {
       return new GenericAction<>(e);
     }
   }
-  
+
   @NonNull
   @Override
   public GameAction<Boolean> unclaim(NationIdentifier identifier, TerritoryIdentity... territories) { // TODO: Replace capital if it's unclaimed
