@@ -66,6 +66,9 @@ public record LegacySave(LegacyGameModeType gameType, LegacyGameId id,
       case RUNNING, SELECTION -> GamePhase.ACTIVE;
     };
     String mapCodename = this.mapSimpleName;
+    if (mapCodename == null) {
+      mapCodename = "";
+    }
 
     Deque<Player> players = new ArrayDeque<>();
     Set<Nation> nations = new HashSet<>();
