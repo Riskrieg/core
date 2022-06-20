@@ -81,7 +81,7 @@ public record LocalGroup(Path path) implements Group {
         } catch (Exception e) {
           LegacySave legacySave = RkJsonUtil.read(savePath, LegacySave.class);
           if (legacySave != null) {
-            save = legacySave.toSave();
+            save = legacySave.toSave(identifier);
           }
         }
 
@@ -121,7 +121,7 @@ public record LocalGroup(Path path) implements Group {
       } catch (Exception e) {
         LegacySave legacySave = RkJsonUtil.read(savePath, LegacySave.class);
         if (legacySave != null) {
-          save = legacySave.toSave();
+          save = legacySave.toSave(identifier);
         }
       }
 

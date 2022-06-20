@@ -54,8 +54,7 @@ public record LegacySave(LegacyGameModeType gameType, LegacyGameId id,
                          LegacyGamePhase gameState, String mapSimpleName,
                          Deque<LegacyPlayer> players, Set<LegacyNation> nations) {
 
-  public Save toSave() {
-    GameIdentifier identifier = GameIdentifier.of(this.id.value());
+  public Save toSave(GameIdentifier identifier) {
     GameConstants constants = GameConstants.standard();
     RkpPalette palette = RkpPalette.standard();
     TimePoint creationTime = this.creationTime.toTimePoint();
