@@ -27,6 +27,7 @@ import com.riskrieg.core.api.group.Group;
 import com.riskrieg.core.api.identifier.GameIdentifier;
 import com.riskrieg.core.api.identifier.GroupIdentifier;
 import com.riskrieg.core.api.requests.GameAction;
+import com.riskrieg.core.internal.legacy.LegacySave;
 import com.riskrieg.core.internal.requests.GenericAction;
 import com.riskrieg.core.util.io.RkJsonUtil;
 import com.riskrieg.palette.RkpPalette;
@@ -73,7 +74,17 @@ public record LocalGroup(Path path) implements Group {
     Path savePath = path.resolve(identifier.id() + Save.FILE_EXT);
     try {
       if (Files.exists(savePath)) {
-        Save save = RkJsonUtil.read(savePath, Save.class);
+
+        Save save = null;
+        try {
+          save = RkJsonUtil.read(savePath, Save.class);
+        } catch (Exception e) {
+          LegacySave legacySave = RkJsonUtil.read(savePath, LegacySave.class);
+          if (legacySave != null) {
+            save = legacySave.toSave();
+          }
+        }
+
         if (save == null) {
           throw new IllegalStateException("Save is null");
         }
@@ -103,7 +114,17 @@ public record LocalGroup(Path path) implements Group {
       if (Files.notExists(savePath)) {
         throw new FileNotFoundException("Save file does not exist");
       }
-      Save save = RkJsonUtil.read(savePath, Save.class);
+
+      Save save = null;
+      try {
+        save = RkJsonUtil.read(savePath, Save.class);
+      } catch (Exception e) {
+        LegacySave legacySave = RkJsonUtil.read(savePath, LegacySave.class);
+        if (legacySave != null) {
+          save = legacySave.toSave();
+        }
+      }
+
       if (save == null) {
         throw new IllegalStateException("Save is null");
       }
