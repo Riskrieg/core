@@ -115,7 +115,7 @@ public final class Conquest implements Game {
   }
 
   public Conquest(GameIdentifier identifier, GameConstants constants, RkpPalette palette, FeatureFlag... featureFlags) {
-    if (palette.size() < constants.maximumPlayers()) { // TODO: Store custom palettes locally
+    if (palette.size() < constants.maximumPlayers()) {
       throw new IllegalStateException("The provided palette only supports up to " + palette.size()
           + " colors, but the provided constants allows a maximum amount of " + constants.maximumPlayers() + " players.");
     }
@@ -569,7 +569,7 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<Boolean> unclaim(NationIdentifier identifier, TerritoryIdentity... territories) {
+  public GameAction<Boolean> unclaim(NationIdentifier identifier, TerritoryIdentity... territories) { // TODO: Replace capital if it's unclaimed
     Objects.requireNonNull(identifier);
     Objects.requireNonNull(territories);
     this.updatedTime = Instant.now();
