@@ -23,10 +23,6 @@ import java.util.Objects;
 
 public record GameTerritory(TerritoryIdentity identity, TerritoryType type) {
 
-  public static GameTerritory of(TerritoryIdentity identity, TerritoryType type) {
-    return new GameTerritory(identity, type);
-  }
-
   public static GameTerritory of(TerritoryIdentity identity) {
     return new GameTerritory(identity, TerritoryType.PLAIN);
   }
