@@ -52,15 +52,15 @@ public class TestApi { // TODO: Implement comprehensive tests
     Group group = api.createGroup(GroupIdentifier.of("12345")).complete();
     Game game = group.createGame(GameIdentifier.of("123"), Conquest.class).complete();
 
-    var palette = RkpPalette.standard();
+    var palette = RkpPalette.standard16();
     for (int i = 0; i < palette.size(); i++) {
       assertEquals(i, palette.get(i).orElse(palette.last()).order());
     }
-    assertEquals(0, RkpPalette.standard().get(-1).orElse(RkpPalette.standard().last()).order());
-    assertEquals(15, RkpPalette.standard().get(16).orElse(RkpPalette.standard().last()).order());
+    assertEquals(0, RkpPalette.standard16().get(-1).orElse(RkpPalette.standard16().last()).order());
+    assertEquals(15, RkpPalette.standard16().get(16).orElse(RkpPalette.standard16().last()).order());
 
     game.addPlayer(PlayerIdentifier.of("1"), "One").complete();
-    Nation nation = game.createNation(RkpPalette.standard().get(3).orElse(RkpPalette.standard().last()), PlayerIdentifier.of("1")).complete();
+    Nation nation = game.createNation(RkpPalette.standard16().get(3).orElse(RkpPalette.standard16().last()), PlayerIdentifier.of("1")).complete();
 
     RkmDecoder decoder = new RkmDecoder();
 
@@ -245,7 +245,7 @@ public class TestApi { // TODO: Implement comprehensive tests
 
     assertEquals(GameIdentifier.of("test-game"), game.identifier());
     assertEquals(GameConstants.standard(), game.constants());
-    assertEquals(RkpPalette.standard(), game.palette());
+    assertEquals(RkpPalette.standard16(), game.palette());
     assertEquals(GamePhase.SETUP, game.phase());
 
     assertNotNull(game.creationTime());
@@ -302,14 +302,14 @@ public class TestApi { // TODO: Implement comprehensive tests
     // Arrange
     Group group = createLocalTestGroup("test-group");
     Game game = createLocalTestGame(group, "test-game", Conquest.class);
-    assertEquals(RkpPalette.standard(), game.palette());
+    assertEquals(RkpPalette.standard16(), game.palette());
 
     // Act
     assertThrowsExactly(NullPointerException.class, () -> game.setPalette(null).complete());
-    assertDoesNotThrow(() -> game.setPalette(RkpPalette.original()).complete());
+    assertDoesNotThrow(() -> game.setPalette(RkpPalette.original16()).complete());
 
     // Assert
-    assertEquals(RkpPalette.original(), game.palette());
+    assertEquals(RkpPalette.original16(), game.palette());
 
     assertTrue(cleanup(group, game));
   }

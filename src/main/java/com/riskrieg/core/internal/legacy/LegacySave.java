@@ -56,7 +56,7 @@ public record LegacySave(LegacyGameModeType gameType, LegacyGameId id,
 
   public Save toSave(GameIdentifier identifier) {
     GameConstants constants = GameConstants.standard();
-    RkpPalette palette = RkpPalette.standard();
+    RkpPalette palette = RkpPalette.standard16();
     TimePoint creationTime = this.creationTime.toTimePoint();
     TimePoint updatedTime = this.lastUpdated.toTimePoint();
     GamePhase phase = switch (this.gameState) {

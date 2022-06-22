@@ -49,7 +49,7 @@ public interface Group {
   @NonNull
   @CheckReturnValue
   default <T extends Game> GameAction<Game> createGame(GameIdentifier identifier, Class<T> type, FeatureFlag... featureFlags) {
-    return createGame(GameConstants.standard(), RkpPalette.standard(), identifier, type, featureFlags);
+    return createGame(GameConstants.standard(), RkpPalette.standard16(), identifier, type, featureFlags);
   }
 
   @NonNull
