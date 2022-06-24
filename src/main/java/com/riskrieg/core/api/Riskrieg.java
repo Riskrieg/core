@@ -34,7 +34,7 @@ public interface Riskrieg {
 
   // Constants
   public static final String NAME = "Riskrieg";
-  public static final String VERSION = "3.0.0-4.2206-beta";
+  public static final String VERSION = "3.0.0-5.2206-beta";
 
   /**
    * Creates a new {@link Group} and returns it. If a {@link Group} with the provided {@link GroupIdentifier} already exists, it returns that {@link Group}.
