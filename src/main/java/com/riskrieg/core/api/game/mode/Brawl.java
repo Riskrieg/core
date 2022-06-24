@@ -493,6 +493,22 @@ public final class Brawl implements Game {
             }
           }
 
+          // If a free claim is available to take (before all territories are claimed), you can't attack, but can otherwise.
+          if(claims.size() != map.vertices().size()) { // Not all territories are claimed globally
+            boolean isTryingToAttackSomeone = claims.stream().map(Claim::territory)
+                .map(GameTerritory::identity)
+                .anyMatch(territoriesToClaim::contains);
+            // Get claimable territories. If they are all in the claims set, then no free claims are available.
+            Set<TerritoryIdentity> claimableTerritories = attacker.getClaimableTerritories(claims, map, getAllies(attacker.leaderIdentifier()));
+            Set<TerritoryIdentity> claimsAsIds = claims.stream().map(Claim::territory).map(GameTerritory::identity).collect(Collectors.toSet());
+            boolean freeClaimUnavailable = claimsAsIds.containsAll(claimableTerritories);
+
+            if(isTryingToAttackSomeone && !freeClaimUnavailable) {
+              throw new IllegalStateException("You have at least one free claim available to you before all territories are claimed, so you cannot attack. You must take the free claim instead.");
+            }
+
+          }
+
           Set<Claim> freeClaims = new HashSet<>();
           Set<Claim> wonClaims = new HashSet<>();
           Set<Claim> defendedClaims = new HashSet<>();
