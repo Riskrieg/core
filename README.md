@@ -2,8 +2,9 @@
 
 # Riskrieg | Core
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Donate](https://img.shields.io/badge/donate-PayPal-brightgreen.svg)](https://paypal.me/aaronjyoder)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-white.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Maven Central](https://img.shields.io/maven-central/v/com.riskrieg/core.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.riskrieg%22%20AND%20a:%22core%22)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-lightgreen.svg)](https://paypal.me/aaronjyoder)
 
 Riskrieg is a world-domination/simulation game that lets you play out scenarios on one of a wide
 variety of game maps. The standard mode, Conquest, plays similarly to traditional
@@ -13,6 +14,7 @@ This is the core Riskrieg game that can be used as a library API in other progra
 be submitted to the [maps repository](https://github.com/Riskrieg/maps).
 ***
 ## Download
+[![Maven Central](https://img.shields.io/maven-central/v/com.riskrieg/core.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.riskrieg%22%20AND%20a:%22core%22)
 
 Latest release: https://github.com/Riskrieg/core/releases/latest
 
