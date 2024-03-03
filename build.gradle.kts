@@ -3,13 +3,13 @@ plugins {
     `maven-publish`
     signing
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
+    id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
 }
 
 // gradlew publishToSonatype closeSonatypeStagingRepository for staging and manual release
 // gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository for automatic release
 
-val versionObject = Version(breaking = "3", minor = "0", nonbreaking = "0", revision = "5", date = "2206", classifier = "beta")
+val versionObject = Version(breaking = "3", minor = "0", nonbreaking = "0", revision = "0", date = "2403")
 project.group = "com.riskrieg"
 project.version = "$versionObject"
 
@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    api("com.github.spotbugs:spotbugs-annotations:4.6.0")
+    api("com.github.spotbugs:spotbugs-annotations:4.7.3")
 
     implementation("org.jgrapht:jgrapht-core:1.5.1")
 
@@ -35,11 +35,11 @@ dependencies {
     implementation("com.riskrieg:palette:1.1.0-4.2206")
     implementation("com.riskrieg:codec:1.0.0-3.2206")
 
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.13.3")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.14.0")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.0")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 }
 
 tasks.test {
