@@ -237,7 +237,7 @@ public final class Conquest implements Game {
 
   @NonNull
   @Override
-  public GameAction<Boolean> setPalette(RkpPalette palette) {
+  public GameAction<Boolean> setPalette(RkpPalette palette) { // TODO: Support shrinking palette size if all nations can support the new palette without transformation
     Objects.requireNonNull(palette);
     try {
       return switch (phase) {
